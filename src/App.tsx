@@ -39,6 +39,7 @@ import {
 import { useLocalization } from "./features/settings/hooks/useLocalization";
 import { useClockRuntime } from "./features/matchday/hooks/useClockRuntime";
 import { usePwaInstall } from "./features/matchday/hooks/usePwaInstall";
+import { ConfirmationDialog } from "./components/ui/ConfirmationDialog";
 import type {
   ActiveModal,
   LocalizedMessage,
@@ -62,6 +63,10 @@ function createPresetId(): string {
   return `${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}`;
 }
 
+type PendingConfirmation =
+  | { kind: "deletePreset"; preset: MatchPreset }
+  | { kind: "reset" };
+
 function App() {
   const {
     settings,
@@ -82,6 +87,8 @@ function App() {
   } = useSavedState();
   const [feedback, setFeedback] = useState<LocalizedMessage | null>(null);
   const [modal, setModal] = useState<ActiveModal | null>(null);
+  const [pendingConfirmation, setPendingConfirmation] =
+    useState<PendingConfirmation | null>(null);
   const [setupDraft, setSetupDraft] = useState<MatchConfiguration>(() =>
     getConfiguration(settings),
   );
@@ -255,11 +262,8 @@ function App() {
   }
 
   function deletePreset(preset: MatchPreset) {
-    if (!window.confirm(t("deletePresetConfirm", { name: preset.name }))) {
-      return;
-    }
-    setPresets((current) => current.filter((item) => item.id !== preset.id));
-    setFeedback({ key: "presetDeleted" });
+    setPendingConfirmation({ kind: "deletePreset", preset });
+    setModal("confirmation");
   }
 
   function handleStart() {
@@ -288,13 +292,33 @@ function App() {
   }
 
   function handleReset() {
-    if (!window.confirm(t("resetConfirm"))) {
+    setPendingConfirmation({ kind: "reset" });
+    setModal("confirmation");
+  }
+
+  function cancelPendingConfirmation() {
+    const returnToSettings = pendingConfirmation?.kind === "deletePreset";
+    setPendingConfirmation(null);
+    setModal(returnToSettings ? "settings" : null);
+  }
+
+  function confirmPendingAction() {
+    if (pendingConfirmation === null) {
       return;
     }
-    setMatch(createMatchClock());
-    setHasMatch(false);
-    setModal(null);
-    setFeedback({ key: "resetFeedback" });
+    if (pendingConfirmation.kind === "deletePreset") {
+      setPresets((current) =>
+        current.filter((item) => item.id !== pendingConfirmation.preset.id),
+      );
+      setModal("settings");
+      setFeedback({ key: "presetDeleted" });
+    } else {
+      setMatch(createMatchClock());
+      setHasMatch(false);
+      setModal(null);
+      setFeedback({ key: "resetFeedback" });
+    }
+    setPendingConfirmation(null);
   }
 
   function openCorrection() {
@@ -630,6 +654,27 @@ function App() {
           t={t}
           instructionsKey={installInstructionsKey}
           onClose={() => setModal(null)}
+        />
+      )}
+      {modal === "confirmation" && pendingConfirmation !== null && (
+        <ConfirmationDialog
+          cancelLabel={t("cancel")}
+          closeLabel={t("close")}
+          confirmLabel={t(
+            pendingConfirmation.kind === "deletePreset" ? "delete" : "reset",
+          )}
+          message={
+            pendingConfirmation.kind === "deletePreset"
+              ? t("deletePresetConfirm", {
+                  name: pendingConfirmation.preset.name,
+                })
+              : t("resetConfirm")
+          }
+          onClose={cancelPendingConfirmation}
+          onConfirm={confirmPendingAction}
+          title={t(
+            pendingConfirmation.kind === "deletePreset" ? "delete" : "reset",
+          )}
         />
       )}
     </div>

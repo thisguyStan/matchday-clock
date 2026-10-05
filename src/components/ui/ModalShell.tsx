@@ -5,6 +5,7 @@ interface ModalShellProps {
   closeLabel: string;
   onClose: () => void;
   children: ReactNode;
+  descriptionId?: string;
   size?: "regular" | "wide";
 }
 
@@ -13,6 +14,7 @@ export function ModalShell({
   closeLabel,
   onClose,
   children,
+  descriptionId,
   size = "regular",
 }: ModalShellProps) {
   const dialogRef = useRef<HTMLElement>(null);
@@ -71,6 +73,7 @@ export function ModalShell({
       }}
     >
       <section
+        aria-describedby={descriptionId}
         aria-labelledby="modal-title"
         aria-modal="true"
         className={`modal-dialog modal-${size}`}

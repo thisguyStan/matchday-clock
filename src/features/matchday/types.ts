@@ -30,7 +30,8 @@ export type ActiveModal =
   | "presetEditor"
   | "correction"
   | "about"
-  | "installHelp";
+  | "installHelp"
+  | "confirmation";
 
 export interface BeforeInstallPromptEvent extends Event {
   prompt(): Promise<void>;

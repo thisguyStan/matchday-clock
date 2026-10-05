@@ -1541,6 +1541,7 @@ button:disabled {
 .secondary-start-button,
 .primary-modal-button,
 .secondary-modal-button,
+.destructive-modal-button,
 .small-secondary-button {
   display: inline-flex;
   align-items: center;
@@ -1565,6 +1566,18 @@ button:disabled {
 .install-button:hover,
 .primary-modal-button:hover {
   filter: brightness(1.05);
+}
+
+.destructive-modal-button {
+  min-height: 2.65rem;
+  padding: 0.65rem 1rem;
+  border-color: color-mix(in srgb, var(--danger) 42%, var(--border));
+  background: color-mix(in srgb, var(--danger) 14%, var(--surface-input));
+  color: var(--danger);
+}
+
+.destructive-modal-button:hover {
+  background: color-mix(in srgb, var(--danger) 22%, var(--surface-input));
 }
 
 .install-dismiss {
