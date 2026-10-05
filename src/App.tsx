@@ -1,5 +1,6 @@
 import {
   useEffect,
+  useLayoutEffect,
   useMemo,
   useState,
   type KeyboardEvent,
@@ -15,7 +16,6 @@ import {
   getMatchTimeMs,
   getPeriodElapsedMs,
   getPhaseBaselineMs,
-  getPhaseLabel,
   getTimeLostMs,
   isStoppageTime,
   pauseClock,
@@ -31,6 +31,25 @@ import {
   type MatchSettings,
   type PauseRecord,
 } from "./lib/match-clock";
+import {
+  DEFAULT_PREFERENCES,
+  FALLBACK_MESSAGES,
+  getIntlLocale,
+  isLanguagePreference,
+  isThemePreference,
+  LANGUAGE_OPTIONS,
+  loadLocaleMessages,
+  readSavedPreferences,
+  resolveSystemLocale,
+  resolveTheme,
+  translate,
+  type LocaleMessages,
+  type LocaleCode,
+  type MessageKey,
+  type MessageParameters,
+  type ResolvedTheme,
+  type UserPreferences,
+} from "./lib/i18n";
 
 const STORAGE_KEY = "matchday-clock:v1";
 const RUNNING_NOTIFICATION_TAG = "matchday-clock-running";
@@ -38,7 +57,13 @@ const RUNNING_NOTIFICATION_TAG = "matchday-clock-running";
 interface SavedState {
   settings: MatchSettings;
   match: MatchClockState;
-  notice: string | null;
+  preferences: UserPreferences;
+  notice: MessageKey | null;
+}
+
+interface LocalizedMessage {
+  key: MessageKey;
+  parameters?: MessageParameters;
 }
 
 function isRecord(value: unknown): value is Record<string, unknown> {
@@ -147,6 +172,7 @@ function readSavedState(): SavedState {
       return {
         settings: DEFAULT_SETTINGS,
         match: createMatchClock(),
+        preferences: DEFAULT_PREFERENCES,
         notice: null,
       };
     }
@@ -157,10 +183,15 @@ function readSavedState(): SavedState {
       isMatchSettings(saved.settings) &&
       isMatchClockState(saved.match)
     ) {
+      const savedPreferences = readSavedPreferences(saved.preferences);
+      if (savedPreferences.invalid) {
+        console.warn("Saved display preferences are invalid; device settings are in use.");
+      }
       return {
         settings: saved.settings,
         match: saved.match,
-        notice: null,
+        preferences: savedPreferences.preferences,
+        notice: savedPreferences.invalid ? "savedPreferenceInvalid" : null,
       };
     }
 
@@ -168,14 +199,16 @@ function readSavedState(): SavedState {
     return {
       settings: DEFAULT_SETTINGS,
       match: createMatchClock(),
-      notice: "Saved match data could not be read, so a fresh clock was loaded.",
+      preferences: DEFAULT_PREFERENCES,
+      notice: "savedDataInvalid",
     };
   } catch (error) {
     console.error("Could not restore the saved match clock.", error);
     return {
       settings: DEFAULT_SETTINGS,
       match: createMatchClock(),
-      notice: "Saved match data could not be read, so a fresh clock was loaded.",
+      preferences: DEFAULT_PREFERENCES,
+      notice: "savedDataInvalid",
     };
   }
 }
@@ -184,67 +217,113 @@ function useSavedState() {
   const [saved] = useState(readSavedState);
   const [settings, setSettings] = useState(saved.settings);
   const [match, setMatch] = useState(saved.match);
-  const [storageError, setStorageError] = useState<string | null>(null);
+  const [preferences, setPreferences] = useState(saved.preferences);
+  const [storageError, setStorageError] = useState(false);
   const [savedNotice, setSavedNotice] = useState(saved.notice);
 
   useEffect(() => {
     try {
       window.localStorage.setItem(
         STORAGE_KEY,
-        JSON.stringify({ settings, match }),
+        JSON.stringify({ settings, match, preferences }),
       );
-      setStorageError(null);
+      setStorageError(false);
     } catch (error) {
       console.error("Could not save the match clock locally.", error);
-      setStorageError(
-        "This browser could not save your match locally. Avoid refreshing or closing the app.",
-      );
+      setStorageError(true);
     }
-  }, [match, settings]);
+  }, [match, preferences, settings]);
 
   return {
     settings,
     setSettings,
     match,
     setMatch,
+    preferences,
+    setPreferences,
     storageError,
     savedNotice,
     setSavedNotice,
   };
 }
 
-function formatPauseDate(timestamp: number): string {
-  return new Intl.DateTimeFormat(undefined, {
+function formatPauseDate(timestamp: number, locale: LocaleCode): string {
+  return new Intl.DateTimeFormat(getIntlLocale(locale), {
     hour: "2-digit",
     minute: "2-digit",
   }).format(timestamp);
 }
 
-function phaseShortLabel(phase: MatchPhase): string {
+function phaseLabel(phase: MatchPhase, messages: LocaleMessages): string {
   switch (phase) {
     case "firstHalf":
-      return "1H";
+      return translate(messages, "firstHalf");
     case "secondHalf":
-      return "2H";
+      return translate(messages, "secondHalf");
     case "extraTimeFirst":
-      return "ET 1";
+      return translate(messages, "extraTimeFirst");
     case "extraTimeSecond":
-      return "ET 2";
+      return translate(messages, "extraTimeSecond");
+  }
+}
+
+function phaseShortLabel(phase: MatchPhase, messages: LocaleMessages): string {
+  switch (phase) {
+    case "firstHalf":
+      return "1";
+    case "secondHalf":
+      return "2";
+    case "extraTimeFirst":
+      return `${translate(messages, "extraShort")} 1`;
+    case "extraTimeSecond":
+      return `${translate(messages, "extraShort")} 2`;
   }
 }
 
 function pauseSummary(
   pauses: PauseRecord[],
   currentPauseMs: number | null,
+  messages: LocaleMessages,
 ): string {
   const count = pauses.length + (currentPauseMs === null ? 0 : 1);
   if (count === 0) {
-    return "No pauses recorded";
+    return translate(messages, "noPauses");
   }
   const totalMs =
     pauses.reduce((total, pause) => total + pause.durationMs, 0) +
     (currentPauseMs ?? 0);
-  return `${count} ${count === 1 ? "pause" : "pauses"}${currentPauseMs === null ? " recorded" : " · 1 current"} · ${formatClockTime(totalMs)} paused`;
+  return translate(messages, "pauseSummary", {
+    count,
+    current:
+      currentPauseMs === null
+        ? ""
+        : ` · ${translate(messages, "currentPause")}`,
+    time: formatClockTime(totalMs),
+  });
+}
+
+function waitForServiceWorkerControl(): Promise<void> {
+  if (!("serviceWorker" in navigator) || navigator.serviceWorker.controller) {
+    return Promise.resolve();
+  }
+
+  const serviceWorker = navigator.serviceWorker;
+  return new Promise((resolve) => {
+    let timeoutId: number | undefined;
+    const finish = () => {
+      if (timeoutId !== undefined) {
+        window.clearTimeout(timeoutId);
+      }
+      serviceWorker.removeEventListener("controllerchange", finish);
+      resolve();
+    };
+
+    serviceWorker.addEventListener("controllerchange", finish, { once: true });
+    timeoutId = window.setTimeout(finish, 3000);
+    if (serviceWorker.controller) {
+      finish();
+    }
+  });
 }
 
 function App() {
@@ -253,20 +332,42 @@ function App() {
     setSettings,
     match,
     setMatch,
+    preferences,
+    setPreferences,
     storageError,
     savedNotice,
     setSavedNotice,
   } = useSavedState();
+  const [systemLocale, setSystemLocale] = useState<LocaleCode>(() =>
+    resolveSystemLocale(
+      navigator.languages.length > 0 ? navigator.languages : [navigator.language],
+    ),
+  );
+  const [systemTheme, setSystemTheme] = useState<ResolvedTheme>(() =>
+    window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light",
+  );
+  const locale =
+    preferences.language === "system" ? systemLocale : preferences.language;
+  const [messages, setMessages] =
+    useState<LocaleMessages>(FALLBACK_MESSAGES);
+  const [messagesLocale, setMessagesLocale] = useState<LocaleCode>("en-GB");
+  const displayLocale = messagesLocale === locale ? locale : "en-GB";
+  const displayMessages =
+    messagesLocale === locale ? messages : FALLBACK_MESSAGES;
+  const theme = resolveTheme(preferences.theme, systemTheme);
+  const t = (key: MessageKey, parameters?: MessageParameters) =>
+    translate(displayMessages, key, parameters);
   const [now, setNow] = useState(() => Date.now());
-  const [wakeStatus, setWakeStatus] = useState("Screen stay-awake is idle.");
-  const [feedback, setFeedback] = useState<string | null>(null);
+  const [wakeStatus, setWakeStatus] = useState<MessageKey>("wakeIdle");
+  const [feedback, setFeedback] = useState<LocalizedMessage | null>(null);
   const [correctionMinutes, setCorrectionMinutes] = useState(() =>
     String(Math.floor(getMatchTimeMs(match, settings, Date.now()) / 60_000)),
   );
   const [correctionSeconds, setCorrectionSeconds] = useState(() =>
     String(Math.floor(getMatchTimeMs(match, settings, Date.now()) / 1_000) % 60),
   );
-  const [correctionError, setCorrectionError] = useState<string | null>(null);
+  const [correctionError, setCorrectionError] =
+    useState<LocalizedMessage | null>(null);
   const availablePhases = useMemo(
     () => getAvailablePhases(settings),
     [settings],
@@ -281,6 +382,82 @@ function App() {
     match.elapsedMs === 0 &&
     match.pauses.length === 0 &&
     match.timeLostMs === 0;
+
+  useEffect(() => {
+    const updateSystemLocale = () => {
+      setSystemLocale(
+        resolveSystemLocale(
+          navigator.languages.length > 0
+            ? navigator.languages
+            : [navigator.language],
+        ),
+      );
+    };
+    window.addEventListener("languagechange", updateSystemLocale);
+    return () => window.removeEventListener("languagechange", updateSystemLocale);
+  }, []);
+
+  useEffect(() => {
+    let cancelled = false;
+    void waitForServiceWorkerControl()
+      .then(() => {
+        if (cancelled) {
+          return null;
+        }
+        return loadLocaleMessages(locale);
+      })
+      .then((loadedMessages) => {
+        if (cancelled || loadedMessages === null) {
+          return;
+        }
+        setMessages(loadedMessages);
+        setMessagesLocale(locale);
+        setFeedback((current) =>
+          current?.key === "localeLoadFailed" ? null : current,
+        );
+      })
+      .catch((error: unknown) => {
+        if (cancelled) {
+          return;
+        }
+        console.error(`Could not load locale messages for ${locale}.`, error);
+        setMessages(FALLBACK_MESSAGES);
+        setMessagesLocale("en-GB");
+        const languageLabel =
+          LANGUAGE_OPTIONS.find((option) => option.code === locale)?.label ??
+          locale;
+        setFeedback({
+          key: "localeLoadFailed",
+          parameters: { language: languageLabel },
+        });
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [locale]);
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+    const updateSystemTheme = () =>
+      setSystemTheme(mediaQuery.matches ? "dark" : "light");
+    if (typeof mediaQuery.addEventListener === "function") {
+      mediaQuery.addEventListener("change", updateSystemTheme);
+      return () => mediaQuery.removeEventListener("change", updateSystemTheme);
+    }
+    mediaQuery.addListener(updateSystemTheme);
+    return () => mediaQuery.removeListener(updateSystemTheme);
+  }, []);
+
+  useLayoutEffect(() => {
+    document.documentElement.lang = getIntlLocale(displayLocale);
+    document.documentElement.dataset.theme = theme;
+    const themeColor = document.querySelector<HTMLMetaElement>(
+      'meta[name="theme-color"]',
+    );
+    if (themeColor) {
+      themeColor.content = theme === "light" ? "#f2f6f1" : "#0b1510";
+    }
+  }, [displayLocale, theme]);
 
   useEffect(() => {
     if (match.status !== "running" && match.status !== "paused") {
@@ -309,8 +486,8 @@ function App() {
     if (match.status !== "running" || !settings.keepScreenAwake) {
       setWakeStatus(
         settings.keepScreenAwake
-          ? "Screen stay-awake is idle."
-          : "Screen stay-awake is off in settings.",
+          ? "wakeIdle"
+          : "wakeOff",
       );
       return;
     }
@@ -320,7 +497,7 @@ function App() {
 
     const acquireWakeLock = async () => {
       if (!("wakeLock" in navigator)) {
-        setWakeStatus("This browser does not support keeping the screen awake.");
+        setWakeStatus("wakeUnsupported");
         return;
       }
 
@@ -331,7 +508,7 @@ function App() {
           return;
         }
         sentinel = lock;
-        setWakeStatus("Screen stay-awake is active while this app is visible.");
+        setWakeStatus("wakeActive");
         lock.addEventListener(
           "release",
           () => {
@@ -340,7 +517,7 @@ function App() {
             }
             sentinel = null;
             if (!canceled && !document.hidden) {
-              setWakeStatus("Screen stay-awake was released; trying again.");
+              setWakeStatus("wakeRetry");
               void acquireWakeLock();
             }
           },
@@ -348,9 +525,7 @@ function App() {
         );
       } catch (error) {
         console.error("Could not acquire the screen wake lock.", error);
-        setWakeStatus(
-          "Could not keep the screen awake. The match clock will continue.",
-        );
+        setWakeStatus("wakeFailed");
       }
     };
 
@@ -380,7 +555,7 @@ function App() {
       return;
     }
     if (!("Notification" in window)) {
-      setFeedback("This browser does not support running notifications.");
+      setFeedback({ key: "notificationUnsupported" });
       return;
     }
 
@@ -391,38 +566,37 @@ function App() {
       }
       if (permission !== "granted") {
         setFeedback(
-          permission === "denied"
-            ? "Notifications are blocked. Allow them in browser settings to see running status."
-            : "Allow notifications in browser settings to show running status.",
+          {
+            key:
+              permission === "denied"
+                ? "notificationDenied"
+                : "notificationPermission",
+          },
         );
         return;
       }
       if (!("serviceWorker" in navigator)) {
-        setFeedback("This browser cannot show a background running notification.");
+        setFeedback({ key: "notificationNoServiceWorker" });
         return;
       }
 
       const registration = await navigator.serviceWorker.getRegistration();
       if (!registration) {
-        setFeedback(
-          "Running notifications are available after the app has been installed or loaded from its hosted PWA.",
-        );
+        setFeedback({ key: "notificationNoRegistration" });
         return;
       }
 
-      await registration.showNotification("Matchday clock is running", {
-        body: "The match clock is active. Return to Matchday Clock to control it.",
+      await registration.showNotification(t("notificationTitle"), {
+        body: t("notificationBody"),
         icon: "/pwa-192x192.png",
         badge: "/pwa-192x192.png",
         tag: RUNNING_NOTIFICATION_TAG,
         silent: true,
       });
-      setFeedback("A running notification was sent where this platform supports it.");
+      setFeedback({ key: "notificationSent" });
     } catch (error) {
       console.error("Could not show the running notification.", error);
-      setFeedback(
-        "Could not show a running notification. Check this app's browser permissions.",
-      );
+      setFeedback({ key: "notificationFailed" });
     }
   }
 
@@ -438,7 +612,7 @@ function App() {
       notifications?.forEach((notification) => notification.close());
     } catch (error) {
       console.error("Could not close the running notification.", error);
-      setFeedback("The browser could not clear the running notification.");
+      setFeedback({ key: "notificationCloseFailed" });
     }
   }
 
@@ -453,7 +627,7 @@ function App() {
       return;
     }
     void closeRunningNotification();
-  }, [match.status, settings.showRunningNotification]);
+  }, [displayLocale, messages, match.status, settings.showRunningNotification]);
 
   function handleStart() {
     const next = startClock(match, Date.now());
@@ -468,30 +642,22 @@ function App() {
   }
 
   function handleStop() {
-    if (
-      !window.confirm(
-        "Stop this match and keep its final time visible? Reset is required before starting another match.",
-      )
-    ) {
+    if (!window.confirm(t("stopConfirm"))) {
       return;
     }
     setMatch((current) => stopClock(current, Date.now()));
-    setFeedback("Match stopped. Its final time is saved on this device.");
+    setFeedback({ key: "stoppedFeedback" });
   }
 
   function handleReset() {
-    if (
-      !window.confirm(
-        "Reset the match clock, pause log, and tracked time lost? Match setup will be kept.",
-      )
-    ) {
+    if (!window.confirm(t("resetConfirm"))) {
       return;
     }
     setMatch(resetClock());
     setCorrectionMinutes("0");
     setCorrectionSeconds("0");
     setCorrectionError(null);
-    setFeedback("Match clock reset. Match setup is unchanged.");
+    setFeedback({ key: "resetFeedback" });
   }
 
   function handlePhaseSelect(phase: MatchPhase) {
@@ -517,7 +683,7 @@ function App() {
       seconds < 0 ||
       seconds > 59
     ) {
-      setCorrectionError("Enter non-negative whole minutes and 0–59 seconds.");
+      setCorrectionError({ key: "invalidCorrection" });
       return;
     }
 
@@ -528,18 +694,20 @@ function App() {
       Date.now(),
     );
     if (corrected === null) {
-      const phaseStart = formatClockTime(
-        getPhaseBaselineMs(match.phase, settings),
-      );
-      setCorrectionError(
-        `That time is before ${getPhaseLabel(match.phase)} starts (${phaseStart}).`,
-      );
+      const phaseStart = formatClockTime(getPhaseBaselineMs(match.phase, settings));
+      setCorrectionError({
+        key: "beforePhase",
+        parameters: {
+          phase: phaseLabel(match.phase, displayMessages),
+          time: phaseStart,
+        },
+      });
       return;
     }
 
     setMatch(corrected);
     setCorrectionError(null);
-    setFeedback("Match time corrected.");
+    setFeedback({ key: "correctedFeedback" });
   }
 
   function loadCurrentTimeIntoCorrection() {
@@ -580,6 +748,10 @@ function App() {
     setSettings((current) => ({ ...current, ...patch }));
   }
 
+  function updatePreferences(patch: Partial<UserPreferences>) {
+    setPreferences((current) => ({ ...current, ...patch }));
+  }
+
   function handleExtraTimeChange(enabled: boolean) {
     updateSettings({ hasExtraTime: enabled });
     if (!enabled && match.phase.startsWith("extraTime")) {
@@ -595,10 +767,10 @@ function App() {
   }
 
   const statusLabel: Record<ClockStatus, string> = {
-    ready: "READY",
-    running: "RUNNING",
-    paused: "PAUSED",
-    stopped: "STOPPED",
+    ready: t("ready"),
+    running: t("running"),
+    paused: t("paused"),
+    stopped: t("stopped"),
   };
   const pauseDurationNow =
     match.status === "paused" && match.pauseStartedAt !== null
@@ -606,23 +778,26 @@ function App() {
       : null;
   const correctionCanBeApplied = match.status !== "stopped";
   const settingsSummary = settings.hasExtraTime
-    ? `${settings.halfLengthMinutes} min halves · ${settings.extraTimeLengthMinutes} min extra-time periods`
-    : `${settings.halfLengthMinutes} min halves · no extra time`;
+    ? t("settingsExtra", {
+        half: settings.halfLengthMinutes,
+        extra: settings.extraTimeLengthMinutes,
+      })
+    : t("settingsNoExtra", { half: settings.halfLengthMinutes });
 
   return (
     <div className="app-shell min-h-dvh bg-[#0b1510] text-[#eff5ef]">
       <header className="app-header mx-auto flex w-full max-w-[1440px] items-center justify-between gap-4 px-4 py-4 sm:px-7 sm:py-5">
-        <a className="brand-lockup" href="/" aria-label="Matchday Clock home">
+        <a className="brand-lockup" href="/" aria-label={t("homeAria")}>
           <img src="/pwa-icon.svg" alt="" className="brand-icon" />
           <span>
             <strong>MATCHDAY</strong>
-            <small>FOOTBALL CLOCK</small>
+            <small>{t("appSubtitle")}</small>
           </span>
         </a>
         <div className="flex items-center gap-2">
           <span className="local-badge">
             <span className="local-badge-dot" />
-            {storageError ? "NOT SAVING" : "SAVED ON DEVICE"}
+            {storageError ? t("notSaving") : t("saved")}
           </span>
         </div>
       </header>
@@ -631,9 +806,9 @@ function App() {
         <section className="clock-card" aria-labelledby="clock-heading">
           <div className="clock-card-top">
             <div>
-              <p className="eyebrow">MATCH TIMER</p>
+              <p className="eyebrow">{t("timer")}</p>
               <h1 id="clock-heading" className="clock-phase-title">
-                {getPhaseLabel(match.phase)}
+                {phaseLabel(match.phase, displayMessages)}
               </h1>
             </div>
             <span className={`status-pill status-${match.status}`}>
@@ -646,7 +821,7 @@ function App() {
             <div
               className={`clock-readout${stoppageTime ? " is-stoppage" : ""}`}
               role="timer"
-              aria-label={`${getPhaseLabel(match.phase)}, ${formatClockTime(matchTimeMs)}${stoppageTime ? ", stoppage time" : ""}`}
+              aria-label={`${phaseLabel(match.phase, displayMessages)}, ${formatClockTime(matchTimeMs)}${stoppageTime ? `, ${t("stoppage")}` : ""}`}
               aria-live="off"
             >
               {formatClockTime(matchTimeMs)}
@@ -655,21 +830,23 @@ function App() {
               {stoppageTime ? (
                 <span className="stoppage-indicator">
                   <span className="stoppage-dot" />
-                  STOPPAGE TIME
+                  {t("stoppage")}
                 </span>
               ) : (
                 <span className="period-limit">
-                  PERIOD {formatClockTime(
-                    match.phase.startsWith("extraTime")
-                      ? settings.extraTimeLengthMinutes * 60_000
-                      : settings.halfLengthMinutes * 60_000,
-                  )}
+                  {t("periodLimit", {
+                    time: formatClockTime(
+                      match.phase.startsWith("extraTime")
+                        ? settings.extraTimeLengthMinutes * 60_000
+                        : settings.halfLengthMinutes * 60_000,
+                    ),
+                  })}
                 </span>
               )}
               <span className="elapsed-caption">
                 {match.status === "paused" && pauseDurationNow !== null
-                  ? `PAUSED ${formatClockTime(pauseDurationNow)}`
-                  : `${formatClockTime(periodElapsedMs)} THIS PERIOD`}
+                  ? t("pausedFor", { time: formatClockTime(pauseDurationNow) })
+                  : t("thisPeriod", { time: formatClockTime(periodElapsedMs) })}
               </span>
             </div>
           </div>
@@ -695,18 +872,18 @@ function App() {
                 <span className="hold-copy">
                   <strong>
                     {match.timeLostStartedAt !== null
-                      ? "TRACKING TIME LOST"
-                      : "HOLD TO TRACK TIME LOST"}
+                      ? t("timeLostTracking")
+                      : t("timeLostHold")}
                   </strong>
                   <small>
-                    Separate from the match clock · {formatClockTime(timeLostMs)} total
+                    {t("timeLostTotal", { time: formatClockTime(timeLostMs) })}
                   </small>
                 </span>
                 <span className="hold-value">{formatClockTime(timeLostMs)}</span>
               </button>
             )}
 
-          <div className="clock-controls" aria-label="Match clock controls">
+          <div className="clock-controls" aria-label={t("controlsAria")}>
             <button
               type="button"
               className="control-button control-start"
@@ -716,7 +893,7 @@ function App() {
               <span className="button-symbol" aria-hidden="true">
                 {match.status === "paused" ? "▶" : "▶"}
               </span>
-              <span>{match.status === "paused" ? "Resume" : "Start"}</span>
+              <span>{match.status === "paused" ? t("resume") : t("start")}</span>
             </button>
             <button
               type="button"
@@ -727,7 +904,7 @@ function App() {
               <span className="button-symbol" aria-hidden="true">
                 Ⅱ
               </span>
-              <span>Pause</span>
+              <span>{t("pause")}</span>
             </button>
             <button
               type="button"
@@ -738,7 +915,7 @@ function App() {
               <span className="button-symbol" aria-hidden="true">
                 ■
               </span>
-              <span>Stop</span>
+              <span>{t("stop")}</span>
             </button>
             <button
               type="button"
@@ -748,7 +925,7 @@ function App() {
               <span className="button-symbol" aria-hidden="true">
                 ↺
               </span>
-              <span>Reset</span>
+              <span>{t("reset")}</span>
             </button>
           </div>
 
@@ -757,10 +934,10 @@ function App() {
               <span className={`wake-icon${running && settings.keepScreenAwake ? " wake-active" : ""}`}>
                 ◉
               </span>
-              <span>{wakeStatus}</span>
+              <span>{t(wakeStatus)}</span>
             </div>
             <div className="match-total">
-              {pauseSummary(match.pauses, pauseDurationNow)}
+              {pauseSummary(match.pauses, pauseDurationNow, displayMessages)}
             </div>
           </div>
         </section>
@@ -769,12 +946,12 @@ function App() {
           <section className="panel period-panel" aria-labelledby="period-heading">
             <div className="panel-heading">
               <div>
-                <p className="eyebrow">MATCH FLOW</p>
-                <h2 id="period-heading">Select period</h2>
+                <p className="eyebrow">{t("matchFlow")}</p>
+                <h2 id="period-heading">{t("selectPeriod")}</h2>
               </div>
               <span className="panel-heading-note">{settingsSummary}</span>
             </div>
-            <div className="phase-switcher" role="group" aria-label="Match period">
+            <div className="phase-switcher" role="group" aria-label={t("selectPeriod")}>
               {availablePhases.map((phase) => (
                 <button
                   key={phase}
@@ -784,39 +961,39 @@ function App() {
                   disabled={running || match.status === "stopped"}
                   onClick={() => handlePhaseSelect(phase)}
                 >
-                  <span>{phaseShortLabel(phase)}</span>
-                  <small>{getPhaseLabel(phase)}</small>
+                  <span>{phaseShortLabel(phase, displayMessages)}</span>
+                  <small>{phaseLabel(phase, displayMessages)}</small>
                 </button>
               ))}
             </div>
             <p className="helper-copy">
-              A new period starts at its match-time mark. The clock keeps running
-              past the limit and turns red for stoppage time.
+              {t("periodHelp")}
             </p>
           </section>
 
           <section className="panel correction-panel" aria-labelledby="correction-heading">
             <div className="panel-heading">
               <div>
-                <p className="eyebrow">QUICK ADJUSTMENT</p>
-                <h2 id="correction-heading">Correct match time</h2>
+                <p className="eyebrow">{t("quickAdjustment")}</p>
+                <h2 id="correction-heading">{t("correctTime")}</h2>
               </div>
               <button
                 type="button"
                 className="text-button"
                 onClick={loadCurrentTimeIntoCorrection}
-                aria-label="Load the currently displayed match time into the correction fields"
+                aria-label={t("useLiveTimeAria")}
               >
-                Use live time
+                {t("useLiveTime")}
               </button>
             </div>
             <p className="helper-copy correction-helper">
-              Set the displayed match time for {getPhaseLabel(match.phase)}. This
-              also works while the clock is running.
+              {t("correctHelper", {
+                phase: phaseLabel(match.phase, displayMessages),
+              })}
             </p>
             <div className="time-adjust-row">
               <label className="number-field">
-                <span>Minutes</span>
+                <span>{t("minutes")}</span>
                 <input
                   type="number"
                   min="0"
@@ -830,7 +1007,7 @@ function App() {
                 :
               </span>
               <label className="number-field number-field-seconds">
-                <span>Seconds</span>
+                <span>{t("seconds")}</span>
                 <input
                   type="number"
                   min="0"
@@ -846,12 +1023,12 @@ function App() {
                 disabled={!correctionCanBeApplied}
                 onClick={handleApplyCorrection}
               >
-                Apply
+                {t("apply")}
               </button>
             </div>
             {correctionError && (
               <p className="form-error" role="alert">
-                {correctionError}
+                {t(correctionError.key, correctionError.parameters)}
               </p>
             )}
           </section>
@@ -859,15 +1036,15 @@ function App() {
           <details className="panel setup-panel" open>
             <summary className="setup-summary">
               <span>
-                <span className="eyebrow">PERSONALISE</span>
-                <strong>Match setup</strong>
+                <span className="eyebrow">{t("personalize")}</span>
+                <strong>{t("setup")}</strong>
               </span>
               <span className="summary-meta">{settingsSummary}</span>
             </summary>
             <div className="setup-content">
               <div className="setup-period-fields">
                 <label className="number-field">
-                  <span>Each half</span>
+                  <span>{t("eachHalf")}</span>
                   <span className="input-with-unit">
                     <input
                       type="number"
@@ -884,11 +1061,11 @@ function App() {
                         }
                       }}
                     />
-                    <small>MIN</small>
+                    <small>{t("minUnit")}</small>
                   </span>
                 </label>
                 <label className="number-field">
-                  <span>Extra-time periods</span>
+                  <span>{t("extraPeriods")}</span>
                   <span className="input-with-unit">
                     <input
                       type="number"
@@ -905,14 +1082,14 @@ function App() {
                         }
                       }}
                     />
-                    <small>MIN</small>
+                    <small>{t("minUnit")}</small>
                   </span>
                 </label>
               </div>
               <label className="setting-toggle">
                 <span>
-                  <strong>Extra time</strong>
-                  <small>Two periods, using the length above</small>
+                  <strong>{t("extra")}</strong>
+                  <small>{t("extraHelp")}</small>
                 </span>
                 <input
                   type="checkbox"
@@ -922,10 +1099,50 @@ function App() {
                 />
               </label>
               <div className="settings-divider" />
+              <div className="preference-fields">
+                <label className="number-field preference-field">
+                  <span>{t("language")}</span>
+                  <select
+                    className="preference-select"
+                    value={preferences.language}
+                    onChange={(event) => {
+                      const language = event.currentTarget.value;
+                      if (isLanguagePreference(language)) {
+                        updatePreferences({ language });
+                      }
+                    }}
+                  >
+                    <option value="system">{t("system")}</option>
+                    {LANGUAGE_OPTIONS.map((option) => (
+                      <option key={option.code} value={option.code}>
+                        {option.label}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+                <label className="number-field preference-field">
+                  <span>{t("appearance")}</span>
+                  <select
+                    className="preference-select"
+                    value={preferences.theme}
+                    onChange={(event) => {
+                      const selectedTheme = event.currentTarget.value;
+                      if (isThemePreference(selectedTheme)) {
+                        updatePreferences({ theme: selectedTheme });
+                      }
+                    }}
+                  >
+                    <option value="system">{t("system")}</option>
+                    <option value="light">{t("light")}</option>
+                    <option value="dark">{t("dark")}</option>
+                  </select>
+                </label>
+              </div>
+              <div className="settings-divider" />
               <label className="setting-toggle">
                 <span>
-                  <strong>Keep screen awake</strong>
-                  <small>While the match clock is running</small>
+                  <strong>{t("keepAwake")}</strong>
+                  <small>{t("keepAwakeHelp")}</small>
                 </span>
                 <input
                   type="checkbox"
@@ -937,8 +1154,8 @@ function App() {
               </label>
               <label className="setting-toggle">
                 <span>
-                  <strong>Running notification</strong>
-                  <small>Best effort; permission and platform support required</small>
+                  <strong>{t("runningNotification")}</strong>
+                  <small>{t("notificationHelp")}</small>
                 </span>
                 <input
                   type="checkbox"
@@ -950,8 +1167,8 @@ function App() {
               </label>
               <label className="setting-toggle advanced-toggle">
                 <span>
-                  <strong>Hold to track time lost</strong>
-                  <small>Add a separate hold button to the clock</small>
+                  <strong>{t("trackLost")}</strong>
+                  <small>{t("trackHelp")}</small>
                 </span>
                 <input
                   type="checkbox"
@@ -964,8 +1181,7 @@ function App() {
                 />
               </label>
               <p className="setup-footnote">
-                Settings and match data stay in this browser on this device. Period
-                lengths can be changed after Reset.
+                {t("setupNote")}
               </p>
             </div>
           </details>
@@ -973,8 +1189,8 @@ function App() {
           <details className="panel pause-panel">
             <summary className="log-summary">
               <span>
-                <span className="eyebrow">MATCH LOG</span>
-                <strong>Pause times</strong>
+                <span className="eyebrow">{t("matchLog")}</span>
+                <strong>{t("pauseTimes")}</strong>
               </span>
               <span className="log-count">
                 {match.pauses.length + (pauseDurationNow === null ? 0 : 1)}
@@ -985,17 +1201,19 @@ function App() {
             </summary>
             <div className="pause-list-content">
               {match.pauses.length === 0 && match.status !== "paused" ? (
-                <p className="empty-log">Pause the clock to start a pause log.</p>
+                <p className="empty-log">{t("pauseEmpty")}</p>
               ) : (
                 <ol className="pause-list">
                   {match.pauses.map((pause, index) => (
                     <li key={`${pause.startedAt}-${index}`}>
                       <span className="pause-index">{String(index + 1).padStart(2, "0")}</span>
                       <span className="pause-detail">
-                        <strong>{getPhaseLabel(pause.phase)}</strong>
+                        <strong>{phaseLabel(pause.phase, displayMessages)}</strong>
                         <small>
-                          At {formatClockTime(pause.matchTimeMs)} ·{" "}
-                          {formatPauseDate(pause.startedAt)}
+                          {t("atTime", {
+                            time: formatClockTime(pause.matchTimeMs),
+                            date: formatPauseDate(pause.startedAt, displayLocale),
+                          })}
                         </small>
                       </span>
                       <span className="pause-duration">
@@ -1007,8 +1225,15 @@ function App() {
                     <li className="pause-current">
                       <span className="pause-index">··</span>
                       <span className="pause-detail">
-                        <strong>Current pause</strong>
-                        <small>Started at {formatPauseDate(match.pauseStartedAt ?? now)}</small>
+                        <strong>{t("currentPause")}</strong>
+                        <small>
+                          {t("startedAt", {
+                            time: formatPauseDate(
+                              match.pauseStartedAt ?? now,
+                              displayLocale,
+                            ),
+                          })}
+                        </small>
                       </span>
                       <span className="pause-duration">
                         {formatClockTime(pauseDurationNow)}
@@ -1019,7 +1244,7 @@ function App() {
               )}
               {(match.pauses.length > 0 || pauseDurationNow !== null) && (
                 <div className="pause-total">
-                  <span>Total pause time</span>
+                  <span>{t("totalPauseTime")}</span>
                   <strong>
                     {formatClockTime(
                       match.pauses.reduce(
@@ -1036,9 +1261,7 @@ function App() {
           <div className="platform-note">
             <span aria-hidden="true">ⓘ</span>
             <p>
-              A web app cannot guarantee background execution or notifications on
-              every phone. The clock uses saved timestamps to recover elapsed time
-              when you return.
+              {t("platformNote")}
             </p>
           </div>
         </aside>
@@ -1048,25 +1271,27 @@ function App() {
         <div className="message-stack" aria-live="polite">
           {savedNotice && (
             <p className="message message-warning">
-              <span>{savedNotice}</span>
+              <span>{t(savedNotice)}</span>
               <button
                 type="button"
                 onClick={() => setSavedNotice(null)}
-                aria-label="Dismiss saved data warning"
+                aria-label={t("dismissSaved")}
                 className="message-close"
               >
                 ×
               </button>
             </p>
           )}
-          {storageError && <p className="message message-warning">{storageError}</p>}
+          {storageError && (
+            <p className="message message-warning">{t("storageError")}</p>
+          )}
           {feedback && (
             <p className="message">
-              <span>{feedback}</span>
+              <span>{t(feedback.key, feedback.parameters)}</span>
               <button
                 type="button"
                 onClick={() => setFeedback(null)}
-                aria-label="Dismiss message"
+                aria-label={t("dismissMessage")}
                 className="message-close"
               >
                 ×

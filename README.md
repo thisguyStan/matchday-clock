@@ -20,6 +20,10 @@ backend.
 - Optional hold-to-track control that measures time lost separately without
   stopping the match clock.
 - Optional screen wake lock while running and best-effort running notifications.
+- Localized interface in 15 languages, with device-language detection and
+  English (UK) as the fallback.
+- Light and dark themes that follow the device appearance by default, with
+  optional manual overrides.
 - Local storage and a service worker cache for use after the first successful
   load.
 
@@ -58,6 +62,21 @@ shell. After that, the service worker caches the app files and the clock works
 offline. Match setup and match data are saved only in that browser's local
 storage; they are not synced to other devices and can be removed by clearing
 the browser's site data.
+
+## Language and appearance
+
+The app supports English (US), English (UK), German, Spanish, Portuguese
+(Portugal and Brazil), French, Dutch, Swedish, Danish, Italian, Polish,
+Norwegian, Finnish, and Croatian. By default it follows the device language;
+unsupported languages fall back to English (UK). The language can be changed
+in **Match setup**.
+
+Light or dark appearance follows the device setting by default. Choose a fixed
+mode in **Match setup** to override it. Language and appearance preferences are
+saved locally with the match data. The app imports only the selected language
+at runtime, while the service worker precaches all locale chunks during its
+installation or update. Once that cache is ready, every supported language can
+be selected offline.
 
 ## Phone background and notification limits
 

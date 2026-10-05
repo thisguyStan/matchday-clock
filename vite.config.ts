@@ -44,4 +44,16 @@ export default defineConfig({
       },
     }),
   ],
+  build: {
+    rollupOptions: {
+      output: {
+        chunkFileNames: (chunkInfo) => {
+          const modulePath = chunkInfo.facadeModuleId?.replaceAll("\\", "/") ?? "";
+          return modulePath.includes("/src/locales/")
+            ? "locales/[name]-[hash].js"
+            : "assets/[name]-[hash].js";
+        },
+      },
+    },
+  },
 });

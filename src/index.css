@@ -43,6 +43,7 @@ button {
 
 button:focus-visible,
 input:focus-visible,
+select:focus-visible,
 summary:focus-visible,
 a:focus-visible {
   outline: 2px solid #caff72;
@@ -574,6 +575,25 @@ button:disabled {
   appearance: textfield;
 }
 
+.preference-fields {
+  display: grid;
+  gap: 0.75rem;
+  margin: 0.55rem 0;
+}
+
+.preference-select {
+  width: 100%;
+  min-width: 0;
+  height: 2.55rem;
+  padding: 0 0.65rem;
+  border: 1px solid rgb(169 194 174 / 16%);
+  border-radius: 0.58rem;
+  background: rgb(4 11 7 / 32%);
+  color: #eff5ef;
+  font: inherit;
+  font-size: 0.82rem;
+}
+
 .time-colon {
   padding-bottom: 0.65rem;
   color: #889c8e;
@@ -1023,4 +1043,352 @@ button:disabled {
     scroll-behavior: auto !important;
     transition-duration: 0.01ms !important;
   }
+}
+
+:root[data-theme="light"] {
+  color-scheme: light;
+  color: #1d2b21;
+  background: #f2f6f1;
+}
+
+:root[data-theme="light"] button:focus-visible,
+:root[data-theme="light"] input:focus-visible,
+:root[data-theme="light"] select:focus-visible,
+:root[data-theme="light"] summary:focus-visible,
+:root[data-theme="light"] a:focus-visible {
+  outline-color: #426b2d;
+}
+
+:root[data-theme="light"] body {
+  background: #f2f6f1;
+  color: #1d2b21;
+}
+
+:root[data-theme="light"] .app-shell {
+  background: #f2f6f1;
+  color: #1d2b21;
+}
+
+:root[data-theme="light"] .app-shell::before {
+  background:
+    radial-gradient(ellipse at 20% -15%, rgb(103 150 86 / 10%), transparent 42%),
+    radial-gradient(ellipse at 95% 25%, rgb(104 153 118 / 8%), transparent 32%);
+}
+
+:root[data-theme="light"] .clock-card,
+:root[data-theme="light"] .panel {
+  border-color: #dbe5dc;
+  background: linear-gradient(140deg, #fff, #f8faf7);
+  box-shadow: 0 18px 50px rgb(33 53 37 / 8%);
+}
+
+:root[data-theme="light"] .brand-lockup small {
+  color: #667c6c;
+}
+
+:root[data-theme="light"] .local-badge {
+  border-color: #d8e5cc;
+  background: #f1f7e9;
+  color: #43612f;
+}
+
+:root[data-theme="light"] .local-badge-dot,
+:root[data-theme="light"] .status-ready .status-dot {
+  background: #4d772f;
+}
+
+:root[data-theme="light"] .eyebrow {
+  color: #687d6d;
+}
+
+:root[data-theme="light"] .clock-phase-title,
+:root[data-theme="light"] .panel-heading h2,
+:root[data-theme="light"] .setup-summary strong,
+:root[data-theme="light"] .log-summary strong {
+  color: #1d2b21;
+}
+
+:root[data-theme="light"] .status-pill {
+  border-color: #d5dfd7;
+  color: #53675a;
+}
+
+:root[data-theme="light"] .status-running {
+  border-color: #bfd6af;
+  color: #3f6928;
+}
+
+:root[data-theme="light"] .status-running .status-dot {
+  background: #4d772f;
+  box-shadow: 0 0 0 3px rgb(77 119 47 / 12%);
+}
+
+:root[data-theme="light"] .status-paused {
+  border-color: #e8d8b5;
+  color: #8b641e;
+}
+
+:root[data-theme="light"] .status-paused .status-dot {
+  background: #b9852c;
+}
+
+:root[data-theme="light"] .status-stopped {
+  border-color: #e8c7c4;
+  color: #a63530;
+}
+
+:root[data-theme="light"] .status-stopped .status-dot {
+  background: #b83b35;
+}
+
+:root[data-theme="light"] .clock-readout {
+  color: #17251a;
+  text-shadow: none;
+}
+
+:root[data-theme="light"] .clock-readout.is-stoppage {
+  color: #c33b34;
+  text-shadow: 0 0 1.8rem rgb(195 59 52 / 10%);
+}
+
+:root[data-theme="light"] .period-limit,
+:root[data-theme="light"] .elapsed-caption {
+  color: #637668;
+}
+
+:root[data-theme="light"] .stoppage-indicator {
+  color: #b43630;
+}
+
+:root[data-theme="light"] .stoppage-dot {
+  background: #c33b34;
+  box-shadow: 0 0 0 3px rgb(195 59 52 / 10%);
+}
+
+:root[data-theme="light"] .hold-tracker {
+  border-color: #cddfc1;
+  background: #f0f6ea;
+  color: #233326;
+}
+
+:root[data-theme="light"] .hold-tracker.is-tracking {
+  border-color: #91b775;
+  background: #e7f1dd;
+}
+
+:root[data-theme="light"] .hold-icon,
+:root[data-theme="light"] .hold-value {
+  color: #426c2b;
+}
+
+:root[data-theme="light"] .hold-copy small {
+  color: #607466;
+}
+
+:root[data-theme="light"] .control-pause,
+:root[data-theme="light"] .control-reset {
+  border-color: #d5dfd7;
+  background: #f2f6f2;
+  color: #2b3b30;
+}
+
+:root[data-theme="light"] .control-pause:not(:disabled):hover,
+:root[data-theme="light"] .control-reset:hover {
+  border-color: #b7c8ba;
+  background: #e8efe9;
+}
+
+:root[data-theme="light"] .control-stop {
+  border-color: #e7c4c1;
+  background: #fcf0ef;
+  color: #a73530;
+}
+
+:root[data-theme="light"] .control-stop:not(:disabled):hover {
+  background: #f8e4e2;
+}
+
+:root[data-theme="light"] .clock-footer {
+  border-color: #dce5dd;
+}
+
+:root[data-theme="light"] .wake-status,
+:root[data-theme="light"] .match-total {
+  color: #607466;
+}
+
+:root[data-theme="light"] .wake-icon {
+  color: #718477;
+}
+
+:root[data-theme="light"] .wake-icon.wake-active {
+  color: #4d772f;
+}
+
+:root[data-theme="light"] .panel-heading-note,
+:root[data-theme="light"] .summary-meta {
+  color: #5d7163;
+}
+
+:root[data-theme="light"] .phase-button {
+  border-color: #dce5dd;
+  background: #f7faf7;
+  color: #405448;
+}
+
+:root[data-theme="light"] .phase-button small {
+  color: #667a6c;
+}
+
+:root[data-theme="light"] .phase-button:not(:disabled):hover {
+  border-color: #b9d0aa;
+}
+
+:root[data-theme="light"] .phase-button.is-selected {
+  border-color: #a8c792;
+  background: #edf5e7;
+  color: #2e4d24;
+}
+
+:root[data-theme="light"] .phase-button.is-selected small {
+  color: #466a35;
+}
+
+:root[data-theme="light"] .helper-copy {
+  color: #5f7465;
+}
+
+:root[data-theme="light"] .text-button {
+  color: #3f6928;
+}
+
+:root[data-theme="light"] .text-button:hover {
+  color: #29491a;
+}
+
+:root[data-theme="light"] .number-field {
+  color: #596f60;
+}
+
+:root[data-theme="light"] .number-field input,
+:root[data-theme="light"] .preference-select {
+  border-color: #d4dfd6;
+  background: #fff;
+  color: #1d2b21;
+}
+
+:root[data-theme="light"] .input-with-unit small {
+  color: #687d6d;
+}
+
+:root[data-theme="light"] .time-colon {
+  color: #65796a;
+}
+
+:root[data-theme="light"] .apply-button {
+  border-color: #bdd2ad;
+  background: #edf5e7;
+  color: #31551f;
+}
+
+:root[data-theme="light"] .apply-button:not(:disabled):hover {
+  background: #e2eed8;
+}
+
+:root[data-theme="light"] .form-error {
+  color: #aa302b;
+}
+
+:root[data-theme="light"] .settings-divider {
+  background: #e0e8e1;
+}
+
+:root[data-theme="light"] .setting-toggle strong {
+  color: #29392e;
+}
+
+:root[data-theme="light"] .setting-toggle small {
+  color: #627668;
+}
+
+:root[data-theme="light"] .setting-toggle input {
+  border-color: #c5d1c8;
+  background-color: #e7ede8;
+}
+
+:root[data-theme="light"] .setting-toggle input::before {
+  background: #829487;
+}
+
+:root[data-theme="light"] .setting-toggle input:checked {
+  border-color: #6e984f;
+  background-color: #6a914c;
+}
+
+:root[data-theme="light"] .setting-toggle input:checked::before {
+  background: #fff;
+}
+
+:root[data-theme="light"] .advanced-toggle {
+  border-color: #d8e5cc;
+  background: #f5f9f1;
+}
+
+:root[data-theme="light"] .setup-footnote {
+  color: #627668;
+}
+
+:root[data-theme="light"] .log-count {
+  color: #53695a;
+}
+
+:root[data-theme="light"] .chevron,
+:root[data-theme="light"] .empty-log,
+:root[data-theme="light"] .pause-total {
+  color: #607466;
+}
+
+:root[data-theme="light"] .pause-list li {
+  border-color: #e2e9e3;
+}
+
+:root[data-theme="light"] .pause-index {
+  color: #687e6d;
+}
+
+:root[data-theme="light"] .pause-detail strong {
+  color: #2a392e;
+}
+
+:root[data-theme="light"] .pause-detail small {
+  color: #617568;
+}
+
+:root[data-theme="light"] .pause-duration,
+:root[data-theme="light"] .pause-total strong {
+  color: #466a35;
+}
+
+:root[data-theme="light"] .pause-current .pause-duration {
+  color: #8b641e;
+}
+
+:root[data-theme="light"] .platform-note {
+  color: #5e7364;
+}
+
+:root[data-theme="light"] .platform-note > span {
+  color: #526b59;
+}
+
+:root[data-theme="light"] .message {
+  border-color: #d5e2cb;
+  background: #fff;
+  box-shadow: 0 12px 35px rgb(33 53 37 / 16%);
+  color: #2c422e;
+}
+
+:root[data-theme="light"] .message-warning {
+  border-color: #e7d2a9;
+  color: #79571c;
 }
