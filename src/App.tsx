@@ -2,9 +2,12 @@ import {
   useEffect,
   useLayoutEffect,
   useMemo,
+  useRef,
   useState,
+  type FormEvent,
   type KeyboardEvent,
   type PointerEvent,
+  type ReactNode,
 } from "react";
 import {
   DEFAULT_SETTINGS,
@@ -19,11 +22,10 @@ import {
   getTimeLostMs,
   isStoppageTime,
   pauseClock,
-  resetClock,
-  selectPhase,
   setMatchTime,
   startClock,
   startTimeLostTracking,
+  stopBreakClock,
   stopClock,
   type ClockStatus,
   type MatchClockState,
@@ -43,8 +45,8 @@ import {
   resolveSystemLocale,
   resolveTheme,
   translate,
-  type LocaleMessages,
   type LocaleCode,
+  type LocaleMessages,
   type MessageKey,
   type MessageParameters,
   type ResolvedTheme,
@@ -54,16 +56,54 @@ import {
 const STORAGE_KEY = "matchday-clock:v1";
 const RUNNING_NOTIFICATION_TAG = "matchday-clock-running";
 
+interface MatchConfiguration {
+  halfLengthMinutes: number;
+  hasExtraTime: boolean;
+  extraTimeLengthMinutes: number;
+}
+
+interface MatchPreset extends MatchConfiguration {
+  id: string;
+  name: string;
+}
+
+type PresetDraft = Omit<MatchPreset, "id"> & { id: string | null };
+
 interface SavedState {
   settings: MatchSettings;
   match: MatchClockState;
   preferences: UserPreferences;
+  presets: MatchPreset[];
+  hasMatch: boolean;
+  pauseClockEnabled: boolean;
   notice: MessageKey | null;
 }
 
 interface LocalizedMessage {
   key: MessageKey;
   parameters?: MessageParameters;
+}
+
+type ActiveModal =
+  | "settings"
+  | "setup"
+  | "presetPicker"
+  | "presetEditor"
+  | "correction"
+  | "about"
+  | "installHelp";
+
+interface BeforeInstallPromptEvent extends Event {
+  prompt(): Promise<void>;
+  userChoice: Promise<{ outcome: "accepted" | "dismissed"; platform: string }>;
+}
+
+interface ModalShellProps {
+  title: string;
+  closeLabel: string;
+  onClose: () => void;
+  children: ReactNode;
+  size?: "regular" | "wide";
 }
 
 function isRecord(value: unknown): value is Record<string, unknown> {
@@ -121,6 +161,24 @@ function isMatchSettings(value: unknown): value is MatchSettings {
   );
 }
 
+function isMatchPreset(value: unknown): value is MatchPreset {
+  return (
+    isRecord(value) &&
+    typeof value.id === "string" &&
+    typeof value.name === "string" &&
+    value.name.trim().length > 0 &&
+    typeof value.halfLengthMinutes === "number" &&
+    Number.isInteger(value.halfLengthMinutes) &&
+    value.halfLengthMinutes >= 1 &&
+    value.halfLengthMinutes <= 180 &&
+    typeof value.hasExtraTime === "boolean" &&
+    typeof value.extraTimeLengthMinutes === "number" &&
+    Number.isInteger(value.extraTimeLengthMinutes) &&
+    value.extraTimeLengthMinutes >= 1 &&
+    value.extraTimeLengthMinutes <= 180
+  );
+}
+
 function isMatchClockState(value: unknown): value is MatchClockState {
   if (
     !isRecord(value) ||
@@ -128,6 +186,7 @@ function isMatchClockState(value: unknown): value is MatchClockState {
     (value.status !== "ready" &&
       value.status !== "running" &&
       value.status !== "paused" &&
+      value.status !== "break" &&
       value.status !== "stopped") ||
     typeof value.elapsedMs !== "number" ||
     !Number.isFinite(value.elapsedMs) ||
@@ -149,11 +208,12 @@ function isMatchClockState(value: unknown): value is MatchClockState {
   if (
     (value.status === "running" && value.startedAt === null) ||
     (value.status !== "running" && value.startedAt !== null) ||
-    (value.status === "paused" &&
+    ((value.status === "paused" || value.status === "break") &&
       (value.pauseStartedAt === null ||
         value.pauseMatchTimeMs === null ||
         value.pausePhase === null)) ||
     (value.status !== "paused" &&
+      value.status !== "break" &&
       (value.pauseStartedAt !== null ||
         value.pauseMatchTimeMs !== null ||
         value.pausePhase !== null)) ||
@@ -173,6 +233,9 @@ function readSavedState(): SavedState {
         settings: DEFAULT_SETTINGS,
         match: createMatchClock(),
         preferences: DEFAULT_PREFERENCES,
+        presets: [],
+        hasMatch: false,
+        pauseClockEnabled: true,
         notice: null,
       };
     }
@@ -184,14 +247,33 @@ function readSavedState(): SavedState {
       isMatchClockState(saved.match)
     ) {
       const savedPreferences = readSavedPreferences(saved.preferences);
+      const presetsValid =
+        saved.presets === undefined ||
+        (Array.isArray(saved.presets) && saved.presets.every(isMatchPreset));
       if (savedPreferences.invalid) {
-        console.warn("Saved display preferences are invalid; device settings are in use.");
+        console.warn(
+          "Saved display preferences are invalid; device settings are in use.",
+        );
+      }
+      if (!presetsValid) {
+        console.warn("Saved presets are invalid; no presets were restored.");
       }
       return {
         settings: saved.settings,
         match: saved.match,
         preferences: savedPreferences.preferences,
-        notice: savedPreferences.invalid ? "savedPreferenceInvalid" : null,
+        presets: presetsValid ? (saved.presets as MatchPreset[] | undefined) ?? [] : [],
+        hasMatch:
+          saved.hasMatch === true || saved.match.status !== "ready",
+        pauseClockEnabled:
+          typeof saved.pauseClockEnabled === "boolean"
+            ? saved.pauseClockEnabled
+            : true,
+        notice: savedPreferences.invalid
+          ? "savedPreferenceInvalid"
+          : presetsValid
+            ? null
+            : "savedDataInvalid",
       };
     }
 
@@ -200,6 +282,9 @@ function readSavedState(): SavedState {
       settings: DEFAULT_SETTINGS,
       match: createMatchClock(),
       preferences: DEFAULT_PREFERENCES,
+      presets: [],
+      hasMatch: false,
+      pauseClockEnabled: true,
       notice: "savedDataInvalid",
     };
   } catch (error) {
@@ -208,6 +293,9 @@ function readSavedState(): SavedState {
       settings: DEFAULT_SETTINGS,
       match: createMatchClock(),
       preferences: DEFAULT_PREFERENCES,
+      presets: [],
+      hasMatch: false,
+      pauseClockEnabled: true,
       notice: "savedDataInvalid",
     };
   }
@@ -218,6 +306,11 @@ function useSavedState() {
   const [settings, setSettings] = useState(saved.settings);
   const [match, setMatch] = useState(saved.match);
   const [preferences, setPreferences] = useState(saved.preferences);
+  const [presets, setPresets] = useState(saved.presets);
+  const [hasMatch, setHasMatch] = useState(saved.hasMatch);
+  const [pauseClockEnabled, setPauseClockEnabled] = useState(
+    saved.pauseClockEnabled,
+  );
   const [storageError, setStorageError] = useState(false);
   const [savedNotice, setSavedNotice] = useState(saved.notice);
 
@@ -225,14 +318,28 @@ function useSavedState() {
     try {
       window.localStorage.setItem(
         STORAGE_KEY,
-        JSON.stringify({ settings, match, preferences }),
+        JSON.stringify({
+          settings,
+          match,
+          preferences,
+          presets,
+          hasMatch,
+          pauseClockEnabled,
+        }),
       );
       setStorageError(false);
     } catch (error) {
       console.error("Could not save the match clock locally.", error);
       setStorageError(true);
     }
-  }, [match, preferences, settings]);
+  }, [
+    hasMatch,
+    match,
+    pauseClockEnabled,
+    preferences,
+    presets,
+    settings,
+  ]);
 
   return {
     settings,
@@ -241,6 +348,12 @@ function useSavedState() {
     setMatch,
     preferences,
     setPreferences,
+    presets,
+    setPresets,
+    hasMatch,
+    setHasMatch,
+    pauseClockEnabled,
+    setPauseClockEnabled,
     storageError,
     savedNotice,
     setSavedNotice,
@@ -302,6 +415,21 @@ function pauseSummary(
   });
 }
 
+function getConfiguration(settings: MatchSettings): MatchConfiguration {
+  return {
+    halfLengthMinutes: settings.halfLengthMinutes,
+    hasExtraTime: settings.hasExtraTime,
+    extraTimeLengthMinutes: settings.extraTimeLengthMinutes,
+  };
+}
+
+function createPresetId(): string {
+  if (typeof crypto.randomUUID === "function") {
+    return crypto.randomUUID();
+  }
+  return `${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}`;
+}
+
 function waitForServiceWorkerControl(): Promise<void> {
   if (!("serviceWorker" in navigator) || navigator.serviceWorker.controller) {
     return Promise.resolve();
@@ -326,6 +454,114 @@ function waitForServiceWorkerControl(): Promise<void> {
   });
 }
 
+function isStandaloneDisplay(): boolean {
+  const navigatorWithStandalone = navigator as Navigator & {
+    standalone?: boolean;
+  };
+  return (
+    window.matchMedia("(display-mode: standalone)").matches ||
+    navigatorWithStandalone.standalone === true
+  );
+}
+
+function getInstallPlatform(): "ios" | "android" | "other" {
+  const userAgent = navigator.userAgent;
+  const isIOS =
+    /iPad|iPhone|iPod/i.test(userAgent) ||
+    (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+  if (isIOS) {
+    return "ios";
+  }
+  return /Android/i.test(userAgent) ? "android" : "other";
+}
+
+function ModalShell({
+  title,
+  closeLabel,
+  onClose,
+  children,
+  size = "regular",
+}: ModalShellProps) {
+  const dialogRef = useRef<HTMLElement>(null);
+  const closeRef = useRef(onClose);
+  closeRef.current = onClose;
+
+  useEffect(() => {
+    const dialog = dialogRef.current;
+    const previousFocus = document.activeElement;
+    dialog?.focus();
+
+    const handleKeyDown = (event: globalThis.KeyboardEvent) => {
+      if (event.key === "Escape") {
+        event.preventDefault();
+        closeRef.current();
+        return;
+      }
+
+      if (event.key !== "Tab" || dialog === null) {
+        return;
+      }
+
+      const focusable = dialog.querySelectorAll<HTMLElement>(
+        'button:not(:disabled), input:not(:disabled), select:not(:disabled), a[href], [tabindex]:not([tabindex="-1"])',
+      );
+      const first = focusable.item(0);
+      const last = focusable.item(focusable.length - 1);
+      if (focusable.length === 0) {
+        event.preventDefault();
+        dialog.focus();
+      } else if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+      if (previousFocus instanceof HTMLElement) {
+        previousFocus.focus();
+      }
+    };
+  }, []);
+
+  return (
+    <div
+      className="modal-backdrop"
+      onMouseDown={(event) => {
+        if (event.target === event.currentTarget) {
+          closeRef.current();
+        }
+      }}
+    >
+      <section
+        aria-labelledby="modal-title"
+        aria-modal="true"
+        className={`modal-dialog modal-${size}`}
+        ref={dialogRef}
+        role="dialog"
+        tabIndex={-1}
+      >
+        <header className="modal-header">
+          <h2 id="modal-title">{title}</h2>
+          <button
+            aria-label={closeLabel}
+            className="icon-button modal-close"
+            onClick={() => closeRef.current()}
+            type="button"
+          >
+            ×
+          </button>
+        </header>
+        <div className="modal-body">{children}</div>
+      </section>
+    </div>
+  );
+}
+
 function App() {
   const {
     settings,
@@ -334,54 +570,95 @@ function App() {
     setMatch,
     preferences,
     setPreferences,
+    presets,
+    setPresets,
+    hasMatch,
+    setHasMatch,
+    pauseClockEnabled,
+    setPauseClockEnabled,
     storageError,
     savedNotice,
     setSavedNotice,
   } = useSavedState();
   const [systemLocale, setSystemLocale] = useState<LocaleCode>(() =>
     resolveSystemLocale(
-      navigator.languages.length > 0 ? navigator.languages : [navigator.language],
+      navigator.languages.length > 0
+        ? navigator.languages
+        : [navigator.language],
     ),
   );
   const [systemTheme, setSystemTheme] = useState<ResolvedTheme>(() =>
     window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light",
   );
+  const [messages, setMessages] = useState<LocaleMessages>(FALLBACK_MESSAGES);
+  const [messagesLocale, setMessagesLocale] = useState<LocaleCode>("en-GB");
+  const [now, setNow] = useState(() => Date.now());
+  const [wakeStatus, setWakeStatus] = useState<MessageKey>("wakeIdle");
+  const [feedback, setFeedback] = useState<LocalizedMessage | null>(null);
+  const [modal, setModal] = useState<ActiveModal | null>(null);
+  const [setupDraft, setSetupDraft] = useState<MatchConfiguration>(() =>
+    getConfiguration(settings),
+  );
+  const [setupSaveAsPreset, setSetupSaveAsPreset] = useState(false);
+  const [setupPresetName, setSetupPresetName] = useState("");
+  const [setupError, setSetupError] = useState<MessageKey | null>(null);
+  const [presetDraft, setPresetDraft] = useState<PresetDraft | null>(null);
+  const [presetError, setPresetError] = useState<MessageKey | null>(null);
+  const [presetEditorReturn, setPresetEditorReturn] =
+    useState<ActiveModal | null>(null);
+  const [correctionPhase, setCorrectionPhase] = useState(match.phase);
+  const [correctionMinutes, setCorrectionMinutes] = useState(() =>
+    String(Math.floor(getMatchTimeMs(match, settings, Date.now()) / 60_000)),
+  );
+  const [correctionSeconds, setCorrectionSeconds] = useState(() =>
+    String(
+      Math.floor(getMatchTimeMs(match, settings, Date.now()) / 1_000) % 60,
+    ),
+  );
+  const [correctionError, setCorrectionError] =
+    useState<LocalizedMessage | null>(null);
+  const [installPrompt, setInstallPrompt] =
+    useState<BeforeInstallPromptEvent | null>(null);
+  const [standalone, setStandalone] = useState(isStandaloneDisplay);
+  const [installDismissed, setInstallDismissed] = useState(false);
+  const availablePhases = useMemo(
+    () => getAvailablePhases(settings),
+    [settings],
+  );
   const locale =
     preferences.language === "system" ? systemLocale : preferences.language;
-  const [messages, setMessages] =
-    useState<LocaleMessages>(FALLBACK_MESSAGES);
-  const [messagesLocale, setMessagesLocale] = useState<LocaleCode>("en-GB");
   const displayLocale = messagesLocale === locale ? locale : "en-GB";
   const displayMessages =
     messagesLocale === locale ? messages : FALLBACK_MESSAGES;
   const theme = resolveTheme(preferences.theme, systemTheme);
   const t = (key: MessageKey, parameters?: MessageParameters) =>
     translate(displayMessages, key, parameters);
-  const [now, setNow] = useState(() => Date.now());
-  const [wakeStatus, setWakeStatus] = useState<MessageKey>("wakeIdle");
-  const [feedback, setFeedback] = useState<LocalizedMessage | null>(null);
-  const [correctionMinutes, setCorrectionMinutes] = useState(() =>
-    String(Math.floor(getMatchTimeMs(match, settings, Date.now()) / 60_000)),
-  );
-  const [correctionSeconds, setCorrectionSeconds] = useState(() =>
-    String(Math.floor(getMatchTimeMs(match, settings, Date.now()) / 1_000) % 60),
-  );
-  const [correctionError, setCorrectionError] =
-    useState<LocalizedMessage | null>(null);
-  const availablePhases = useMemo(
-    () => getAvailablePhases(settings),
-    [settings],
-  );
   const periodElapsedMs = getPeriodElapsedMs(match, now);
   const matchTimeMs = getMatchTimeMs(match, settings, now);
   const timeLostMs = getTimeLostMs(match, now);
   const stoppageTime = isStoppageTime(match, settings, now);
   const running = match.status === "running";
-  const settingsEditable =
-    match.status === "ready" &&
-    match.elapsedMs === 0 &&
-    match.pauses.length === 0 &&
-    match.timeLostMs === 0;
+  const breakRunning = match.status === "break";
+  const activeClock = running || breakRunning;
+  const pauseDurationNow =
+    (match.status === "paused" || match.status === "break") &&
+    match.pauseStartedAt !== null
+      ? Math.max(0, now - match.pauseStartedAt)
+      : null;
+  const settingsSummary = settings.hasExtraTime
+    ? t("settingsExtra", {
+        half: settings.halfLengthMinutes,
+        extra: settings.extraTimeLengthMinutes,
+      })
+    : t("settingsNoExtra", { half: settings.halfLengthMinutes });
+  const statusLabel: Record<ClockStatus, string> = {
+    ready: t("ready"),
+    running: t("running"),
+    paused: t("paused"),
+    break: t("breakRunning"),
+    stopped: t("finished"),
+  };
+  const installPlatform = getInstallPlatform();
 
   useEffect(() => {
     const updateSystemLocale = () => {
@@ -460,7 +737,11 @@ function App() {
   }, [displayLocale, theme]);
 
   useEffect(() => {
-    if (match.status !== "running" && match.status !== "paused") {
+    if (
+      match.status !== "running" &&
+      match.status !== "paused" &&
+      match.status !== "break"
+    ) {
       return;
     }
 
@@ -480,19 +761,17 @@ function App() {
       document.removeEventListener("visibilitychange", updateNow);
       window.removeEventListener("pagehide", updateNow);
     };
-  }, [match.status]);
+  }, [match.status, setMatch]);
 
   useEffect(() => {
-    if (match.status !== "running" || !settings.keepScreenAwake) {
+    if (!activeClock || !settings.keepScreenAwake) {
       setWakeStatus(
-        settings.keepScreenAwake
-          ? "wakeIdle"
-          : "wakeOff",
+        settings.keepScreenAwake ? "wakeIdle" : "wakeOff",
       );
       return;
     }
 
-    let canceled = false;
+    let cancelled = false;
     let sentinel: WakeLockSentinel | null = null;
 
     const acquireWakeLock = async () => {
@@ -503,7 +782,7 @@ function App() {
 
       try {
         const lock = await navigator.wakeLock.request("screen");
-        if (canceled) {
+        if (cancelled) {
           await lock.release();
           return;
         }
@@ -516,7 +795,7 @@ function App() {
               return;
             }
             sentinel = null;
-            if (!canceled && !document.hidden) {
+            if (!cancelled && !document.hidden) {
               setWakeStatus("wakeRetry");
               void acquireWakeLock();
             }
@@ -530,7 +809,7 @@ function App() {
     };
 
     const onVisibilityChange = () => {
-      if (!document.hidden && sentinel === null && !canceled) {
+      if (!document.hidden && sentinel === null && !cancelled) {
         void acquireWakeLock();
       }
     };
@@ -538,7 +817,7 @@ function App() {
     void acquireWakeLock();
     document.addEventListener("visibilitychange", onVisibilityChange);
     return () => {
-      canceled = true;
+      cancelled = true;
       document.removeEventListener("visibilitychange", onVisibilityChange);
       if (sentinel !== null) {
         const lock = sentinel;
@@ -548,10 +827,13 @@ function App() {
         });
       }
     };
-  }, [match.status, settings.keepScreenAwake]);
+  }, [activeClock, settings.keepScreenAwake]);
 
-  async function showRunningNotification(requestPermission: boolean) {
-    if (!settings.showRunningNotification) {
+  async function showRunningNotification(
+    requestPermission: boolean,
+    forceEnabled = false,
+  ) {
+    if (!settings.showRunningNotification && !forceEnabled) {
       return;
     }
     if (!("Notification" in window)) {
@@ -565,14 +847,12 @@ function App() {
         permission = await Notification.requestPermission();
       }
       if (permission !== "granted") {
-        setFeedback(
-          {
-            key:
-              permission === "denied"
-                ? "notificationDenied"
-                : "notificationPermission",
-          },
-        );
+        setFeedback({
+          key:
+            permission === "denied"
+              ? "notificationDenied"
+              : "notificationPermission",
+        });
         return;
       }
       if (!("serviceWorker" in navigator)) {
@@ -595,7 +875,7 @@ function App() {
       });
       setFeedback({ key: "notificationSent" });
     } catch (error) {
-      console.error("Could not show the running notification.", error);
+      console.error("Could not show a running notification.", error);
       setFeedback({ key: "notificationFailed" });
     }
   }
@@ -617,17 +897,163 @@ function App() {
   }
 
   useEffect(() => {
-    if (match.status === "running" && settings.showRunningNotification) {
-      if (
-        "Notification" in window &&
-        Notification.permission === "granted"
-      ) {
+    if (activeClock && settings.showRunningNotification) {
+      if ("Notification" in window && Notification.permission === "granted") {
         void showRunningNotification(false);
       }
       return;
     }
     void closeRunningNotification();
-  }, [displayLocale, messages, match.status, settings.showRunningNotification]);
+  }, [
+    activeClock,
+    displayLocale,
+    messages,
+    settings.showRunningNotification,
+  ]);
+
+  useEffect(() => {
+    const displayMode = window.matchMedia("(display-mode: standalone)");
+    const updateStandalone = () => setStandalone(isStandaloneDisplay());
+    const handleBeforeInstallPrompt = (event: Event) => {
+      event.preventDefault();
+      setInstallPrompt(event as BeforeInstallPromptEvent);
+    };
+    const handleAppInstalled = () => {
+      setStandalone(true);
+      setInstallPrompt(null);
+      setInstallDismissed(true);
+    };
+
+    if (typeof displayMode.addEventListener === "function") {
+      displayMode.addEventListener("change", updateStandalone);
+    } else {
+      displayMode.addListener(updateStandalone);
+    }
+    window.addEventListener(
+      "beforeinstallprompt",
+      handleBeforeInstallPrompt,
+    );
+    window.addEventListener("appinstalled", handleAppInstalled);
+    return () => {
+      if (typeof displayMode.removeEventListener === "function") {
+        displayMode.removeEventListener("change", updateStandalone);
+      } else {
+        displayMode.removeListener(updateStandalone);
+      }
+      window.removeEventListener(
+        "beforeinstallprompt",
+        handleBeforeInstallPrompt,
+      );
+      window.removeEventListener("appinstalled", handleAppInstalled);
+    };
+  }, []);
+
+  function updateSettings(patch: Partial<MatchSettings>) {
+    setSettings((current) => ({ ...current, ...patch }));
+  }
+
+  function updatePreferences(patch: Partial<UserPreferences>) {
+    setPreferences((current) => ({ ...current, ...patch }));
+  }
+
+  function openSetup() {
+    setSetupDraft(getConfiguration(settings));
+    setSetupSaveAsPreset(false);
+    setSetupPresetName("");
+    setSetupError(null);
+    setModal("setup");
+  }
+
+  function startNewMatch(configuration: MatchConfiguration) {
+    setSettings((current) => ({ ...current, ...configuration }));
+    setMatch(createMatchClock());
+    setHasMatch(true);
+    setModal(null);
+    setFeedback(null);
+  }
+
+  function handleSetupSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if (setupSaveAsPreset) {
+      const name = setupPresetName.trim();
+      if (name.length === 0) {
+        setSetupError("presetNameRequired");
+        return;
+      }
+      if (presets.some((preset) => preset.name.toLowerCase() === name.toLowerCase())) {
+        setSetupError("presetNameExists");
+        return;
+      }
+      setPresets((current) => [
+        ...current,
+        { id: createPresetId(), name, ...setupDraft },
+      ]);
+    }
+    startNewMatch(setupDraft);
+  }
+
+  function openPresetEditor(preset: MatchPreset | null) {
+    setPresetDraft(
+      preset
+        ? { ...preset }
+        : { id: null, name: "", ...getConfiguration(settings) },
+    );
+    setPresetError(null);
+    setPresetEditorReturn("settings");
+    setModal("presetEditor");
+  }
+
+  function savePresetDraft(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if (presetDraft === null) {
+      return;
+    }
+
+    const name = presetDraft.name.trim();
+    if (name.length === 0) {
+      setPresetError("presetNameRequired");
+      return;
+    }
+    if (
+      presets.some(
+        (preset) =>
+          preset.id !== presetDraft.id &&
+          preset.name.toLowerCase() === name.toLowerCase(),
+      )
+    ) {
+      setPresetError("presetNameExists");
+      return;
+    }
+
+    const presetId = presetDraft.id;
+    if (presetId === null) {
+      const nextPreset: MatchPreset = {
+        ...presetDraft,
+        id: createPresetId(),
+        name,
+      };
+      setPresets((current) => [...current, nextPreset]);
+    } else {
+      const nextPreset: MatchPreset = { ...presetDraft, id: presetId, name };
+      setPresets((current) =>
+        current.map((preset) =>
+          preset.id === nextPreset.id ? nextPreset : preset,
+        ),
+      );
+    }
+    setModal(presetEditorReturn ?? "settings");
+    setFeedback({
+      key: presetDraft.id === null ? "presetSaved" : "presetUpdated",
+    });
+  }
+
+  function deletePreset(preset: MatchPreset) {
+    if (!window.confirm(t("deletePresetConfirm", { name: preset.name }))) {
+      return;
+    }
+    setPresets((current) => current.filter((item) => item.id !== preset.id));
+    setFeedback({ key: "presetDeleted" });
+  }
 
   function handleStart() {
     const next = startClock(match, Date.now());
@@ -642,35 +1068,38 @@ function App() {
   }
 
   function handleStop() {
-    if (!window.confirm(t("stopConfirm"))) {
+    const currentTime = Date.now();
+    if (match.status === "break") {
+      setMatch((current) => stopBreakClock(current, currentTime));
       return;
     }
-    setMatch((current) => stopClock(current, Date.now()));
-    setFeedback({ key: "stoppedFeedback" });
+    const next = stopClock(match, settings, pauseClockEnabled, currentTime);
+    setMatch(next);
+    if (next.status === "stopped") {
+      setFeedback({ key: "matchFinished" });
+    }
   }
 
   function handleReset() {
     if (!window.confirm(t("resetConfirm"))) {
       return;
     }
-    setMatch(resetClock());
-    setCorrectionMinutes("0");
-    setCorrectionSeconds("0");
-    setCorrectionError(null);
+    setMatch(createMatchClock());
+    setHasMatch(false);
+    setModal(null);
     setFeedback({ key: "resetFeedback" });
   }
 
-  function handlePhaseSelect(phase: MatchPhase) {
-    setMatch((current) => selectPhase(current, phase));
-    const baselineMinutes = Math.floor(
-      getPhaseBaselineMs(phase, settings) / 60_000,
-    );
-    setCorrectionMinutes(String(baselineMinutes));
-    setCorrectionSeconds("0");
+  function openCorrection() {
+    setCorrectionPhase(match.phase);
+    setCorrectionMinutes(String(Math.floor(matchTimeMs / 60_000)));
+    setCorrectionSeconds(String(Math.floor(matchTimeMs / 1_000) % 60));
     setCorrectionError(null);
+    setModal("correction");
   }
 
-  function handleApplyCorrection() {
+  function handleApplyCorrection(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
     const minutes = Number(correctionMinutes);
     const seconds = Number(correctionSeconds);
     if (
@@ -690,16 +1119,18 @@ function App() {
     const corrected = setMatchTime(
       match,
       settings,
+      correctionPhase,
       (minutes * 60 + seconds) * 1_000,
       Date.now(),
     );
     if (corrected === null) {
-      const phaseStart = formatClockTime(getPhaseBaselineMs(match.phase, settings));
       setCorrectionError({
         key: "beforePhase",
         parameters: {
-          phase: phaseLabel(match.phase, displayMessages),
-          time: phaseStart,
+          phase: phaseLabel(correctionPhase, displayMessages),
+          time: formatClockTime(
+            getPhaseBaselineMs(correctionPhase, settings),
+          ),
         },
       });
       return;
@@ -707,14 +1138,14 @@ function App() {
 
     setMatch(corrected);
     setCorrectionError(null);
+    setModal(null);
     setFeedback({ key: "correctedFeedback" });
   }
 
   function loadCurrentTimeIntoCorrection() {
-    const minutes = Math.floor(matchTimeMs / 60_000);
-    const seconds = Math.floor(matchTimeMs / 1_000) % 60;
-    setCorrectionMinutes(String(minutes));
-    setCorrectionSeconds(String(seconds));
+    setCorrectionPhase(match.phase);
+    setCorrectionMinutes(String(Math.floor(matchTimeMs / 60_000)));
+    setCorrectionSeconds(String(Math.floor(matchTimeMs / 1_000) % 60));
     setCorrectionError(null);
   }
 
@@ -744,49 +1175,55 @@ function App() {
     }
   }
 
-  function updateSettings(patch: Partial<MatchSettings>) {
-    setSettings((current) => ({ ...current, ...patch }));
-  }
-
-  function updatePreferences(patch: Partial<UserPreferences>) {
-    setPreferences((current) => ({ ...current, ...patch }));
-  }
-
-  function handleExtraTimeChange(enabled: boolean) {
-    updateSettings({ hasExtraTime: enabled });
-    if (!enabled && match.phase.startsWith("extraTime")) {
-      handlePhaseSelect("secondHalf");
-    }
-  }
-
   function handleNotificationSetting(enabled: boolean) {
     updateSettings({ showRunningNotification: enabled });
-    if (enabled && running) {
-      void showRunningNotification(true);
+    if (enabled && activeClock) {
+      void showRunningNotification(true, true);
     }
   }
 
-  const statusLabel: Record<ClockStatus, string> = {
-    ready: t("ready"),
-    running: t("running"),
-    paused: t("paused"),
-    stopped: t("stopped"),
-  };
-  const pauseDurationNow =
-    match.status === "paused" && match.pauseStartedAt !== null
-      ? Math.max(0, now - match.pauseStartedAt)
-      : null;
-  const correctionCanBeApplied = match.status !== "stopped";
-  const settingsSummary = settings.hasExtraTime
-    ? t("settingsExtra", {
-        half: settings.halfLengthMinutes,
-        extra: settings.extraTimeLengthMinutes,
-      })
-    : t("settingsNoExtra", { half: settings.halfLengthMinutes });
+  function handlePauseClockSetting(enabled: boolean) {
+    setPauseClockEnabled(enabled);
+    if (!enabled && breakRunning) {
+      setMatch((current) => stopBreakClock(current, Date.now()));
+    }
+  }
+
+  async function handleInstall() {
+    if (installPrompt === null) {
+      setModal("installHelp");
+      return;
+    }
+
+    try {
+      const prompt = installPrompt;
+      await prompt.prompt();
+      const choice = await prompt.userChoice;
+      setInstallPrompt(null);
+      if (choice.outcome === "accepted") {
+        setInstallDismissed(true);
+      }
+    } catch (error) {
+      console.error("Could not open the PWA installation prompt.", error);
+      setFeedback({ key: "installFailed" });
+    }
+  }
+
+  function closePresetEditor() {
+    setModal(presetEditorReturn ?? "settings");
+  }
+
+  const installInstructionsKey: MessageKey =
+    installPlatform === "ios"
+      ? "installInstructionsIOS"
+      : installPlatform === "android"
+        ? "installInstructionsAndroid"
+        : "installInstructionsOther";
+  const selectedPauseRecords = match.pauses;
 
   return (
     <div className="app-shell min-h-dvh bg-[#0b1510] text-[#eff5ef]">
-      <header className="app-header mx-auto flex w-full max-w-[1440px] items-center justify-between gap-4 px-4 py-4 sm:px-7 sm:py-5">
+      <header className="app-header mx-auto flex w-full max-w-[1120px] items-center justify-between gap-4 px-4 py-4 sm:px-7 sm:py-5">
         <a className="brand-lockup" href="/" aria-label={t("homeAria")}>
           <img src="/pwa-icon.svg" alt="" className="brand-icon" />
           <span>
@@ -794,79 +1231,164 @@ function App() {
             <small>{t("appSubtitle")}</small>
           </span>
         </a>
-        <div className="flex items-center gap-2">
+        <div className="header-actions">
           <span className="local-badge">
             <span className="local-badge-dot" />
             {storageError ? t("notSaving") : t("saved")}
           </span>
+          <button
+            aria-label={t("openSettings")}
+            className="icon-button settings-button"
+            onClick={() => setModal("settings")}
+            title={t("openSettings")}
+            type="button"
+          >
+            <span aria-hidden="true">⚙</span>
+          </button>
         </div>
       </header>
 
-      <main className="mx-auto grid w-full max-w-[1440px] gap-4 px-4 pb-8 sm:gap-6 sm:px-7 sm:pb-10 lg:grid-cols-[minmax(0,1.45fr)_minmax(340px,0.75fr)]">
-        <section className="clock-card" aria-labelledby="clock-heading">
-          <div className="clock-card-top">
-            <div>
-              <p className="eyebrow">{t("timer")}</p>
-              <h1 id="clock-heading" className="clock-phase-title">
-                {phaseLabel(match.phase, displayMessages)}
-              </h1>
-            </div>
-            <span className={`status-pill status-${match.status}`}>
-              <span className="status-dot" />
-              {statusLabel[match.status]}
+      {!standalone && !installDismissed && (
+        <section className="install-banner mx-auto" aria-label={t("installBanner")}>
+          <div className="install-copy">
+            <span aria-hidden="true" className="install-icon">
+              ⇧
             </span>
+            <p>{t("installBanner")}</p>
           </div>
+          <button className="install-button" onClick={() => void handleInstall()} type="button">
+            {t("installApp")}
+          </button>
+          <button
+            aria-label={t("dismissInstall")}
+            className="icon-button install-dismiss"
+            onClick={() => setInstallDismissed(true)}
+            type="button"
+          >
+            ×
+          </button>
+        </section>
+      )}
 
-          <div className="clock-readout-wrap">
-            <div
-              className={`clock-readout${stoppageTime ? " is-stoppage" : ""}`}
-              role="timer"
-              aria-label={`${phaseLabel(match.phase, displayMessages)}, ${formatClockTime(matchTimeMs)}${stoppageTime ? `, ${t("stoppage")}` : ""}`}
-              aria-live="off"
-            >
-              {formatClockTime(matchTimeMs)}
+      <main className={`app-main mx-auto w-full max-w-[1120px] px-4 pb-8 sm:px-7 sm:pb-10${hasMatch ? " is-clock" : " is-launch"}`}>
+        {!hasMatch ? (
+          <section className="launch-panel panel" aria-labelledby="launch-title">
+            <div className="launch-copy">
+              <p className="eyebrow">{t("appSubtitle")}</p>
+              <h1 id="launch-title">{t("launchTitle")}</h1>
+              <p>{t("launchDescription")}</p>
             </div>
-            <div className="clock-meta-row">
-              {stoppageTime ? (
-                <span className="stoppage-indicator">
-                  <span className="stoppage-dot" />
-                  {t("stoppage")}
-                </span>
-              ) : (
-                <span className="period-limit">
-                  {t("periodLimit", {
-                    time: formatClockTime(
-                      match.phase.startsWith("extraTime")
-                        ? settings.extraTimeLengthMinutes * 60_000
-                        : settings.halfLengthMinutes * 60_000,
-                    ),
-                  })}
-                </span>
-              )}
-              <span className="elapsed-caption">
-                {match.status === "paused" && pauseDurationNow !== null
-                  ? t("pausedFor", { time: formatClockTime(pauseDurationNow) })
-                  : t("thisPeriod", { time: formatClockTime(periodElapsedMs) })}
+            <div className="launch-actions">
+              <div className="split-start">
+                <button
+                  aria-haspopup="dialog"
+                  aria-label={t("choosePreset")}
+                  className="preset-dropdown-trigger"
+                  onClick={() => setModal("presetPicker")}
+                  title={t("choosePreset")}
+                  type="button"
+                >
+                  <span aria-hidden="true">⌄</span>
+                </button>
+                <button
+                  className="primary-start-button"
+                  onClick={() => startNewMatch(getConfiguration(settings))}
+                  type="button"
+                >
+                  <span>{t("useLastSettings")}</span>
+                  <small>{settingsSummary}</small>
+                </button>
+              </div>
+              <button className="secondary-start-button" onClick={openSetup} type="button">
+                <span aria-hidden="true">＋</span>
+                {t("setUpMatch")}
+              </button>
+            </div>
+            {presets.length > 0 && (
+              <p className="saved-preset-count">
+                {t("savedPresetCount", { count: presets.length })}
+              </p>
+            )}
+          </section>
+        ) : (
+          <section className="clock-card active-match" aria-labelledby="clock-heading">
+            <div className="clock-card-top">
+              <div>
+                <p className="eyebrow">{t("timer")}</p>
+                <h1 id="clock-heading" className="clock-phase-title">
+                  {phaseLabel(match.phase, displayMessages)}
+                </h1>
+              </div>
+              <span className={`status-pill status-${match.status}`}>
+                <span className="status-dot" />
+                {statusLabel[match.status]}
               </span>
             </div>
-          </div>
 
-          {match.status === "running" &&
-            settings.trackStoppageTime && (
+            <div className="clock-readout-wrap">
+              <div
+                aria-label={`${phaseLabel(match.phase, displayMessages)}, ${formatClockTime(matchTimeMs)}${stoppageTime ? `, ${t("stoppage")}` : ""}`}
+                aria-live="off"
+                className={`clock-readout${stoppageTime ? " is-stoppage" : ""}`}
+                role="timer"
+              >
+                {formatClockTime(matchTimeMs)}
+              </div>
+              <div className="clock-meta-row">
+                {stoppageTime ? (
+                  <span className="stoppage-indicator">
+                    <span className="stoppage-dot" />
+                    {t("stoppage")}
+                  </span>
+                ) : (
+                  <span className="period-limit">
+                    {t("periodLimit", {
+                      time: formatClockTime(
+                        getPhaseBaselineMs(match.phase, settings) +
+                          (match.phase.startsWith("extraTime")
+                            ? settings.extraTimeLengthMinutes
+                            : settings.halfLengthMinutes) *
+                            60_000 -
+                          getPhaseBaselineMs(match.phase, settings),
+                      ),
+                    })}
+                  </span>
+                )}
+                <span className="elapsed-caption">
+                  {match.status === "paused" && pauseDurationNow !== null
+                    ? t("pausedFor", {
+                        time: formatClockTime(pauseDurationNow),
+                      })
+                    : t("thisPeriod", {
+                        time: formatClockTime(periodElapsedMs),
+                      })}
+                </span>
+              </div>
+            </div>
+
+            {breakRunning && pauseDurationNow !== null && (
+              <div className="break-clock" role="timer">
+                <span>{t("breakTime")}</span>
+                <strong>{formatClockTime(pauseDurationNow)}</strong>
+              </div>
+            )}
+
+            {running && settings.trackStoppageTime && (
               <button
-                type="button"
-                className={`hold-tracker${match.timeLostStartedAt !== null ? " is-tracking" : ""}`}
+                aria-label={`${t("timeLostHold")}: ${formatClockTime(timeLostMs)}`}
                 aria-pressed={match.timeLostStartedAt !== null}
-                onPointerDown={beginTracking}
-                onPointerUp={endTracking}
-                onPointerCancel={endTracking}
-                onLostPointerCapture={endTracking}
-                onKeyDown={handleTrackingKeyDown}
-                onKeyUp={handleTrackingKeyUp}
+                className={`hold-tracker${match.timeLostStartedAt !== null ? " is-tracking" : ""}`}
                 onBlur={endTracking}
                 onContextMenu={(event) => event.preventDefault()}
+                onKeyDown={handleTrackingKeyDown}
+                onKeyUp={handleTrackingKeyUp}
+                onLostPointerCapture={endTracking}
+                onPointerCancel={endTracking}
+                onPointerDown={beginTracking}
+                onPointerUp={endTracking}
+                type="button"
               >
-                <span className="hold-icon" aria-hidden="true">
+                <span aria-hidden="true" className="hold-icon">
                   {match.timeLostStartedAt !== null ? "●" : "◉"}
                 </span>
                 <span className="hold-copy">
@@ -875,242 +1397,144 @@ function App() {
                       ? t("timeLostTracking")
                       : t("timeLostHold")}
                   </strong>
-                  <small>
-                    {t("timeLostTotal", { time: formatClockTime(timeLostMs) })}
-                  </small>
+                  <small>{t("timeLostTotal", { time: formatClockTime(timeLostMs) })}</small>
                 </span>
-                <span className="hold-value">{formatClockTime(timeLostMs)}</span>
+                <span aria-hidden="true" className="hold-value">
+                  {formatClockTime(timeLostMs)}
+                </span>
               </button>
             )}
 
-          <div className="clock-controls" aria-label={t("controlsAria")}>
-            <button
-              type="button"
-              className="control-button control-start"
-              onClick={handleStart}
-              disabled={running || match.status === "stopped"}
-            >
-              <span className="button-symbol" aria-hidden="true">
-                {match.status === "paused" ? "▶" : "▶"}
-              </span>
-              <span>{match.status === "paused" ? t("resume") : t("start")}</span>
-            </button>
-            <button
-              type="button"
-              className="control-button control-pause"
-              onClick={handlePause}
-              disabled={!running}
-            >
-              <span className="button-symbol" aria-hidden="true">
-                Ⅱ
-              </span>
-              <span>{t("pause")}</span>
-            </button>
-            <button
-              type="button"
-              className="control-button control-stop"
-              onClick={handleStop}
-              disabled={match.status === "ready" || match.status === "stopped"}
-            >
-              <span className="button-symbol" aria-hidden="true">
-                ■
-              </span>
-              <span>{t("stop")}</span>
-            </button>
-            <button
-              type="button"
-              className="control-button control-reset"
-              onClick={handleReset}
-            >
-              <span className="button-symbol" aria-hidden="true">
-                ↺
-              </span>
-              <span>{t("reset")}</span>
-            </button>
-          </div>
+            <div aria-label={t("controlsAria")} className="clock-controls">
+              <button
+                aria-label={running ? t("pause") : t(match.status === "paused" ? "resume" : "start")}
+                className="control-button control-start"
+                disabled={match.status === "stopped"}
+                onClick={running ? handlePause : handleStart}
+                type="button"
+              >
+                <span aria-hidden="true" className="button-symbol">
+                  {running ? "Ⅱ" : "▶"}
+                </span>
+                <span className="button-label">
+                  {running
+                    ? t("pause")
+                    : t(match.status === "paused" ? "resume" : "start")}
+                </span>
+              </button>
+              <button
+                aria-label={breakRunning ? t("stopBreak") : t("stop")}
+                className="control-button control-stop"
+                disabled={
+                  match.status === "ready" || match.status === "stopped"
+                }
+                onClick={handleStop}
+                type="button"
+              >
+                <span aria-hidden="true" className="button-symbol">
+                  ■
+                </span>
+                <span className="button-label">
+                  {breakRunning ? t("stopBreak") : t("stop")}
+                </span>
+              </button>
+              <button
+                aria-label={t("reset")}
+                className="control-button control-reset"
+                onClick={handleReset}
+                type="button"
+              >
+                <span aria-hidden="true" className="button-symbol">
+                  ↺
+                </span>
+                <span className="button-label">{t("reset")}</span>
+              </button>
+            </div>
 
-          <div className="clock-footer">
-            <div className="wake-status" aria-live="polite">
-              <span className={`wake-icon${running && settings.keepScreenAwake ? " wake-active" : ""}`}>
-                ◉
-              </span>
-              <span>{t(wakeStatus)}</span>
+            <div className="clock-utilities">
+              <button
+                className="text-button correction-trigger"
+                onClick={openCorrection}
+                type="button"
+              >
+                <span aria-hidden="true">✎</span>
+                {t("correctTime")}
+              </button>
             </div>
-            <div className="match-total">
-              {pauseSummary(match.pauses, pauseDurationNow, displayMessages)}
-            </div>
-          </div>
-        </section>
 
-        <aside className="side-column">
-          <section className="panel period-panel" aria-labelledby="period-heading">
-            <div className="panel-heading">
-              <div>
-                <p className="eyebrow">{t("matchFlow")}</p>
-                <h2 id="period-heading">{t("selectPeriod")}</h2>
-              </div>
-              <span className="panel-heading-note">{settingsSummary}</span>
-            </div>
-            <div className="phase-switcher" role="group" aria-label={t("selectPeriod")}>
-              {availablePhases.map((phase) => (
-                <button
-                  key={phase}
-                  type="button"
-                  className={`phase-button${match.phase === phase ? " is-selected" : ""}`}
-                  aria-pressed={match.phase === phase}
-                  disabled={running || match.status === "stopped"}
-                  onClick={() => handlePhaseSelect(phase)}
+            <div className="clock-footer">
+              <div className="wake-status" aria-live="polite">
+                <span
+                  className={`wake-icon${activeClock && settings.keepScreenAwake ? " wake-active" : ""}`}
                 >
-                  <span>{phaseShortLabel(phase, displayMessages)}</span>
-                  <small>{phaseLabel(phase, displayMessages)}</small>
-                </button>
-              ))}
-            </div>
-            <p className="helper-copy">
-              {t("periodHelp")}
-            </p>
-          </section>
-
-          <section className="panel correction-panel" aria-labelledby="correction-heading">
-            <div className="panel-heading">
-              <div>
-                <p className="eyebrow">{t("quickAdjustment")}</p>
-                <h2 id="correction-heading">{t("correctTime")}</h2>
-              </div>
-              <button
-                type="button"
-                className="text-button"
-                onClick={loadCurrentTimeIntoCorrection}
-                aria-label={t("useLiveTimeAria")}
-              >
-                {t("useLiveTime")}
-              </button>
-            </div>
-            <p className="helper-copy correction-helper">
-              {t("correctHelper", {
-                phase: phaseLabel(match.phase, displayMessages),
-              })}
-            </p>
-            <div className="time-adjust-row">
-              <label className="number-field">
-                <span>{t("minutes")}</span>
-                <input
-                  type="number"
-                  min="0"
-                  max="999"
-                  inputMode="numeric"
-                  value={correctionMinutes}
-                  onChange={(event) => setCorrectionMinutes(event.currentTarget.value)}
-                />
-              </label>
-              <span className="time-colon" aria-hidden="true">
-                :
-              </span>
-              <label className="number-field number-field-seconds">
-                <span>{t("seconds")}</span>
-                <input
-                  type="number"
-                  min="0"
-                  max="59"
-                  inputMode="numeric"
-                  value={correctionSeconds}
-                  onChange={(event) => setCorrectionSeconds(event.currentTarget.value)}
-                />
-              </label>
-              <button
-                type="button"
-                className="apply-button"
-                disabled={!correctionCanBeApplied}
-                onClick={handleApplyCorrection}
-              >
-                {t("apply")}
-              </button>
-            </div>
-            {correctionError && (
-              <p className="form-error" role="alert">
-                {t(correctionError.key, correctionError.parameters)}
-              </p>
-            )}
-          </section>
-
-          <details className="panel setup-panel" open>
-            <summary className="setup-summary">
-              <span>
-                <span className="eyebrow">{t("personalize")}</span>
-                <strong>{t("setup")}</strong>
-              </span>
-              <span className="summary-meta">{settingsSummary}</span>
-            </summary>
-            <div className="setup-content">
-              <div className="setup-period-fields">
-                <label className="number-field">
-                  <span>{t("eachHalf")}</span>
-                  <span className="input-with-unit">
-                    <input
-                      type="number"
-                      min="1"
-                      max="180"
-                      step="1"
-                      inputMode="numeric"
-                      value={settings.halfLengthMinutes}
-                      disabled={!settingsEditable}
-                      onChange={(event) => {
-                        const value = event.currentTarget.valueAsNumber;
-                        if (Number.isInteger(value) && value >= 1 && value <= 180) {
-                          updateSettings({ halfLengthMinutes: value });
-                        }
-                      }}
-                    />
-                    <small>{t("minUnit")}</small>
-                  </span>
-                </label>
-                <label className="number-field">
-                  <span>{t("extraPeriods")}</span>
-                  <span className="input-with-unit">
-                    <input
-                      type="number"
-                      min="1"
-                      max="180"
-                      step="1"
-                      inputMode="numeric"
-                      value={settings.extraTimeLengthMinutes}
-                      disabled={!settingsEditable || !settings.hasExtraTime}
-                      onChange={(event) => {
-                        const value = event.currentTarget.valueAsNumber;
-                        if (Number.isInteger(value) && value >= 1 && value <= 180) {
-                          updateSettings({ extraTimeLengthMinutes: value });
-                        }
-                      }}
-                    />
-                    <small>{t("minUnit")}</small>
-                  </span>
-                </label>
-              </div>
-              <label className="setting-toggle">
-                <span>
-                  <strong>{t("extra")}</strong>
-                  <small>{t("extraHelp")}</small>
+                  ◉
                 </span>
-                <input
-                  type="checkbox"
-                  checked={settings.hasExtraTime}
-                  disabled={!settingsEditable}
-                  onChange={(event) => handleExtraTimeChange(event.currentTarget.checked)}
-                />
-              </label>
-              <div className="settings-divider" />
-              <div className="preference-fields">
+                <span>{t(wakeStatus)}</span>
+              </div>
+              <div className="match-total">
+                {pauseSummary(match.pauses, pauseDurationNow, displayMessages)}
+              </div>
+            </div>
+          </section>
+        )}
+      </main>
+
+      {(savedNotice || storageError || feedback) && (
+        <div aria-live="polite" className="message-stack">
+          {savedNotice && (
+            <p className="message message-warning">
+              <span>{t(savedNotice)}</span>
+              <button
+                aria-label={t("dismissSaved")}
+                className="message-close"
+                onClick={() => setSavedNotice(null)}
+                type="button"
+              >
+                ×
+              </button>
+            </p>
+          )}
+          {storageError && (
+            <p className="message message-warning">{t("storageError")}</p>
+          )}
+          {feedback && (
+            <p className="message">
+              <span>{t(feedback.key, feedback.parameters)}</span>
+              <button
+                aria-label={t("dismissMessage")}
+                className="message-close"
+                onClick={() => setFeedback(null)}
+                type="button"
+              >
+                ×
+              </button>
+            </p>
+          )}
+        </div>
+      )}
+
+      {modal === "settings" && (
+        <ModalShell
+          closeLabel={t("close")}
+          onClose={() => setModal(null)}
+          size="wide"
+          title={t("settingsTitle")}
+        >
+          <div className="settings-modal-grid">
+            <section className="modal-section" aria-labelledby="display-settings-heading">
+              <h3 id="display-settings-heading">{t("displaySettings")}</h3>
+              <div className="preference-fields modal-preferences">
                 <label className="number-field preference-field">
                   <span>{t("language")}</span>
                   <select
                     className="preference-select"
-                    value={preferences.language}
                     onChange={(event) => {
                       const language = event.currentTarget.value;
                       if (isLanguagePreference(language)) {
                         updatePreferences({ language });
                       }
                     }}
+                    value={preferences.language}
                   >
                     <option value="system">{t("system")}</option>
                     {LANGUAGE_OPTIONS.map((option) => (
@@ -1124,13 +1548,13 @@ function App() {
                   <span>{t("appearance")}</span>
                   <select
                     className="preference-select"
-                    value={preferences.theme}
                     onChange={(event) => {
                       const selectedTheme = event.currentTarget.value;
                       if (isThemePreference(selectedTheme)) {
                         updatePreferences({ theme: selectedTheme });
                       }
                     }}
+                    value={preferences.theme}
                   >
                     <option value="system">{t("system")}</option>
                     <option value="light">{t("light")}</option>
@@ -1138,18 +1562,19 @@ function App() {
                   </select>
                 </label>
               </div>
-              <div className="settings-divider" />
               <label className="setting-toggle">
                 <span>
                   <strong>{t("keepAwake")}</strong>
                   <small>{t("keepAwakeHelp")}</small>
                 </span>
                 <input
-                  type="checkbox"
                   checked={settings.keepScreenAwake}
                   onChange={(event) =>
-                    updateSettings({ keepScreenAwake: event.currentTarget.checked })
+                    updateSettings({
+                      keepScreenAwake: event.currentTarget.checked,
+                    })
                   }
+                  type="checkbox"
                 />
               </label>
               <label className="setting-toggle">
@@ -1158,147 +1583,639 @@ function App() {
                   <small>{t("notificationHelp")}</small>
                 </span>
                 <input
-                  type="checkbox"
                   checked={settings.showRunningNotification}
                   onChange={(event) =>
                     handleNotificationSetting(event.currentTarget.checked)
                   }
+                  type="checkbox"
                 />
               </label>
-              <label className="setting-toggle advanced-toggle">
+              <label className="setting-toggle">
                 <span>
                   <strong>{t("trackLost")}</strong>
                   <small>{t("trackHelp")}</small>
                 </span>
                 <input
-                  type="checkbox"
                   checked={settings.trackStoppageTime}
                   onChange={(event) =>
                     updateSettings({
                       trackStoppageTime: event.currentTarget.checked,
                     })
                   }
+                  type="checkbox"
                 />
               </label>
-              <p className="setup-footnote">
-                {t("setupNote")}
-              </p>
-            </div>
-          </details>
-
-          <details className="panel pause-panel">
-            <summary className="log-summary">
-              <span>
-                <span className="eyebrow">{t("matchLog")}</span>
-                <strong>{t("pauseTimes")}</strong>
-              </span>
-              <span className="log-count">
-                {match.pauses.length + (pauseDurationNow === null ? 0 : 1)}
-                <span className="chevron" aria-hidden="true">
-                  ⌄
+              <label className="setting-toggle">
+                <span>
+                  <strong>{t("pauseClock")}</strong>
+                  <small>{t("pauseClockHelp")}</small>
                 </span>
-              </span>
-            </summary>
-            <div className="pause-list-content">
-              {match.pauses.length === 0 && match.status !== "paused" ? (
-                <p className="empty-log">{t("pauseEmpty")}</p>
+                <input
+                  checked={pauseClockEnabled}
+                  onChange={(event) =>
+                    handlePauseClockSetting(event.currentTarget.checked)
+                  }
+                  type="checkbox"
+                />
+              </label>
+            </section>
+
+            <section className="modal-section" aria-labelledby="presets-heading">
+              <div className="section-heading">
+                <h3 id="presets-heading">{t("savedPresets")}</h3>
+                <button
+                  className="small-secondary-button"
+                  onClick={() => openPresetEditor(null)}
+                  type="button"
+                >
+                  <span aria-hidden="true">＋</span>
+                  {t("newPreset")}
+                </button>
+              </div>
+              {presets.length === 0 ? (
+                <p className="empty-presets">{t("noPresets")}</p>
               ) : (
-                <ol className="pause-list">
-                  {match.pauses.map((pause, index) => (
-                    <li key={`${pause.startedAt}-${index}`}>
-                      <span className="pause-index">{String(index + 1).padStart(2, "0")}</span>
-                      <span className="pause-detail">
-                        <strong>{phaseLabel(pause.phase, displayMessages)}</strong>
+                <ul className="preset-management-list">
+                  {presets.map((preset) => (
+                    <li className="preset-management-item" key={preset.id}>
+                      <div className="preset-management-copy">
+                        <strong>{preset.name}</strong>
                         <small>
-                          {t("atTime", {
-                            time: formatClockTime(pause.matchTimeMs),
-                            date: formatPauseDate(pause.startedAt, displayLocale),
-                          })}
+                          {preset.hasExtraTime
+                            ? t("settingsExtra", {
+                                half: preset.halfLengthMinutes,
+                                extra: preset.extraTimeLengthMinutes,
+                              })
+                            : t("settingsNoExtra", {
+                                half: preset.halfLengthMinutes,
+                              })}
                         </small>
-                      </span>
-                      <span className="pause-duration">
-                        {formatClockTime(pause.durationMs)}
-                      </span>
+                      </div>
+                      <div className="preset-item-actions">
+                        <button
+                          className="text-button"
+                          onClick={() => openPresetEditor(preset)}
+                          type="button"
+                        >
+                          {t("edit")}
+                        </button>
+                        <button
+                          className="text-button destructive-text"
+                          onClick={() => deletePreset(preset)}
+                          type="button"
+                        >
+                          {t("delete")}
+                        </button>
+                      </div>
                     </li>
                   ))}
-                  {match.status === "paused" && pauseDurationNow !== null && (
-                    <li className="pause-current">
-                      <span className="pause-index">··</span>
-                      <span className="pause-detail">
-                        <strong>{t("currentPause")}</strong>
-                        <small>
-                          {t("startedAt", {
-                            time: formatPauseDate(
-                              match.pauseStartedAt ?? now,
-                              displayLocale,
-                            ),
-                          })}
-                        </small>
-                      </span>
-                      <span className="pause-duration">
-                        {formatClockTime(pauseDurationNow)}
-                      </span>
-                    </li>
-                  )}
-                </ol>
+                </ul>
               )}
-              {(match.pauses.length > 0 || pauseDurationNow !== null) && (
-                <div className="pause-total">
-                  <span>{t("totalPauseTime")}</span>
-                  <strong>
-                    {formatClockTime(
-                      match.pauses.reduce(
-                        (total, pause) => total + pause.durationMs,
-                        0,
-                      ) + (pauseDurationNow ?? 0),
-                    )}
-                  </strong>
-                </div>
-              )}
-            </div>
-          </details>
-
-          <div className="platform-note">
-            <span aria-hidden="true">ⓘ</span>
-            <p>
-              {t("platformNote")}
-            </p>
+            </section>
           </div>
-        </aside>
-      </main>
 
-      {(savedNotice || storageError || feedback) && (
-        <div className="message-stack" aria-live="polite">
-          {savedNotice && (
-            <p className="message message-warning">
-              <span>{t(savedNotice)}</span>
+          {selectedPauseRecords.length > 0 || pauseDurationNow !== null ? (
+            <details className="modal-section pause-log-section">
+              <summary>
+                <span>{t("pauseTimes")}</span>
+                <span className="pause-log-count">
+                  {selectedPauseRecords.length +
+                    (pauseDurationNow === null ? 0 : 1)}
+                  <span aria-hidden="true">⌄</span>
+                </span>
+              </summary>
+              <ol className="pause-list">
+                {selectedPauseRecords.map((pause, index) => (
+                  <li key={`${pause.startedAt}-${index}`}>
+                    <span className="pause-index">
+                      {String(index + 1).padStart(2, "0")}
+                    </span>
+                    <span className="pause-detail">
+                      <strong>{phaseLabel(pause.phase, displayMessages)}</strong>
+                      <small>
+                        {t("atTime", {
+                          time: formatClockTime(pause.matchTimeMs),
+                          date: formatPauseDate(pause.startedAt, displayLocale),
+                        })}
+                      </small>
+                    </span>
+                    <span className="pause-duration">
+                      {formatClockTime(pause.durationMs)}
+                    </span>
+                  </li>
+                ))}
+                {pauseDurationNow !== null && (
+                  <li className="pause-current">
+                    <span className="pause-index">··</span>
+                    <span className="pause-detail">
+                      <strong>{t("currentPause")}</strong>
+                      <small>
+                        {t("startedAt", {
+                          time: formatPauseDate(
+                            match.pauseStartedAt ?? now,
+                            displayLocale,
+                          ),
+                        })}
+                      </small>
+                    </span>
+                    <span className="pause-duration">
+                      {formatClockTime(pauseDurationNow)}
+                    </span>
+                  </li>
+                )}
+              </ol>
+              <div className="pause-total">
+                <span>{t("totalPauseTime")}</span>
+                <strong>
+                  {formatClockTime(
+                    selectedPauseRecords.reduce(
+                      (total, pause) => total + pause.durationMs,
+                      0,
+                    ) + (pauseDurationNow ?? 0),
+                  )}
+                </strong>
+              </div>
+            </details>
+          ) : null}
+
+          <section className="about-entry">
+            <div>
+              <h3>{t("about")}</h3>
+              <p>{t("aboutShort")}</p>
+            </div>
+            <button
+              className="small-secondary-button"
+              onClick={() => setModal("about")}
+              type="button"
+            >
+              {t("about")}
+            </button>
+          </section>
+        </ModalShell>
+      )}
+
+      {modal === "setup" && (
+        <ModalShell
+          closeLabel={t("close")}
+          onClose={() => setModal(null)}
+          title={t("setUpMatch")}
+        >
+          <form className="modal-form" onSubmit={handleSetupSubmit}>
+            <p className="modal-intro">{t("setupDescription")}</p>
+            <div className="setup-period-fields modal-period-fields">
+              <label className="number-field">
+                <span>{t("eachHalf")}</span>
+                <span className="input-with-unit">
+                  <input
+                    inputMode="numeric"
+                    max="180"
+                    min="1"
+                    onChange={(event) => {
+                      const halfLengthMinutes =
+                        event.currentTarget.valueAsNumber;
+                      if (
+                        Number.isInteger(halfLengthMinutes) &&
+                        halfLengthMinutes >= 1 &&
+                        halfLengthMinutes <= 180
+                      ) {
+                        setSetupDraft((current) => ({
+                          ...current,
+                          halfLengthMinutes,
+                        }));
+                      }
+                    }}
+                    step="1"
+                    type="number"
+                    value={setupDraft.halfLengthMinutes}
+                  />
+                  <small>{t("minUnit")}</small>
+                </span>
+              </label>
+              <label className="number-field">
+                <span>{t("extraPeriods")}</span>
+                <span className="input-with-unit">
+                  <input
+                    disabled={!setupDraft.hasExtraTime}
+                    inputMode="numeric"
+                    max="180"
+                    min="1"
+                    onChange={(event) => {
+                      const extraTimeLengthMinutes =
+                        event.currentTarget.valueAsNumber;
+                      if (
+                        Number.isInteger(extraTimeLengthMinutes) &&
+                        extraTimeLengthMinutes >= 1 &&
+                        extraTimeLengthMinutes <= 180
+                      ) {
+                        setSetupDraft((current) => ({
+                          ...current,
+                          extraTimeLengthMinutes,
+                        }));
+                      }
+                    }}
+                    step="1"
+                    type="number"
+                    value={setupDraft.extraTimeLengthMinutes}
+                  />
+                  <small>{t("minUnit")}</small>
+                </span>
+              </label>
+            </div>
+            <label className="setting-toggle">
+              <span>
+                <strong>{t("extra")}</strong>
+                <small>{t("extraHelp")}</small>
+              </span>
+              <input
+                checked={setupDraft.hasExtraTime}
+                onChange={(event) => {
+                  const hasExtraTime = event.currentTarget.checked;
+                  setSetupDraft((current) => ({
+                    ...current,
+                    hasExtraTime,
+                  }));
+                }}
+                type="checkbox"
+              />
+            </label>
+            <label className="setting-toggle save-preset-toggle">
+              <span>
+                <strong>{t("saveAsPreset")}</strong>
+                <small>{t("saveAsPresetHelp")}</small>
+              </span>
+              <input
+                checked={setupSaveAsPreset}
+                onChange={(event) => {
+                  setSetupSaveAsPreset(event.currentTarget.checked);
+                  setSetupError(null);
+                }}
+                type="checkbox"
+              />
+            </label>
+            {setupSaveAsPreset && (
+              <label className="number-field preset-name-field">
+                <span>{t("presetName")}</span>
+                <input
+                  autoComplete="off"
+                  maxLength={40}
+                  onChange={(event) => {
+                    setSetupPresetName(event.currentTarget.value);
+                    setSetupError(null);
+                  }}
+                  value={setupPresetName}
+                />
+              </label>
+            )}
+            {setupError && (
+              <p className="form-error" role="alert">
+                {t(setupError)}
+              </p>
+            )}
+            <div className="modal-actions">
               <button
+                className="secondary-modal-button"
+                onClick={() => setModal(null)}
                 type="button"
-                onClick={() => setSavedNotice(null)}
-                aria-label={t("dismissSaved")}
-                className="message-close"
               >
-                ×
+                {t("cancel")}
               </button>
-            </p>
-          )}
-          {storageError && (
-            <p className="message message-warning">{t("storageError")}</p>
-          )}
-          {feedback && (
-            <p className="message">
-              <span>{t(feedback.key, feedback.parameters)}</span>
+              <button className="primary-modal-button" type="submit">
+                {t("continueToClock")}
+              </button>
+            </div>
+          </form>
+        </ModalShell>
+      )}
+
+      {modal === "presetPicker" && (
+        <ModalShell
+          closeLabel={t("close")}
+          onClose={() => setModal(null)}
+          title={t("choosePreset")}
+        >
+          {presets.length === 0 ? (
+            <div className="empty-preset-picker">
+              <p>{t("noPresets")}</p>
               <button
+                className="primary-modal-button"
+                onClick={() => {
+                  setModal(null);
+                  openSetup();
+                }}
                 type="button"
-                onClick={() => setFeedback(null)}
-                aria-label={t("dismissMessage")}
-                className="message-close"
               >
-                ×
+                {t("setUpMatch")}
               </button>
-            </p>
+            </div>
+          ) : (
+            <ul className="preset-picker-list">
+              {presets.map((preset) => (
+                <li key={preset.id}>
+                  <button
+                    className="preset-picker-item"
+                    onClick={() => startNewMatch(preset)}
+                    type="button"
+                  >
+                    <span>
+                      <strong>{preset.name}</strong>
+                      <small>
+                        {preset.hasExtraTime
+                          ? t("settingsExtra", {
+                              half: preset.halfLengthMinutes,
+                              extra: preset.extraTimeLengthMinutes,
+                            })
+                          : t("settingsNoExtra", {
+                              half: preset.halfLengthMinutes,
+                            })}
+                      </small>
+                    </span>
+                    <span aria-hidden="true" className="preset-picker-arrow">
+                      →
+                    </span>
+                  </button>
+                </li>
+              ))}
+            </ul>
           )}
-        </div>
+        </ModalShell>
+      )}
+
+      {modal === "presetEditor" && presetDraft !== null && (
+        <ModalShell
+          closeLabel={t("close")}
+          onClose={closePresetEditor}
+          title={t(presetDraft.id === null ? "newPreset" : "editPreset")}
+        >
+          <form className="modal-form" onSubmit={savePresetDraft}>
+            <label className="number-field preset-name-field">
+              <span>{t("presetName")}</span>
+              <input
+                autoComplete="off"
+                maxLength={40}
+                onChange={(event) => {
+                  const name = event.currentTarget.value;
+                  setPresetDraft((current) =>
+                    current === null
+                      ? current
+                      : { ...current, name },
+                  );
+                  setPresetError(null);
+                }}
+                value={presetDraft.name}
+              />
+            </label>
+            <div className="setup-period-fields modal-period-fields">
+              <label className="number-field">
+                <span>{t("eachHalf")}</span>
+                <span className="input-with-unit">
+                  <input
+                    inputMode="numeric"
+                    max="180"
+                    min="1"
+                    onChange={(event) => {
+                      const halfLengthMinutes =
+                        event.currentTarget.valueAsNumber;
+                      if (
+                        Number.isInteger(halfLengthMinutes) &&
+                        halfLengthMinutes >= 1 &&
+                        halfLengthMinutes <= 180
+                      ) {
+                        setPresetDraft((current) =>
+                          current === null
+                            ? current
+                            : { ...current, halfLengthMinutes },
+                        );
+                      }
+                    }}
+                    step="1"
+                    type="number"
+                    value={presetDraft.halfLengthMinutes}
+                  />
+                  <small>{t("minUnit")}</small>
+                </span>
+              </label>
+              <label className="number-field">
+                <span>{t("extraPeriods")}</span>
+                <span className="input-with-unit">
+                  <input
+                    disabled={!presetDraft.hasExtraTime}
+                    inputMode="numeric"
+                    max="180"
+                    min="1"
+                    onChange={(event) => {
+                      const extraTimeLengthMinutes =
+                        event.currentTarget.valueAsNumber;
+                      if (
+                        Number.isInteger(extraTimeLengthMinutes) &&
+                        extraTimeLengthMinutes >= 1 &&
+                        extraTimeLengthMinutes <= 180
+                      ) {
+                        setPresetDraft((current) =>
+                          current === null
+                            ? current
+                            : { ...current, extraTimeLengthMinutes },
+                        );
+                      }
+                    }}
+                    step="1"
+                    type="number"
+                    value={presetDraft.extraTimeLengthMinutes}
+                  />
+                  <small>{t("minUnit")}</small>
+                </span>
+              </label>
+            </div>
+            <label className="setting-toggle">
+              <span>
+                <strong>{t("extra")}</strong>
+                <small>{t("extraHelp")}</small>
+              </span>
+              <input
+                checked={presetDraft.hasExtraTime}
+                onChange={(event) => {
+                  const hasExtraTime = event.currentTarget.checked;
+                  setPresetDraft((current) =>
+                    current === null
+                      ? current
+                      : {
+                          ...current,
+                          hasExtraTime,
+                        },
+                  );
+                }}
+                type="checkbox"
+              />
+            </label>
+            {presetError && (
+              <p className="form-error" role="alert">
+                {t(presetError)}
+              </p>
+            )}
+            <div className="modal-actions">
+              <button
+                className="secondary-modal-button"
+                onClick={closePresetEditor}
+                type="button"
+              >
+                {t("cancel")}
+              </button>
+              <button className="primary-modal-button" type="submit">
+                {t("save")}
+              </button>
+            </div>
+          </form>
+        </ModalShell>
+      )}
+
+      {modal === "correction" && (
+        <ModalShell
+          closeLabel={t("close")}
+          onClose={() => setModal(null)}
+          title={t("correctTime")}
+        >
+          <form className="modal-form" onSubmit={handleApplyCorrection}>
+            <p className="modal-intro">
+              {t("correctHelper", {
+                phase: phaseLabel(correctionPhase, displayMessages),
+              })}
+            </p>
+            <label className="number-field">
+              <span>{t("selectPeriod")}</span>
+              <select
+                className="preference-select"
+                onChange={(event) => {
+                  const selectedPhase = event.currentTarget.value;
+                  if (
+                    MATCH_PHASES.some((phase) => phase === selectedPhase) &&
+                    availablePhases.includes(selectedPhase as MatchPhase)
+                  ) {
+                    setCorrectionPhase(selectedPhase as MatchPhase);
+                    setCorrectionError(null);
+                  }
+                }}
+                value={correctionPhase}
+              >
+                {availablePhases.map((phase) => (
+                  <option key={phase} value={phase}>
+                    {phaseShortLabel(phase, displayMessages)} ·{" "}
+                    {phaseLabel(phase, displayMessages)}
+                  </option>
+                ))}
+              </select>
+            </label>
+            <div className="correction-tools">
+              <span className="eyebrow">{t("quickAdjustment")}</span>
+              <button
+                className="text-button"
+                onClick={loadCurrentTimeIntoCorrection}
+                type="button"
+              >
+                {t("useLiveTime")}
+              </button>
+            </div>
+            <div className="correction-time-grid">
+              <label className="number-field">
+                <span>{t("minutes")}</span>
+                <input
+                  inputMode="numeric"
+                  max="999"
+                  min="0"
+                  onChange={(event) => {
+                    setCorrectionMinutes(event.currentTarget.value);
+                    setCorrectionError(null);
+                  }}
+                  type="number"
+                  value={correctionMinutes}
+                />
+              </label>
+              <span aria-hidden="true" className="time-colon">
+                :
+              </span>
+              <label className="number-field">
+                <span>{t("seconds")}</span>
+                <input
+                  inputMode="numeric"
+                  max="59"
+                  min="0"
+                  onChange={(event) => {
+                    setCorrectionSeconds(event.currentTarget.value);
+                    setCorrectionError(null);
+                  }}
+                  type="number"
+                  value={correctionSeconds}
+                />
+              </label>
+            </div>
+            {correctionError && (
+              <p className="form-error" role="alert">
+                {t(correctionError.key, correctionError.parameters)}
+              </p>
+            )}
+            <div className="modal-actions">
+              <button
+                className="secondary-modal-button"
+                onClick={() => setModal(null)}
+                type="button"
+              >
+                {t("cancel")}
+              </button>
+              <button className="primary-modal-button" type="submit">
+                {t("apply")}
+              </button>
+            </div>
+          </form>
+        </ModalShell>
+      )}
+
+      {modal === "about" && (
+        <ModalShell
+          closeLabel={t("close")}
+          onClose={() => setModal("settings")}
+          title={t("about")}
+        >
+          <div className="about-content">
+            <p>{t("aboutDescription")}</p>
+            <div className="about-platform-note">
+              <span aria-hidden="true">ⓘ</span>
+              <p>{t("platformNote")}</p>
+            </div>
+            <section className="license-info">
+              <h3>{t("licenses")}</h3>
+              <p>{t("licenseDescription")}</p>
+              <a href="/licenses/DSEG-OFL-1.1.txt" rel="noreferrer" target="_blank">
+                {t("fontLicense")}
+              </a>
+            </section>
+          </div>
+          <div className="modal-actions">
+            <button
+              className="primary-modal-button"
+              onClick={() => setModal("settings")}
+              type="button"
+            >
+              {t("close")}
+            </button>
+          </div>
+        </ModalShell>
+      )}
+
+      {modal === "installHelp" && (
+        <ModalShell
+          closeLabel={t("close")}
+          onClose={() => setModal(null)}
+          title={t("installInstructionsTitle")}
+        >
+          <p className="install-instructions">{t(installInstructionsKey)}</p>
+          <div className="modal-actions">
+            <button
+              className="primary-modal-button"
+              onClick={() => setModal(null)}
+              type="button"
+            >
+              {t("close")}
+            </button>
+          </div>
+        </ModalShell>
       )}
     </div>
   );

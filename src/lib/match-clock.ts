@@ -6,7 +6,7 @@ export const MATCH_PHASES = [
 ] as const;
 
 export type MatchPhase = (typeof MATCH_PHASES)[number];
-export type ClockStatus = "ready" | "running" | "paused" | "stopped";
+export type ClockStatus = "ready" | "running" | "paused" | "break" | "stopped";
 
 export interface MatchSettings {
   halfLengthMinutes: number;
@@ -148,7 +148,7 @@ export function startClock(state: MatchClockState, now: number): MatchClockState
     return state;
   }
 
-  if (state.status === "paused") {
+  if (state.status === "paused" || state.status === "break") {
     const pauseRecord =
       state.pauseStartedAt !== null &&
       state.pauseMatchTimeMs !== null &&
@@ -203,9 +203,11 @@ export function pauseClock(
 
 export function stopClock(
   state: MatchClockState,
+  settings: MatchSettings,
+  runBreakClock: boolean,
   now: number,
 ): MatchClockState {
-  if (state.status === "ready" || state.status === "stopped") {
+  if (state.status !== "running" && state.status !== "paused") {
     return state;
   }
 
@@ -226,17 +228,56 @@ export function stopClock(
         ]
       : [];
 
+  const phases = getAvailablePhases(settings);
+  const nextPhase = phases[phases.indexOf(state.phase) + 1];
+  const breakClockRunning = nextPhase !== undefined && runBreakClock;
   return {
     ...state,
-    status: "stopped",
-    elapsedMs,
+    phase: nextPhase ?? state.phase,
+    status: nextPhase === undefined ? "stopped" : breakClockRunning ? "break" : "ready",
+    elapsedMs: nextPhase === undefined ? elapsedMs : 0,
     startedAt: null,
+    pauseStartedAt: breakClockRunning ? now : null,
+    pauseMatchTimeMs: breakClockRunning
+      ? getPhaseBaselineMs(state.phase, settings) + elapsedMs
+      : null,
+    pausePhase: breakClockRunning ? state.phase : null,
+    pauses: [...state.pauses, ...pauseRecord],
+    timeLostMs: getTimeLostMs(state, now),
+    timeLostStartedAt: null,
+  };
+}
+
+export function stopBreakClock(
+  state: MatchClockState,
+  now: number,
+): MatchClockState {
+  if (state.status !== "break") {
+    return state;
+  }
+
+  const pauseRecord =
+    state.pauseStartedAt !== null &&
+    state.pauseMatchTimeMs !== null &&
+    state.pausePhase !== null
+      ? [
+          {
+            phase: state.pausePhase,
+            matchTimeMs: state.pauseMatchTimeMs,
+            startedAt: state.pauseStartedAt,
+            endedAt: Math.max(now, state.pauseStartedAt),
+            durationMs: Math.max(0, now - state.pauseStartedAt),
+          },
+        ]
+      : [];
+
+  return {
+    ...state,
+    status: "ready",
     pauseStartedAt: null,
     pauseMatchTimeMs: null,
     pausePhase: null,
     pauses: [...state.pauses, ...pauseRecord],
-    timeLostMs: getTimeLostMs(state, now),
-    timeLostStartedAt: null,
   };
 }
 
@@ -257,18 +298,56 @@ export function selectPhase(
 export function setMatchTime(
   state: MatchClockState,
   settings: MatchSettings,
+  phase: MatchPhase,
   matchTimeMs: number,
   now: number,
 ): MatchClockState | null {
-  const elapsedMs = matchTimeMs - getPhaseBaselineMs(state.phase, settings);
-  if (!Number.isFinite(matchTimeMs) || elapsedMs < 0) {
+  const elapsedMs = matchTimeMs - getPhaseBaselineMs(phase, settings);
+  if (
+    !getAvailablePhases(settings).includes(phase) ||
+    !Number.isFinite(matchTimeMs) ||
+    elapsedMs < 0
+  ) {
     return null;
   }
 
+  const keepPaused = state.status === "paused" && state.phase === phase;
+  const keepStopped = state.status === "stopped" && state.phase === phase;
+  const status = state.status === "running"
+    ? "running"
+    : keepPaused
+      ? "paused"
+      : keepStopped
+        ? "stopped"
+        : "ready";
+  const pauseRecord =
+    (state.status === "break" || (state.status === "paused" && !keepPaused)) &&
+    state.pauseStartedAt !== null &&
+    state.pauseMatchTimeMs !== null &&
+    state.pausePhase !== null
+      ? [
+          {
+            phase: state.pausePhase,
+            matchTimeMs: state.pauseMatchTimeMs,
+            startedAt: state.pauseStartedAt,
+            endedAt: Math.max(now, state.pauseStartedAt),
+            durationMs: Math.max(0, now - state.pauseStartedAt),
+          },
+        ]
+      : [];
+
   return {
     ...state,
+    phase,
+    status,
     elapsedMs,
     startedAt: state.status === "running" ? now : null,
+    pauseStartedAt: keepPaused ? state.pauseStartedAt : null,
+    pauseMatchTimeMs: keepPaused ? matchTimeMs : null,
+    pausePhase: keepPaused ? phase : null,
+    pauses: [...state.pauses, ...pauseRecord],
+    timeLostMs: getTimeLostMs(state, now),
+    timeLostStartedAt: state.status === "running" ? state.timeLostStartedAt : null,
   };
 }
 

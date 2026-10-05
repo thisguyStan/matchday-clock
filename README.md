@@ -4,6 +4,8 @@ An installable, offline-first football match clock. It runs entirely in the
 browser, stores match data on the current device, and needs no account or
 backend.
 
+> Made with AI
+
 ## Features
 
 - Installable PWA for Android and Apple devices, with portrait and landscape
@@ -13,13 +15,18 @@ backend.
 - Cumulative match time: a 45-minute first half shows `48:05` in red at 3:05
   stoppage time; the second half starts at `45:00`. Period lengths are
   configurable for shorter-format leagues.
-- Start/resume, pause, confirmed stop, and confirmed reset controls. The clock
-  keeps running past a period limit until the next period is selected.
+- A combined start/pause control, period stop, and confirmed reset. Stop
+  advances to the next configured period and starts an optional break timer;
+  stopping the final period leaves its final time visible.
 - Correct the displayed time at any point, including while running.
-- A pause log with the period, match time, and duration of every pause.
+- A pause log with the period, match time, and duration of each between-period
+  break and manual pause, available from Settings.
 - Optional hold-to-track control that measures time lost separately without
   stopping the match clock.
 - Optional screen wake lock while running and best-effort running notifications.
+- Locally saved, named match presets for commonly used period lengths.
+- An install banner with a browser install prompt where supported and
+  platform-specific instructions otherwise.
 - Localized interface in 15 languages, with device-language detection and
   English (UK) as the fallback.
 - Light and dark themes that follow the device appearance by default, with
@@ -51,7 +58,7 @@ npm run preview
 ## Install on a phone or tablet
 
 Serve the app over HTTPS (or `localhost` for development), then open it in the
-browser:
+browser. The app shows an install banner outside standalone/PWA mode:
 
 - **Android:** use Chrome's Install app / Add to Home screen option.
 - **iPhone or iPad:** open the site in Safari, choose Share, then Add to Home
@@ -69,10 +76,10 @@ The app supports English (US), English (UK), German, Spanish, Portuguese
 (Portugal and Brazil), French, Dutch, Swedish, Danish, Italian, Polish,
 Norwegian, Finnish, and Croatian. By default it follows the device language;
 unsupported languages fall back to English (UK). The language can be changed
-in **Match setup**.
+in **Settings**.
 
 Light or dark appearance follows the device setting by default. Choose a fixed
-mode in **Match setup** to override it. Language and appearance preferences are
+mode in **Settings** to override it. Language and appearance preferences are
 saved locally with the match data. The app imports only the selected language
 at runtime, while the service worker precaches all locale chunks during its
 installation or update. Once that cache is ready, every supported language can
@@ -88,11 +95,13 @@ screen does not make the match clock drift.
 Browsers can suspend or terminate a PWA while it is in the background, and a
 web app cannot guarantee execution after it is closed. The screen wake lock is
 best-effort and only works while supported by the browser; it can be disabled
-in Match setup. Running notifications also depend on browser permission and
-platform support, and are not a guaranteed persistent background service.
-Explicitly use **Stop** to finish a match; if the operating system later
-reopens a saved running match, its clock is recovered from its last saved
-timestamp.
+in Settings. Running notifications also depend on browser permission and
+platform support, and are not a guaranteed persistent background service. Use
+**Stop** at the end of each period to advance the match and optionally start
+the break timer. After the final period, the clock stays at its final time; use
+**Reset** to clear the match and return to the setup choices. If the operating
+system later reopens a saved running match, its clock is recovered from its
+last saved timestamp.
 
 ## Self-host with Docker
 
