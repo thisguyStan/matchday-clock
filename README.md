@@ -1,0 +1,105 @@
+# Matchday Clock
+
+An installable, offline-first football match clock. It runs entirely in the
+browser, stores match data on the current device, and needs no account or
+backend.
+
+## Features
+
+- Installable PWA for Android and Apple devices, with portrait and landscape
+  layouts.
+- Configurable duration for each regulation half and, optionally, each of two
+  extra-time periods.
+- Cumulative match time: a 45-minute first half shows `48:05` in red at 3:05
+  stoppage time; the second half starts at `45:00`. Period lengths are
+  configurable for shorter-format leagues.
+- Start/resume, pause, confirmed stop, and confirmed reset controls. The clock
+  keeps running past a period limit until the next period is selected.
+- Correct the displayed time at any point, including while running.
+- A pause log with the period, match time, and duration of every pause.
+- Optional hold-to-track control that measures time lost separately without
+  stopping the match clock.
+- Optional screen wake lock while running and best-effort running notifications.
+- Local storage and a service worker cache for use after the first successful
+  load.
+
+The clock uses the locally bundled DSEG7 LCD font. It is distributed under the
+SIL Open Font License 1.1; the required notice is included at
+`public/licenses/DSEG-OFL-1.1.txt` and in the built webfiles.
+
+## Run locally
+
+Requirements: Node.js 22.12 or newer and npm.
+
+```sh
+npm ci
+npm run dev
+```
+
+Run the focused clock-model tests and production build with:
+
+```sh
+npm test
+npm run build
+npm run preview
+```
+
+## Install on a phone or tablet
+
+Serve the app over HTTPS (or `localhost` for development), then open it in the
+browser:
+
+- **Android:** use Chrome's Install app / Add to Home screen option.
+- **iPhone or iPad:** open the site in Safari, choose Share, then Add to Home
+  Screen.
+
+The first visit needs a network connection so the browser can download the app
+shell. After that, the service worker caches the app files and the clock works
+offline. Match setup and match data are saved only in that browser's local
+storage; they are not synced to other devices and can be removed by clearing
+the browser's site data.
+
+## Phone background and notification limits
+
+The displayed clock is calculated from saved timestamps rather than depending
+on a JavaScript interval to count seconds. When the app becomes visible again,
+it recalculates the time, so throttling while switching apps or locking the
+screen does not make the match clock drift.
+
+Browsers can suspend or terminate a PWA while it is in the background, and a
+web app cannot guarantee execution after it is closed. The screen wake lock is
+best-effort and only works while supported by the browser; it can be disabled
+in Match setup. Running notifications also depend on browser permission and
+platform support, and are not a guaranteed persistent background service.
+Explicitly use **Stop** to finish a match; if the operating system later
+reopens a saved running match, its clock is recovered from its last saved
+timestamp.
+
+## Self-host with Docker
+
+The image serves the static PWA with Nginx on port 80. Put it behind an HTTPS
+reverse proxy so mobile browsers can install it and grant wake-lock or
+notification permissions.
+
+```sh
+docker build -t matchday-clock .
+docker run --rm -p 8080:80 matchday-clock
+```
+
+Then open `http://localhost:8080` (or the HTTPS hostname configured in your
+reverse proxy).
+
+## GitHub releases
+
+Pushing a version tag such as `v1.0.0` runs
+`.github/workflows/release.yml`. The workflow tests and builds the app, creates
+a GitHub Release with `matchday-clock-static-webfiles.tar.gz` attached, and
+publishes a multi-architecture container image to GitHub Container Registry:
+
+```text
+ghcr.io/thisguystan/matchday-clock:v1.0.0
+ghcr.io/thisguystan/matchday-clock:latest
+```
+
+The created release includes a direct link to the GHCR package as well as the
+downloadable static webfiles.
