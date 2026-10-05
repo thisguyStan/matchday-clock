@@ -57,8 +57,12 @@ npm run preview
 
 ## Install on a phone or tablet
 
-Serve the app over HTTPS (or `localhost` for development), then open it in the
-browser. The app shows an install banner outside standalone/PWA mode:
+For phone and tablet installation, serve the app over HTTPS with a certificate
+trusted by the device. The Docker image serves HTTP on port 80, so put it
+behind a TLS-terminating reverse proxy; a plain `http://` LAN or IP address is
+not installable by Android Chrome. `localhost` is suitable for development.
+Then open the app in the browser. The app shows an install banner outside
+standalone/PWA mode:
 
 - **Android:** use Chrome's Install app / Add to Home screen option.
 - **iPhone or iPad:** open the site in Safari, choose Share, then Add to Home
