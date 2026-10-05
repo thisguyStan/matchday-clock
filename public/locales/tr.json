@@ -1,0 +1,206 @@
+{
+  "install": {
+    "banner": "Hızlı erişim ve çevrimdışı kullanım için Matchday Clock'u yükleyin.",
+    "dismiss": "Yükleme bandını kapat",
+    "app": "Uygulamayı yükle",
+    "instructions": {
+      "title": "Matchday Clock'u yükleyin",
+      "ios": "Safari'de Paylaş'a, ardından Ana Ekrana Ekle'ye dokunun. Diğer iPhone tarayıcılarında paylaşım veya tarayıcı menüsünü açıp Ana Ekrana Ekle'yi seçin.",
+      "android": "Tarayıcı menüsünü açın ve Uygulamayı yükle veya Ana ekrana ekle'yi seçin.",
+      "other": "Tarayıcınızın Uygulamayı yükle veya Ana ekrana ekle seçeneğini kullanın. Bu seçenek yoksa tarayıcı menüsünü kontrol edin."
+    },
+    "failed": "Yükleme başlatılamadı. Uygulamayı yüklemek için tarayıcı menüsünü kullanın."
+  },
+  "settings": {
+    "open": "Ayarları aç",
+    "title": "Ayarlar",
+    "display": "Uygulama ayarları",
+    "pauseClock": "Devreler arasındaki süreyi takip et",
+    "pauseClockHelp": "Bir devre sona erdikten sonraki arayı otomatik olarak ölç",
+    "personalize": "Kişiselleştir",
+    "keepAwake": "Ekranı açık tut",
+    "keepAwakeHelp": "Maç saati çalışırken",
+    "runningNotification": "Çalışma bildirimi",
+    "notificationHelp": "Mümkün olduğunda; izin ve platform desteği gerekir",
+    "trackLost": "Kaybedilen süreyi basılı tutarak kaydet",
+    "trackHelp": "Saate ayrı bir basılı tutma düğmesi ekle",
+    "language": "Dil",
+    "appearance": "Görünüm",
+    "system": "Cihaz ayarını kullan",
+    "light": "Açık",
+    "dark": "Koyu"
+  },
+  "launch": {
+    "title": "Maç gününe hazır mısınız?",
+    "description": "Alışık olduğunuz maç ayarlarını seçin veya yenisini yapılandırın. Başlat'a bastığınızda saat çalışmaya başlar.",
+    "useLastSettings": "Son ayarları kullan",
+    "setup": "Maçı ayarla"
+  },
+  "preset": {
+    "choose": "Kayıtlı bir maç ayarı seçin",
+    "count": "{count} kayıtlı hazır ayar",
+    "nameRequired": "Bu hazır ayar için bir ad girin.",
+    "nameExists": "Bu adla bir hazır ayar zaten var.",
+    "deleteConfirm": "\"{name}\" silinsin mi? Bu işlem geri alınamaz.",
+    "saved": "Hazır ayar bu cihaza kaydedildi.",
+    "updated": "Hazır ayar güncellendi.",
+    "deleted": "Hazır ayar silindi.",
+    "heading": "Kayıtlı hazır ayarlar",
+    "empty": "Henüz kayıtlı hazır ayar yok. Maç ayarlarken bir tane kaydedin.",
+    "new": "Yeni hazır ayar",
+    "edit": "Hazır ayarı düzenle",
+    "name": "Hazır ayar adı"
+  },
+  "break": {
+    "running": "Ara saati çalışıyor",
+    "time": "Ara süresi",
+    "stop": "Ara saatini durdur"
+  },
+  "clock": {
+    "status": {
+      "finished": "Tamamlandı",
+      "ready": "Hazır",
+      "running": "Çalışıyor",
+      "paused": "Duraklatıldı",
+      "stopped": "Durduruldu"
+    },
+    "timer": "Maç saati",
+    "stoppage": "Uzatma dakikası",
+    "periodLimit": "Devre {time}",
+    "thisPeriod": "{time} bu devre",
+    "pausedFor": "Duraklatıldı: {time}",
+    "controlsAria": "Maç saati kontrolleri"
+  },
+  "match": {
+    "finished": "Maç tamamlandı. Son süre bu cihaza kaydedildi.",
+    "flow": "Maç akışı"
+  },
+  "common": {
+    "delete": "Sil",
+    "edit": "Düzenle",
+    "close": "Kapat",
+    "save": "Kaydet",
+    "cancel": "İptal",
+    "apply": "Uygula",
+    "dismissMessage": "Mesajı kapat"
+  },
+  "setup": {
+    "description": "Bu maçın devre sürelerini seçin. Bu ayarları daha sonra kullanmak üzere kaydedebilirsiniz.",
+    "saveAsPreset": "Bu ayarı hazır ayar olarak kaydet",
+    "saveAsPresetHelp": "Bu devre sürelerini daha sonraki maçlar için bu cihaza kaydedin.",
+    "continueToClock": "Saate geç",
+    "summary": {
+      "withExtraTime": "{half} dk. devreler · {extra} dk. uzatma devreleri",
+      "withoutExtraTime": "{half} dk. devreler · uzatma yok"
+    },
+    "title": "Maç ayarları",
+    "eachHalf": "Her devre",
+    "extraPeriods": "Uzatma devreleri",
+    "extraTime": "Uzatma",
+    "extraHelp": "Yukarıdaki süreyi kullanan iki devre",
+    "note": "Ayarlar ve maç verileri bu cihazdaki tarayıcıda kalır. Devre süreleri Sıfırla'dan sonra değiştirilebilir."
+  },
+  "about": {
+    "title": "Hakkında",
+    "short": "Uygulama bilgileri ve açık kaynak bildirimleri.",
+    "description": "Matchday Clock bu cihazda yerel olarak çalışır ve çevrimdışı kullanılabilir.",
+    "licenses": {
+      "heading": "Lisanslar ve teşekkürler",
+      "description": "Ekran, SIL Open Font License 1.1 kapsamında dağıtılan DSEG7 Classic yazı tipini kullanır.",
+      "font": "DSEG7 yazı tipi lisansını okuyun (OFL 1.1)"
+    },
+    "platformNote": "Bir web uygulaması her telefonda arka planda çalışmayı veya bildirimleri garanti edemez. Geri döndüğünüzde geçen süreyi hesaplamak için kaydedilmiş zaman damgalarını kullanır."
+  },
+  "app": {
+    "subtitle": "Futbol saati",
+    "homeAria": "Matchday Clock ana sayfası"
+  },
+  "storage": {
+    "saved": "Cihaza kaydedildi",
+    "notSaving": "Kaydedilmiyor",
+    "dismissSavedWarning": "Kaydedilen veri uyarısını kapat",
+    "invalidMatch": "Kaydedilen maç verileri okunamadı; bu nedenle yeni bir saat yüklendi.",
+    "invalidPreferences": "Kaydedilen tercihler geçersizdi; cihaz ayarları kullanılıyor.",
+    "writeFailed": "Bu tarayıcı maçınızı yerel olarak kaydedemedi. Uygulamayı yenilemekten veya kapatmaktan kaçının."
+  },
+  "period": {
+    "firstHalf": "İlk devre",
+    "secondHalf": "İkinci devre",
+    "extraTimeFirst": "Uzatma 1",
+    "extraTimeSecond": "Uzatma 2",
+    "extraShort": "UZ",
+    "select": "Devre seçin",
+    "help": "Yeni bir devre maç süresindeki başlangıç noktasından başlar. Saat sınır aşıldıktan sonra da çalışır ve uzatma dakikalarında kırmızıya döner."
+  },
+  "lostTime": {
+    "hold": "Kaybedilen süreyi basılı tutarak kaydet",
+    "tracking": "Kaybedilen süre kaydediliyor",
+    "total": "Maç saatinden ayrı · toplam {time}"
+  },
+  "control": {
+    "start": "Başlat",
+    "resume": "Sürdür",
+    "pause": "Duraklat",
+    "stop": "Durdur",
+    "reset": "Sıfırla"
+  },
+  "wake": {
+    "idle": "Ekranı açık tutma beklemede.",
+    "off": "Ekranı açık tutma ayarlarda kapalı.",
+    "active": "Bu uygulama görünürken ekran açık tutuluyor.",
+    "unsupported": "Bu tarayıcı ekranın açık tutulmasını desteklemiyor.",
+    "retry": "Ekranın açık tutulması sonlandırıldı; yeniden deneniyor.",
+    "failed": "Ekran açık tutulamadı. Maç saati çalışmaya devam edecek."
+  },
+  "pauseLog": {
+    "none": "Kaydedilmiş duraklama yok",
+    "summary": "Duraklamalar: {count}{current} · toplam {time}",
+    "matchLog": "Maç kaydı",
+    "title": "Duraklama süreleri",
+    "emptyState": "Duraklama kaydını başlatmak için saati duraklatın.",
+    "current": "Geçerli duraklama",
+    "totalTime": "Toplam duraklama süresi"
+  },
+  "correction": {
+    "quickAdjustment": "Hızlı düzeltme",
+    "title": "Maç süresini düzelt",
+    "useLiveTime": "Canlı süreyi kullan",
+    "useLiveTimeAria": "Geçerli maç süresini düzeltme alanlarına yükle",
+    "helper": "Gösterilen maç süresini {phase} için ayarlayın. Saat çalışırken de kullanılabilir.",
+    "minutes": "Dakika",
+    "seconds": "Saniye",
+    "invalid": "0 ile 59 arasında tam dakika ve saniye girin.",
+    "beforePeriod": "Bu süre, {phase} başlangıcından ({time}) önce."
+  },
+  "units": {
+    "minuteShort": "DK"
+  },
+  "date": {
+    "startedAt": "Başlangıç: {time}",
+    "atTime": "Saat {time} · {date}"
+  },
+  "notification": {
+    "unsupported": "Bu tarayıcı çalışma bildirimlerini desteklemiyor.",
+    "denied": "Bildirimler engellendi. Çalışma durumunu görmek için tarayıcı ayarlarından izin verin.",
+    "permission": "Çalışma durumunu göstermek için tarayıcı ayarlarından bildirimlere izin verin.",
+    "noServiceWorker": "Bu tarayıcı arka planda çalışma bildirimi gösteremiyor.",
+    "noRegistration": "Çalışma bildirimleri, uygulama yüklendikten veya barındırılan PWA'sından açıldıktan sonra kullanılabilir.",
+    "title": "Matchday Clock çalışıyor",
+    "body": "Maç saati etkin. Kontrol etmek için Matchday Clock'a geri dönün.",
+    "sent": "Bu platformun desteklediği durumlarda çalışma bildirimi gönderildi.",
+    "failed": "Çalışma bildirimi gösterilemedi. Bu uygulamanın tarayıcı izinlerini kontrol edin.",
+    "closeFailed": "Tarayıcı çalışma bildirimini kapatamadı."
+  },
+  "confirmation": {
+    "stop": "Bu maçı durdurup son süresini görünür tutmak istiyor musunuz? Yeni bir maç başlatmadan önce sıfırlamanız gerekir.",
+    "reset": "Maç saati, duraklama kaydı ve kaydedilen kayıp süre sıfırlansın mı? Maç ayarları korunacak."
+  },
+  "feedback": {
+    "stopped": "Maç durduruldu. Son süresi bu cihaza kaydedildi.",
+    "reset": "Maç saati sıfırlandı. Maç ayarları değişmedi.",
+    "corrected": "Maç süresi düzeltildi."
+  },
+  "locale": {
+    "loadFailed": "{language} yüklenemedi. İngilizce (Birleşik Krallık) kullanılıyor."
+  }
+}

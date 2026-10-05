@@ -4,6 +4,8 @@ import { VitePWA } from "vite-plugin-pwa";
 import { defineConfig } from "vite";
 
 export default defineConfig({
+  root: "src",
+  publicDir: "../public",
   plugins: [
     react(),
     tailwindcss(),
@@ -41,19 +43,28 @@ export default defineConfig({
       },
       workbox: {
         globPatterns: ["**/*.{js,css,html,svg,png,woff,woff2,txt}"],
+        runtimeCaching: [
+          {
+            urlPattern: /\/locales\/[^/]+\.json$/,
+            handler: "NetworkFirst",
+            options: {
+              cacheName: "matchday-clock-locales",
+              networkTimeoutSeconds: 3,
+              expiration: {
+                maxEntries: 50,
+                maxAgeSeconds: 60 * 60 * 24 * 365,
+              },
+              cacheableResponse: {
+                statuses: [200],
+              },
+            },
+          },
+        ],
       },
     }),
   ],
   build: {
-    rollupOptions: {
-      output: {
-        chunkFileNames: (chunkInfo) => {
-          const modulePath = chunkInfo.facadeModuleId?.replaceAll("\\", "/") ?? "";
-          return modulePath.includes("/src/locales/")
-            ? "locales/[name]-[hash].js"
-            : "assets/[name]-[hash].js";
-        },
-      },
-    },
+    outDir: "../dist",
+    emptyOutDir: true,
   },
 });

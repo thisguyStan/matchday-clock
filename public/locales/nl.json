@@ -1,0 +1,206 @@
+{
+  "install": {
+    "banner": "Installeer Matchday Clock voor snelle toegang en offline gebruik.",
+    "dismiss": "Installatiemelding sluiten",
+    "app": "App installeren",
+    "instructions": {
+      "title": "Matchday Clock installeren",
+      "ios": "Tik in Safari op Deel en daarna op Zet op beginscherm. Open in andere iPhone-browsers het deel- of browsermenu en kies Zet op beginscherm.",
+      "android": "Open het browsermenu en kies App installeren of Toevoegen aan startscherm.",
+      "other": "Gebruik de optie App installeren of Toevoegen aan startscherm in je browser. Staat die er niet bij, kijk dan in het browsermenu."
+    },
+    "failed": "Installeren is niet gestart. Gebruik het browsermenu om de app te installeren."
+  },
+  "settings": {
+    "open": "Instellingen openen",
+    "title": "Instellingen",
+    "display": "App-instellingen",
+    "pauseClock": "Tijd tussen speelperioden bijhouden",
+    "pauseClockHelp": "De pauze na het stoppen van een periode automatisch meten",
+    "personalize": "Aanpassen",
+    "keepAwake": "Scherm actief houden",
+    "keepAwakeHelp": "Terwijl de wedstrijdklok loopt",
+    "runningNotification": "Melding bij lopende klok",
+    "notificationHelp": "Afhankelijk van toestemming en platformondersteuning",
+    "trackLost": "Verloren tijd meten",
+    "trackHelp": "Voegt een knop toe die je ingedrukt houdt",
+    "language": "Taal",
+    "appearance": "Weergave",
+    "system": "Apparaatinstelling gebruiken",
+    "light": "Licht",
+    "dark": "Donker"
+  },
+  "launch": {
+    "title": "Klaar voor de wedstrijd?",
+    "description": "Kies je gebruikelijke wedstrijdinstellingen of stel een nieuwe wedstrijd in. De klok start wanneer je op Start tikt.",
+    "useLastSettings": "Laatste instellingen gebruiken",
+    "setup": "Wedstrijd instellen"
+  },
+  "preset": {
+    "choose": "Opgeslagen voorinstelling kiezen",
+    "count": "{count} opgeslagen voorinstellingen",
+    "nameRequired": "Geef deze voorinstelling een naam.",
+    "nameExists": "Er bestaat al een voorinstelling met deze naam.",
+    "deleteConfirm": "‘{name}’ verwijderen? Dit kan niet ongedaan worden gemaakt.",
+    "saved": "Voorinstelling op dit apparaat opgeslagen.",
+    "updated": "Voorinstelling bijgewerkt.",
+    "deleted": "Voorinstelling verwijderd.",
+    "heading": "Opgeslagen voorinstellingen",
+    "empty": "Nog geen voorinstellingen. Sla er een op bij het instellen van een wedstrijd.",
+    "new": "Nieuwe voorinstelling",
+    "edit": "Voorinstelling bewerken",
+    "name": "Naam van voorinstelling"
+  },
+  "break": {
+    "running": "Pauzeklok loopt",
+    "time": "Pauzetijd",
+    "stop": "Pauzeklok stoppen"
+  },
+  "clock": {
+    "status": {
+      "finished": "Afgelopen",
+      "ready": "Gereed",
+      "running": "Loopt",
+      "paused": "Gepauzeerd",
+      "stopped": "Gestopt"
+    },
+    "timer": "Wedstrijdklok",
+    "stoppage": "Blessuretijd",
+    "periodLimit": "Periode {time}",
+    "thisPeriod": "{time} deze helft",
+    "pausedFor": "{time} gepauzeerd",
+    "controlsAria": "Bediening van de wedstrijdklok"
+  },
+  "match": {
+    "finished": "Wedstrijd afgelopen. De eindtijd is op dit apparaat opgeslagen.",
+    "flow": "Wedstrijdverloop"
+  },
+  "common": {
+    "delete": "Verwijderen",
+    "edit": "Bewerken",
+    "close": "Sluiten",
+    "save": "Opslaan",
+    "cancel": "Annuleren",
+    "apply": "Toepassen",
+    "dismissMessage": "Melding sluiten"
+  },
+  "setup": {
+    "description": "Kies de lengte van de speelperioden. Je kunt deze instellingen bewaren voor later.",
+    "saveAsPreset": "Deze instellingen als voorinstelling opslaan",
+    "saveAsPresetHelp": "Bewaar deze periodelengtes op dit apparaat voor volgende wedstrijden.",
+    "continueToClock": "Doorgaan naar de klok",
+    "summary": {
+      "withExtraTime": "Helften van {half} min · verlengingsperioden van {extra} min",
+      "withoutExtraTime": "Helften van {half} min · geen verlenging"
+    },
+    "title": "Wedstrijd instellen",
+    "eachHalf": "Elke helft",
+    "extraPeriods": "Verlengingsperioden",
+    "extraTime": "Verlenging",
+    "extraHelp": "Twee perioden met de lengte hierboven",
+    "note": "Instellingen en wedstrijdgegevens blijven in deze browser op dit apparaat. De duur kan na reset worden aangepast."
+  },
+  "about": {
+    "title": "Over",
+    "short": "App-informatie en open-sourcemeldingen.",
+    "description": "Matchday Clock werkt lokaal op dit apparaat en kan offline worden gebruikt.",
+    "licenses": {
+      "heading": "Licenties en dankbetuigingen",
+      "description": "De klok gebruikt DSEG7 Classic, uitgebracht onder de SIL Open Font License 1.1.",
+      "font": "DSEG7-lettertypelicentie lezen (OFL 1.1)"
+    },
+    "platformNote": "Een webapp kan achtergrondwerking en meldingen niet op elke telefoon garanderen. Bij terugkeer berekent de klok de tijd opnieuw met opgeslagen tijdstempels."
+  },
+  "app": {
+    "subtitle": "Voetbalklok",
+    "homeAria": "Naar Matchday Clock"
+  },
+  "storage": {
+    "saved": "Op dit apparaat opgeslagen",
+    "notSaving": "Niet opgeslagen",
+    "dismissSavedWarning": "Waarschuwing over opgeslagen gegevens sluiten",
+    "invalidMatch": "Opgeslagen wedstrijdgegevens konden niet worden gelezen. Er is een nieuwe klok geladen.",
+    "invalidPreferences": "De opgeslagen voorkeuren waren ongeldig. De apparaatinstellingen worden gebruikt.",
+    "writeFailed": "Deze browser kon de wedstrijd niet lokaal opslaan. Vernieuw of sluit de app niet."
+  },
+  "period": {
+    "firstHalf": "Eerste helft",
+    "secondHalf": "Tweede helft",
+    "extraTimeFirst": "Verlenging 1",
+    "extraTimeSecond": "Verlenging 2",
+    "extraShort": "VL",
+    "select": "Periode kiezen",
+    "help": "Een nieuwe helft begint op de bijbehorende wedstrijdtijd. De klok loopt door na de limiet en wordt rood tijdens blessuretijd."
+  },
+  "lostTime": {
+    "hold": "Houd ingedrukt om verloren tijd te meten",
+    "tracking": "Verloren tijd meten",
+    "total": "Los van de wedstrijdklok · totaal {time}"
+  },
+  "control": {
+    "start": "Start",
+    "resume": "Hervat",
+    "pause": "Pauze",
+    "stop": "Stop",
+    "reset": "Reset"
+  },
+  "wake": {
+    "idle": "Scherm wakker houden is inactief.",
+    "off": "Scherm wakker houden is uitgeschakeld in de instellingen.",
+    "active": "Het scherm blijft actief zolang de app zichtbaar is.",
+    "unsupported": "Deze browser kan het scherm niet actief houden.",
+    "retry": "Scherm wakker houden is gestopt; opnieuw proberen.",
+    "failed": "Het scherm kon niet actief blijven. De wedstrijdklok loopt door."
+  },
+  "pauseLog": {
+    "none": "Geen pauzes vastgelegd",
+    "summary": "Pauzes: {count}{current} · totaal {time}",
+    "matchLog": "Wedstrijdlog",
+    "title": "Pauzes",
+    "emptyState": "Pauzeer de klok om pauzes vast te leggen.",
+    "current": "Huidige pauze",
+    "totalTime": "Totale pauzetijd"
+  },
+  "correction": {
+    "quickAdjustment": "Snel aanpassen",
+    "title": "Wedstrijdtijd corrigeren",
+    "useLiveTime": "Huidige tijd gebruiken",
+    "useLiveTimeAria": "Vul de huidige wedstrijdtijd in de correctievelden in",
+    "helper": "Stel de weergegeven tijd in voor {phase}. Dit kan ook terwijl de klok loopt.",
+    "minutes": "Minuten",
+    "seconds": "Seconden",
+    "invalid": "Vul hele minuten en seconden van 0 tot en met 59 in.",
+    "beforePeriod": "Deze tijd ligt vóór het begin van {phase} ({time})."
+  },
+  "units": {
+    "minuteShort": "MIN"
+  },
+  "date": {
+    "startedAt": "Gestart om {time}",
+    "atTime": "Bij {time} · {date}"
+  },
+  "notification": {
+    "unsupported": "Deze browser ondersteunt geen meldingen voor de wedstrijdklok.",
+    "denied": "Meldingen zijn geblokkeerd. Sta ze toe in de browserinstellingen om de status te zien.",
+    "permission": "Sta meldingen toe in de browserinstellingen om de status te tonen.",
+    "noServiceWorker": "Deze browser kan geen melding op de achtergrond tonen.",
+    "noRegistration": "Meldingen zijn beschikbaar nadat de app is geïnstalleerd of de gehoste PWA is geopend.",
+    "title": "Matchday Clock loopt",
+    "body": "De wedstrijdklok loopt. Open Matchday Clock om deze te bedienen.",
+    "sent": "Er is een melding verstuurd als het platform dit ondersteunt.",
+    "failed": "De melding kon niet worden getoond. Controleer de app-machtigingen.",
+    "closeFailed": "De browser kon de melding niet sluiten."
+  },
+  "confirmation": {
+    "stop": "De wedstrijd stoppen en de eindtijd tonen? Reset de klok voordat je een nieuwe wedstrijd start.",
+    "reset": "De klok, pauzelog en gemeten verloren tijd resetten? De instellingen blijven behouden."
+  },
+  "feedback": {
+    "stopped": "Wedstrijd gestopt. De eindtijd is op dit apparaat opgeslagen.",
+    "reset": "Wedstrijdklok gereset. De instellingen zijn behouden.",
+    "corrected": "Wedstrijdtijd gecorrigeerd."
+  },
+  "locale": {
+    "loadFailed": "Taal {language} kon niet worden geladen. Engels (VK) wordt gebruikt."
+  }
+}

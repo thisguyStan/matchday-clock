@@ -27,9 +27,9 @@ backend.
 - Locally saved, named match presets for commonly used period lengths.
 - An install banner with a browser install prompt where supported and
   platform-specific instructions otherwise.
-- Localized interface in 15 languages, with device-language detection and
+- Localized interface in 24 languages, with device-language detection and
   English (UK) as the fallback.
-- Light and dark themes that follow the device appearance by default, with
+- Light, dark, and OLED themes, with device appearance selected by default and
   optional manual overrides.
 - Local storage and a service worker cache for use after the first successful
   load.
@@ -74,16 +74,19 @@ the browser's site data.
 
 The app supports English (US), English (UK), German, Spanish, Portuguese
 (Portugal and Brazil), French, Dutch, Swedish, Danish, Italian, Polish,
-Norwegian, Finnish, and Croatian. By default it follows the device language;
-unsupported languages fall back to English (UK). The language can be changed
-in **Settings**.
+Norwegian, Finnish, Croatian, Japanese, Korean, Turkish, Serbian (Latin),
+Bosnian, Ukrainian, Russian, Simplified Chinese, and Georgian (Kartuli). By
+default it follows the device language; unsupported languages fall back to
+English (UK). The language can be changed in **Settings**.
 
-Light or dark appearance follows the device setting by default. Choose a fixed
-mode in **Settings** to override it. Language and appearance preferences are
-saved locally with the match data. The app imports only the selected language
-at runtime, while the service worker precaches all locale chunks during its
-installation or update. Once that cache is ready, every supported language can
-be selected offline.
+Appearance follows the device setting by default. Choose light, dark, or OLED
+in **Settings** to override it; OLED uses a pure-black app background.
+Language and appearance preferences are saved locally with the match data.
+The app fetches only the selected language
+at runtime. The service worker caches each language the first time it is
+selected, so the installed app stays small; a language that has not yet been
+cached still needs a connection the first time it is chosen. Previously
+selected languages remain available offline.
 
 ## Phone background and notification limits
 

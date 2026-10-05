@@ -1,0 +1,206 @@
+{
+  "install": {
+    "banner": "Install Matchday Clock for quick access and offline use.",
+    "dismiss": "Dismiss installation banner",
+    "app": "Install app",
+    "instructions": {
+      "title": "Install Matchday Clock",
+      "ios": "In Safari, tap Share, then Add to Home Screen. In other iPhone browsers, open the share or browser menu and choose Add to Home Screen.",
+      "android": "Open your browser menu and choose Install app or Add to Home screen.",
+      "other": "Use your browser's Install app or Add to Home screen option. If it is not available, check the browser menu."
+    },
+    "failed": "Could not start installation. Use your browser menu to install the app."
+  },
+  "settings": {
+    "open": "Open settings",
+    "title": "Settings",
+    "display": "App settings",
+    "pauseClock": "Track time between periods",
+    "pauseClockHelp": "Automatically time the break after stopping a period",
+    "personalize": "Personalise",
+    "keepAwake": "Keep screen awake",
+    "keepAwakeHelp": "While the match clock is running",
+    "runningNotification": "Running notification",
+    "notificationHelp": "Best effort; permission and platform support required",
+    "trackLost": "Hold to track time lost",
+    "trackHelp": "Add a separate hold button to the clock",
+    "language": "Language",
+    "appearance": "Appearance",
+    "system": "Use device setting",
+    "light": "Light",
+    "dark": "Dark"
+  },
+  "launch": {
+    "title": "Ready for matchday?",
+    "description": "Choose your usual match setup or configure a new one. The clock starts when you press Start.",
+    "useLastSettings": "Use last settings",
+    "setup": "Set up match"
+  },
+  "preset": {
+    "choose": "Choose a saved preset",
+    "count": "{count} saved presets",
+    "nameRequired": "Enter a name for this preset.",
+    "nameExists": "A preset with this name already exists.",
+    "deleteConfirm": "Delete \"{name}\"? This cannot be undone.",
+    "saved": "Preset saved on this device.",
+    "updated": "Preset updated.",
+    "deleted": "Preset deleted.",
+    "heading": "Saved presets",
+    "empty": "No saved presets yet. Save one when setting up a match.",
+    "new": "New preset",
+    "edit": "Edit preset",
+    "name": "Preset name"
+  },
+  "break": {
+    "running": "Break clock running",
+    "time": "Break time",
+    "stop": "Stop break clock"
+  },
+  "clock": {
+    "status": {
+      "finished": "Finished",
+      "ready": "Ready",
+      "running": "Running",
+      "paused": "Paused",
+      "stopped": "Stopped"
+    },
+    "timer": "Match timer",
+    "stoppage": "Stoppage time",
+    "periodLimit": "Period {time}",
+    "thisPeriod": "{time} this period",
+    "pausedFor": "Paused {time}",
+    "controlsAria": "Match clock controls"
+  },
+  "match": {
+    "finished": "Match complete. The final time is saved on this device.",
+    "flow": "Match flow"
+  },
+  "common": {
+    "delete": "Delete",
+    "edit": "Edit",
+    "close": "Close",
+    "save": "Save",
+    "cancel": "Cancel",
+    "apply": "Apply",
+    "dismissMessage": "Dismiss message"
+  },
+  "setup": {
+    "description": "Choose the period lengths for this match. You can save this setup for later.",
+    "saveAsPreset": "Save this setup as a preset",
+    "saveAsPresetHelp": "Keep these period lengths on this device for later matches.",
+    "continueToClock": "Continue to clock",
+    "summary": {
+      "withExtraTime": "{half} min halves · {extra} min extra-time periods",
+      "withoutExtraTime": "{half} min halves · no extra time"
+    },
+    "title": "Match setup",
+    "eachHalf": "Each half",
+    "extraPeriods": "Extra-time periods",
+    "extraTime": "Extra time",
+    "extraHelp": "Two periods, using the length above",
+    "note": "Settings and match data stay in this browser on this device. Period lengths can be changed after Reset."
+  },
+  "about": {
+    "title": "About",
+    "short": "App information and open-source notices.",
+    "description": "Matchday Clock runs locally on this device and can work offline.",
+    "licenses": {
+      "heading": "Licences and acknowledgements",
+      "description": "The display uses DSEG7 Classic, distributed under the SIL Open Font License 1.1.",
+      "font": "Read the DSEG7 font licence (OFL 1.1)"
+    },
+    "platformNote": "A web app cannot guarantee background execution or notifications on every phone. The clock uses saved timestamps to recover elapsed time when you return."
+  },
+  "app": {
+    "subtitle": "Football clock",
+    "homeAria": "Matchday Clock home"
+  },
+  "storage": {
+    "saved": "Saved on device",
+    "notSaving": "Not saving",
+    "dismissSavedWarning": "Dismiss saved data warning",
+    "invalidMatch": "Saved match data could not be read, so a fresh clock was loaded.",
+    "invalidPreferences": "Saved preferences were invalid, so device settings are being used.",
+    "writeFailed": "This browser could not save your match locally. Avoid refreshing or closing the app."
+  },
+  "period": {
+    "firstHalf": "First half",
+    "secondHalf": "Second half",
+    "extraTimeFirst": "Extra time 1",
+    "extraTimeSecond": "Extra time 2",
+    "extraShort": "ET",
+    "select": "Select period",
+    "help": "A new period starts at its match-time mark. The clock keeps running past the limit and turns red for stoppage time."
+  },
+  "lostTime": {
+    "hold": "Hold to track time lost",
+    "tracking": "Tracking time lost",
+    "total": "Separate from the match clock · {time} total"
+  },
+  "control": {
+    "start": "Start",
+    "resume": "Resume",
+    "pause": "Pause",
+    "stop": "Stop",
+    "reset": "Reset"
+  },
+  "wake": {
+    "idle": "Screen stay-awake is idle.",
+    "off": "Screen stay-awake is off in settings.",
+    "active": "Screen stay-awake is active while this app is visible.",
+    "unsupported": "This browser does not support keeping the screen awake.",
+    "retry": "Screen stay-awake was released; trying again.",
+    "failed": "Could not keep the screen awake. The match clock will continue."
+  },
+  "pauseLog": {
+    "none": "No pauses recorded",
+    "summary": "Pauses: {count}{current} · {time} total",
+    "matchLog": "Match log",
+    "title": "Pause times",
+    "emptyState": "Pause the clock to start a pause log.",
+    "current": "Current pause",
+    "totalTime": "Total pause time"
+  },
+  "correction": {
+    "quickAdjustment": "Quick adjustment",
+    "title": "Correct match time",
+    "useLiveTime": "Use live time",
+    "useLiveTimeAria": "Load the current match time into the correction fields",
+    "helper": "Set the displayed match time for {phase}. This also works while the clock is running.",
+    "minutes": "Minutes",
+    "seconds": "Seconds",
+    "invalid": "Enter whole minutes and seconds from 0 to 59.",
+    "beforePeriod": "That time is before {phase} starts ({time})."
+  },
+  "units": {
+    "minuteShort": "MIN"
+  },
+  "date": {
+    "startedAt": "Started at {time}",
+    "atTime": "At {time} · {date}"
+  },
+  "notification": {
+    "unsupported": "This browser does not support running notifications.",
+    "denied": "Notifications are blocked. Allow them in browser settings to see running status.",
+    "permission": "Allow notifications in browser settings to show running status.",
+    "noServiceWorker": "This browser cannot show a background running notification.",
+    "noRegistration": "Running notifications are available after the app is installed or loaded from its hosted PWA.",
+    "title": "Matchday Clock is running",
+    "body": "The match clock is active. Return to Matchday Clock to control it.",
+    "sent": "A running notification was sent where this platform supports it.",
+    "failed": "Could not show a running notification. Check this app's browser permissions.",
+    "closeFailed": "The browser could not clear the running notification."
+  },
+  "confirmation": {
+    "stop": "Stop this match and keep its final time visible? Reset is required before starting another match.",
+    "reset": "Reset the match clock, pause log, and tracked time lost? Match setup will be kept."
+  },
+  "feedback": {
+    "stopped": "Match stopped. Its final time is saved on this device.",
+    "reset": "Match clock reset. Match setup is unchanged.",
+    "corrected": "Match time corrected."
+  },
+  "locale": {
+    "loadFailed": "Could not load {language}. Using English (UK)."
+  }
+}

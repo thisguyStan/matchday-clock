@@ -1,0 +1,206 @@
+{
+  "install": {
+    "banner": "Installa Matchday Clock per accedervi rapidamente e usarla offline.",
+    "dismiss": "Chiudi l’avviso di installazione",
+    "app": "Installa app",
+    "instructions": {
+      "title": "Installa Matchday Clock",
+      "ios": "In Safari, tocca Condividi e poi Aggiungi alla schermata Home. Negli altri browser per iPhone, apri il menu di condivisione o del browser e scegli Aggiungi alla schermata Home.",
+      "android": "Apri il menu del browser e scegli Installa app o Aggiungi alla schermata Home.",
+      "other": "Usa l’opzione Installa app o Aggiungi alla schermata Home del browser. Se non è disponibile, controlla il menu del browser."
+    },
+    "failed": "Impossibile avviare l’installazione. Installa l’app dal menu del browser."
+  },
+  "settings": {
+    "open": "Apri impostazioni",
+    "title": "Impostazioni",
+    "display": "Impostazioni dell’app",
+    "pauseClock": "Registra il tempo tra i periodi",
+    "pauseClockHelp": "Cronometra automaticamente l’intervallo dopo aver fermato un periodo",
+    "personalize": "Personalizza",
+    "keepAwake": "Mantieni attivo lo schermo",
+    "keepAwakeHelp": "Mentre il cronometro è in corso",
+    "runningNotification": "Notifica del cronometro",
+    "notificationHelp": "Richiede autorizzazione e supporto della piattaforma",
+    "trackLost": "Misura il tempo perso",
+    "trackHelp": "Aggiunge un pulsante da tenere premuto",
+    "language": "Lingua",
+    "appearance": "Aspetto",
+    "system": "Usa impostazione del dispositivo",
+    "light": "Chiaro",
+    "dark": "Scuro"
+  },
+  "launch": {
+    "title": "Pronto per la partita?",
+    "description": "Scegli la configurazione abituale o prepara una nuova partita. Il cronometro parte quando tocchi Avvia.",
+    "useLastSettings": "Usa le ultime impostazioni",
+    "setup": "Configura partita"
+  },
+  "preset": {
+    "choose": "Scegli una configurazione salvata",
+    "count": "{count} configurazioni salvate",
+    "nameRequired": "Inserisci un nome per questa configurazione.",
+    "nameExists": "Esiste già una configurazione con questo nome.",
+    "deleteConfirm": "Eliminare “{name}”? L’operazione non può essere annullata.",
+    "saved": "Configurazione salvata su questo dispositivo.",
+    "updated": "Configurazione aggiornata.",
+    "deleted": "Configurazione eliminata.",
+    "heading": "Configurazioni salvate",
+    "empty": "Nessuna configurazione salvata. Salvane una quando prepari una partita.",
+    "new": "Nuova configurazione",
+    "edit": "Modifica configurazione",
+    "name": "Nome configurazione"
+  },
+  "break": {
+    "running": "Cronometro dell’intervallo in corso",
+    "time": "Tempo di intervallo",
+    "stop": "Ferma il cronometro dell’intervallo"
+  },
+  "clock": {
+    "status": {
+      "finished": "Terminata",
+      "ready": "Pronto",
+      "running": "In corso",
+      "paused": "In pausa",
+      "stopped": "Fermato"
+    },
+    "timer": "Cronometro della partita",
+    "stoppage": "Recupero",
+    "periodLimit": "Periodo {time}",
+    "thisPeriod": "{time} di questo periodo",
+    "pausedFor": "In pausa da {time}",
+    "controlsAria": "Controlli del cronometro"
+  },
+  "match": {
+    "finished": "Partita terminata. Il tempo finale è salvato su questo dispositivo.",
+    "flow": "Andamento della partita"
+  },
+  "common": {
+    "delete": "Elimina",
+    "edit": "Modifica",
+    "close": "Chiudi",
+    "save": "Salva",
+    "cancel": "Annulla",
+    "apply": "Applica",
+    "dismissMessage": "Chiudi messaggio"
+  },
+  "setup": {
+    "description": "Scegli la durata dei periodi. Puoi salvare questa configurazione per le partite future.",
+    "saveAsPreset": "Salva questa configurazione come preimpostazione",
+    "saveAsPresetHelp": "Conserva queste durate su questo dispositivo per le prossime partite.",
+    "continueToClock": "Continua al cronometro",
+    "summary": {
+      "withExtraTime": "Tempi da {half} min · periodi supplementari da {extra} min",
+      "withoutExtraTime": "Tempi da {half} min · senza supplementari"
+    },
+    "title": "Impostazioni partita",
+    "eachHalf": "Ogni tempo",
+    "extraPeriods": "Periodi supplementari",
+    "extraTime": "Tempi supplementari",
+    "extraHelp": "Due periodi della durata indicata",
+    "note": "Impostazioni e dati restano in questo browser sul dispositivo. La durata si può modificare dopo la reimpostazione."
+  },
+  "about": {
+    "title": "Informazioni",
+    "short": "Informazioni sull’app e avvisi open source.",
+    "description": "Matchday Clock funziona localmente su questo dispositivo e può essere usata offline.",
+    "licenses": {
+      "heading": "Licenze e riconoscimenti",
+      "description": "Il display usa DSEG7 Classic, distribuito secondo la SIL Open Font License 1.1.",
+      "font": "Leggi la licenza del font DSEG7 (OFL 1.1)"
+    },
+    "platformNote": "Un'app web non può garantire l'esecuzione in background o le notifiche su tutti i telefoni. Al ritorno, il cronometro ricalcola il tempo usando i timestamp salvati."
+  },
+  "app": {
+    "subtitle": "Cronometro di calcio",
+    "homeAria": "Home di Matchday Clock"
+  },
+  "storage": {
+    "saved": "Salvato sul dispositivo",
+    "notSaving": "Non salvato",
+    "dismissSavedWarning": "Chiudi l'avviso sui dati salvati",
+    "invalidMatch": "Impossibile leggere i dati salvati. È stato caricato un nuovo cronometro.",
+    "invalidPreferences": "Le preferenze salvate non erano valide. Verranno usate le impostazioni del dispositivo.",
+    "writeFailed": "Questo browser non è riuscito a salvare la partita localmente. Evita di aggiornare o chiudere l'app."
+  },
+  "period": {
+    "firstHalf": "Primo tempo",
+    "secondHalf": "Secondo tempo",
+    "extraTimeFirst": "Tempi supplementari 1",
+    "extraTimeSecond": "Tempi supplementari 2",
+    "extraShort": "TS",
+    "select": "Seleziona periodo",
+    "help": "Il periodo successivo parte dal minuto di gara corrispondente. Il cronometro continua oltre il limite e diventa rosso durante il recupero."
+  },
+  "lostTime": {
+    "hold": "Tieni premuto per misurare il tempo perso",
+    "tracking": "Misurazione del tempo perso",
+    "total": "Separato dal cronometro · totale {time}"
+  },
+  "control": {
+    "start": "Avvia",
+    "resume": "Riprendi",
+    "pause": "Pausa",
+    "stop": "Ferma",
+    "reset": "Reimposta"
+  },
+  "wake": {
+    "idle": "Blocco schermo inattivo.",
+    "off": "L'opzione per mantenere attivo lo schermo è disattivata.",
+    "active": "Lo schermo resta attivo mentre l'app è visibile.",
+    "unsupported": "Questo browser non può mantenere attivo lo schermo.",
+    "retry": "Il blocco schermo è stato rilasciato; nuovo tentativo.",
+    "failed": "Impossibile mantenere attivo lo schermo. Il cronometro continua."
+  },
+  "pauseLog": {
+    "none": "Nessuna pausa registrata",
+    "summary": "Pause: {count}{current} · totale {time}",
+    "matchLog": "Registro partita",
+    "title": "Pause",
+    "emptyState": "Metti in pausa il cronometro per iniziare il registro.",
+    "current": "Pausa attuale",
+    "totalTime": "Tempo totale di pausa"
+  },
+  "correction": {
+    "quickAdjustment": "Correzione rapida",
+    "title": "Correggi il tempo",
+    "useLiveTime": "Usa il tempo attuale",
+    "useLiveTimeAria": "Carica il tempo attuale nei campi di correzione",
+    "helper": "Imposta il tempo visualizzato per {phase}. Funziona anche con il cronometro in corso.",
+    "minutes": "Minuti",
+    "seconds": "Secondi",
+    "invalid": "Inserisci minuti interi e secondi da 0 a 59.",
+    "beforePeriod": "Questo tempo precede l'inizio di {phase} ({time})."
+  },
+  "units": {
+    "minuteShort": "MIN"
+  },
+  "date": {
+    "startedAt": "Iniziata alle {time}",
+    "atTime": "Al minuto {time} · {date}"
+  },
+  "notification": {
+    "unsupported": "Questo browser non supporta le notifiche del cronometro.",
+    "denied": "Le notifiche sono bloccate. Consenti l'accesso nelle impostazioni del browser per vedere lo stato.",
+    "permission": "Consenti le notifiche nelle impostazioni del browser per mostrare lo stato.",
+    "noServiceWorker": "Questo browser non può mostrare notifiche in background.",
+    "noRegistration": "Le notifiche sono disponibili dopo l'installazione o l'apertura della PWA ospitata.",
+    "title": "Matchday Clock è in corso",
+    "body": "Il cronometro è attivo. Apri Matchday Clock per controllarlo.",
+    "sent": "Notifica inviata se supportata dalla piattaforma.",
+    "failed": "Impossibile mostrare la notifica. Controlla le autorizzazioni dell'app.",
+    "closeFailed": "Il browser non è riuscito a chiudere la notifica."
+  },
+  "confirmation": {
+    "stop": "Fermare la partita e mantenere visibile il tempo finale? Reimposta il cronometro prima di iniziarne un'altra.",
+    "reset": "Reimpostare cronometro, registro delle pause e tempo perso? Le impostazioni saranno mantenute."
+  },
+  "feedback": {
+    "stopped": "Partita fermata. Il tempo finale è salvato sul dispositivo.",
+    "reset": "Cronometro reimpostato. Le impostazioni non sono cambiate.",
+    "corrected": "Tempo della partita corretto."
+  },
+  "locale": {
+    "loadFailed": "Impossibile caricare {language}. Verr? usato l?inglese britannico."
+  }
+}

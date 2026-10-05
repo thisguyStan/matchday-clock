@@ -1,0 +1,206 @@
+{
+  "install": {
+    "banner": "Asenna Matchday Clock, niin saat sen nopeasti käyttöön myös offline-tilassa.",
+    "dismiss": "Sulje asennusilmoitus",
+    "app": "Asenna sovellus",
+    "instructions": {
+      "title": "Asenna Matchday Clock",
+      "ios": "Napauta Safarissa Jaa ja sitten Lisää Koti-valikkoon. Avaa muissa iPhone-selaimissa jako- tai selainvalikko ja valitse Lisää Koti-valikkoon.",
+      "android": "Avaa selaimen valikko ja valitse Asenna sovellus tai Lisää aloitusnäyttöön.",
+      "other": "Käytä selaimen Asenna sovellus- tai Lisää aloitusnäyttöön -toimintoa. Jos sitä ei näy, tarkista selaimen valikko."
+    },
+    "failed": "Asennusta ei voitu aloittaa. Asenna sovellus selaimen valikosta."
+  },
+  "settings": {
+    "open": "Avaa asetukset",
+    "title": "Asetukset",
+    "display": "Sovelluksen asetukset",
+    "pauseClock": "Mittaa jaksojen välinen aika",
+    "pauseClockHelp": "Mittaa tauko automaattisesti jakson pysäyttämisen jälkeen",
+    "personalize": "Mukauta",
+    "keepAwake": "Pidä näyttö hereillä",
+    "keepAwakeHelp": "Ottelukellon käydessä",
+    "runningNotification": "Ilmoitus kellon käydessä",
+    "notificationHelp": "Edellyttää lupaa ja alustan tukea",
+    "trackLost": "Mittaa menetettyä aikaa",
+    "trackHelp": "Lisää erillisen painettuna pidettävän painikkeen",
+    "language": "Kieli",
+    "appearance": "Ulkoasu",
+    "system": "Käytä laitteen asetusta",
+    "light": "Vaalea",
+    "dark": "Tumma"
+  },
+  "launch": {
+    "title": "Valmiina ottelupäivään?",
+    "description": "Valitse tavallinen otteluasetus tai määritä uusi ottelu. Kello käynnistyy, kun painat Käynnistä.",
+    "useLastSettings": "Käytä viimeisimpiä asetuksia",
+    "setup": "Määritä ottelu"
+  },
+  "preset": {
+    "choose": "Valitse tallennettu esiasetus",
+    "count": "{count} tallennettua esiasetusta",
+    "nameRequired": "Anna esiasetukselle nimi.",
+    "nameExists": "Samanniminen esiasetus on jo olemassa.",
+    "deleteConfirm": "Poistetaanko ”{name}”? Tätä ei voi kumota.",
+    "saved": "Esiasetus tallennettiin tälle laitteelle.",
+    "updated": "Esiasetus päivitettiin.",
+    "deleted": "Esiasetus poistettiin.",
+    "heading": "Tallennetut esiasetukset",
+    "empty": "Tallennettuja esiasetuksia ei vielä ole. Tallenna sellainen ottelun määrityksen yhteydessä.",
+    "new": "Uusi esiasetus",
+    "edit": "Muokkaa esiasetusta",
+    "name": "Esiasetuksen nimi"
+  },
+  "break": {
+    "running": "Taukokello käy",
+    "time": "Taukoaika",
+    "stop": "Pysäytä taukokello"
+  },
+  "clock": {
+    "status": {
+      "finished": "Päättynyt",
+      "ready": "Valmis",
+      "running": "Käynnissä",
+      "paused": "Tauolla",
+      "stopped": "Pysäytetty"
+    },
+    "timer": "Ottelukello",
+    "stoppage": "Lisäaika",
+    "periodLimit": "Jakso {time}",
+    "thisPeriod": "{time} tässä jaksossa",
+    "pausedFor": "Tauolla {time}",
+    "controlsAria": "Ottelukellon säätimet"
+  },
+  "match": {
+    "finished": "Ottelu päättyi. Loppuaika tallennettiin tälle laitteelle.",
+    "flow": "Ottelun kulku"
+  },
+  "common": {
+    "delete": "Poista",
+    "edit": "Muokkaa",
+    "close": "Sulje",
+    "save": "Tallenna",
+    "cancel": "Peruuta",
+    "apply": "Käytä",
+    "dismissMessage": "Sulje viesti"
+  },
+  "setup": {
+    "description": "Valitse jaksojen pituudet. Voit tallentaa asetukset myöhempää käyttöä varten.",
+    "saveAsPreset": "Tallenna asetukset esiasetuksena",
+    "saveAsPresetHelp": "Tallenna jaksojen pituudet tälle laitteelle tulevia otteluita varten.",
+    "continueToClock": "Jatka kelloon",
+    "summary": {
+      "withExtraTime": "{half} min puoliajat · jatkoajan jaksot {extra} min",
+      "withoutExtraTime": "{half} min puoliajat · ei jatkoaikaa"
+    },
+    "title": "Ottelun asetukset",
+    "eachHalf": "Kumpikin puoliaika",
+    "extraPeriods": "Jatkoajan jaksot",
+    "extraTime": "Jatkoaika",
+    "extraHelp": "Kaksi yllä määritetyn pituista jaksoa",
+    "note": "Asetukset ja ottelutiedot tallentuvat tähän selaimeen ja laitteeseen. Kestoa voi muuttaa nollauksen jälkeen."
+  },
+  "about": {
+    "title": "Tietoja",
+    "short": "Sovelluksen tiedot ja avoimen lähdekoodin ilmoitukset.",
+    "description": "Matchday Clock toimii paikallisesti tällä laitteella ja myös offline-tilassa.",
+    "licenses": {
+      "heading": "Lisenssit ja kiitokset",
+      "description": "Kellossa käytetään DSEG7 Classicia, jota jaellaan SIL Open Font License 1.1 -lisenssillä.",
+      "font": "Lue DSEG7-fontin lisenssi (OFL 1.1)"
+    },
+    "platformNote": "Verkkosovellus ei voi taata taustatoimintaa tai ilmoituksia kaikissa puhelimissa. Palatessasi kello laskee ajan uudelleen tallennetuista aikaleimoista."
+  },
+  "app": {
+    "subtitle": "Jalkapallokello",
+    "homeAria": "Matchday Clock -etusivu"
+  },
+  "storage": {
+    "saved": "Tallennettu laitteelle",
+    "notSaving": "Ei tallenneta",
+    "dismissSavedWarning": "Sulje tallennettujen tietojen varoitus",
+    "invalidMatch": "Tallennettuja ottelutietoja ei voitu lukea. Uusi kello avattiin.",
+    "invalidPreferences": "Tallennetut asetukset olivat virheelliset. Käytetään laitteen asetuksia.",
+    "writeFailed": "Selain ei voinut tallentaa ottelua paikallisesti. Älä päivitä tai sulje sovellusta."
+  },
+  "period": {
+    "firstHalf": "Ensimmäinen puoliaika",
+    "secondHalf": "Toinen puoliaika",
+    "extraTimeFirst": "Jatkoaika 1",
+    "extraTimeSecond": "Jatkoaika 2",
+    "extraShort": "JA",
+    "select": "Valitse jakso",
+    "help": "Seuraava jakso alkaa sen otteluajan kohdasta. Kello käy rajan yli ja muuttuu punaiseksi lisäajalla."
+  },
+  "lostTime": {
+    "hold": "Mittaa menetetty aika pitämällä painettuna",
+    "tracking": "Menetettyä aikaa mitataan",
+    "total": "Erillään ottelukellosta · yhteensä {time}"
+  },
+  "control": {
+    "start": "Aloita",
+    "resume": "Jatka",
+    "pause": "Tauko",
+    "stop": "Pysäytä",
+    "reset": "Nollaa"
+  },
+  "wake": {
+    "idle": "Näytön hereilläpito ei ole käytössä.",
+    "off": "Näytön hereilläpito on poistettu käytöstä asetuksissa.",
+    "active": "Näyttö pysyy hereillä, kun sovellus on näkyvissä.",
+    "unsupported": "Tämä selain ei tue näytön hereilläpitoa.",
+    "retry": "Näytön hereilläpito vapautui; yritetään uudelleen.",
+    "failed": "Näyttöä ei voitu pitää hereillä. Ottelukello jatkaa."
+  },
+  "pauseLog": {
+    "none": "Taukoja ei ole kirjattu",
+    "summary": "Tauot: {count}{current} · yhteensä {time}",
+    "matchLog": "Otteluloki",
+    "title": "Tauot",
+    "emptyState": "Aloita taukoloki pysäyttämällä kello.",
+    "current": "Nykyinen tauko",
+    "totalTime": "Taukojen kokonaisaika"
+  },
+  "correction": {
+    "quickAdjustment": "Pikakorjaus",
+    "title": "Korjaa otteluaikaa",
+    "useLiveTime": "Käytä nykyistä aikaa",
+    "useLiveTimeAria": "Lataa nykyinen otteluaika korjauskenttiin",
+    "helper": "Aseta näytettävä aika jaksolle {phase}. Aikaa voi korjata myös kellon käydessä.",
+    "minutes": "Minuutit",
+    "seconds": "Sekunnit",
+    "invalid": "Anna kokonaiset minuutit ja sekunnit väliltä 0–59.",
+    "beforePeriod": "Aika on ennen jakson {phase} alkua ({time})."
+  },
+  "units": {
+    "minuteShort": "MIN"
+  },
+  "date": {
+    "startedAt": "Alkoi {time}",
+    "atTime": "Ajassa {time} · {date}"
+  },
+  "notification": {
+    "unsupported": "Tämä selain ei tue ottelukellon ilmoituksia.",
+    "denied": "Ilmoitukset on estetty. Salli ne selaimen asetuksissa nähdäksesi tilan.",
+    "permission": "Salli ilmoitukset selaimen asetuksissa, jotta tila voidaan näyttää.",
+    "noServiceWorker": "Tämä selain ei voi näyttää taustailmoitusta.",
+    "noRegistration": "Ilmoitukset ovat käytettävissä, kun sovellus on asennettu tai isännöity PWA avattu.",
+    "title": "Matchday Clock on käynnissä",
+    "body": "Ottelukello käy. Avaa Matchday Clock hallitaksesi sitä.",
+    "sent": "Ilmoitus lähetettiin, jos alusta tukee sitä.",
+    "failed": "Ilmoitusta ei voitu näyttää. Tarkista sovelluksen luvat.",
+    "closeFailed": "Selain ei voinut sulkea ilmoitusta."
+  },
+  "confirmation": {
+    "stop": "Pysäytetäänkö ottelu ja jätetäänkö loppuaika näkyviin? Nollaa kello ennen seuraavaa ottelua.",
+    "reset": "Nollataanko ottelukello, taukoloki ja mitattu menetetty aika? Asetukset säilyvät."
+  },
+  "feedback": {
+    "stopped": "Ottelu pysäytettiin. Loppuaika tallennettiin laitteelle.",
+    "reset": "Ottelukello nollattiin. Asetukset säilyivät.",
+    "corrected": "Otteluaika korjattu."
+  },
+  "locale": {
+    "loadFailed": "Kielt? {language} ei voitu ladata. K?ytet??n brittienglantia."
+  }
+}

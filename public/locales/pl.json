@@ -1,0 +1,206 @@
+{
+  "install": {
+    "banner": "Zainstaluj Matchday Clock, aby szybko otwierać aplikację i korzystać z niej offline.",
+    "dismiss": "Zamknij komunikat instalacyjny",
+    "app": "Zainstaluj aplikację",
+    "instructions": {
+      "title": "Zainstaluj Matchday Clock",
+      "ios": "W Safari stuknij Udostępnij, a następnie Dodaj do ekranu początkowego. W innych przeglądarkach na iPhonie otwórz menu udostępniania lub przeglądarki i wybierz Dodaj do ekranu początkowego.",
+      "android": "Otwórz menu przeglądarki i wybierz Zainstaluj aplikację lub Dodaj do ekranu głównego.",
+      "other": "Użyj opcji Zainstaluj aplikację lub Dodaj do ekranu głównego w przeglądarce. Jeśli jej nie ma, sprawdź menu przeglądarki."
+    },
+    "failed": "Nie udało się rozpocząć instalacji. Zainstaluj aplikację z menu przeglądarki."
+  },
+  "settings": {
+    "open": "Otwórz ustawienia",
+    "title": "Ustawienia",
+    "display": "Ustawienia aplikacji",
+    "pauseClock": "Mierz czas między połowami",
+    "pauseClockHelp": "Automatycznie mierz przerwę po zatrzymaniu połowy",
+    "personalize": "Personalizacja",
+    "keepAwake": "Utrzymuj aktywny ekran",
+    "keepAwakeHelp": "Podczas działania zegara meczu",
+    "runningNotification": "Powiadomienie o działającym zegarze",
+    "notificationHelp": "Wymaga uprawnień i obsługi przez platformę",
+    "trackLost": "Mierz stracony czas",
+    "trackHelp": "Dodaje osobny przycisk do przytrzymania",
+    "language": "Język",
+    "appearance": "Wygląd",
+    "system": "Użyj ustawienia urządzenia",
+    "light": "Jasny",
+    "dark": "Ciemny"
+  },
+  "launch": {
+    "title": "Gotowi na mecz?",
+    "description": "Wybierz typowe ustawienia meczu lub skonfiguruj nowy. Zegar ruszy po naciśnięciu Start.",
+    "useLastSettings": "Użyj ostatnich ustawień",
+    "setup": "Skonfiguruj mecz"
+  },
+  "preset": {
+    "choose": "Wybierz zapisany preset",
+    "count": "Zapisane presety: {count}",
+    "nameRequired": "Wpisz nazwę presetu.",
+    "nameExists": "Preset o tej nazwie już istnieje.",
+    "deleteConfirm": "Usunąć „{name}”? Tej czynności nie można cofnąć.",
+    "saved": "Preset zapisano na tym urządzeniu.",
+    "updated": "Preset zaktualizowano.",
+    "deleted": "Preset usunięto.",
+    "heading": "Zapisane presety",
+    "empty": "Brak zapisanych presetów. Możesz zapisać konfigurację podczas ustawiania meczu.",
+    "new": "Nowy preset",
+    "edit": "Edytuj preset",
+    "name": "Nazwa presetu"
+  },
+  "break": {
+    "running": "Zegar przerwy działa",
+    "time": "Czas przerwy",
+    "stop": "Zatrzymaj zegar przerwy"
+  },
+  "clock": {
+    "status": {
+      "finished": "Zakończono",
+      "ready": "Gotowy",
+      "running": "W trakcie",
+      "paused": "Wstrzymany",
+      "stopped": "Zatrzymany"
+    },
+    "timer": "Zegar meczu",
+    "stoppage": "Czas doliczony",
+    "periodLimit": "Połowa {time}",
+    "thisPeriod": "{time} tej połowy",
+    "pausedFor": "Pauza {time}",
+    "controlsAria": "Sterowanie zegarem meczu"
+  },
+  "match": {
+    "finished": "Mecz zakończony. Czas końcowy zapisano na tym urządzeniu.",
+    "flow": "Przebieg meczu"
+  },
+  "common": {
+    "delete": "Usuń",
+    "edit": "Edytuj",
+    "close": "Zamknij",
+    "save": "Zapisz",
+    "cancel": "Anuluj",
+    "apply": "Zastosuj",
+    "dismissMessage": "Zamknij komunikat"
+  },
+  "setup": {
+    "description": "Wybierz długość okresów. Możesz zapisać tę konfigurację na przyszłe mecze.",
+    "saveAsPreset": "Zapisz konfigurację jako preset",
+    "saveAsPresetHelp": "Zachowaj długość okresów na tym urządzeniu do kolejnych meczów.",
+    "continueToClock": "Przejdź do zegara",
+    "summary": {
+      "withExtraTime": "Połowy po {half} min · dogrywka: {extra} min na część",
+      "withoutExtraTime": "Połowy po {half} min · bez dogrywki"
+    },
+    "title": "Ustawienia meczu",
+    "eachHalf": "Każda połowa",
+    "extraPeriods": "Części dogrywki",
+    "extraTime": "Dogrywka",
+    "extraHelp": "Dwie części o podanej wyżej długości",
+    "note": "Ustawienia i dane meczu pozostają w tej przeglądarce na tym urządzeniu. Długość można zmienić po resecie."
+  },
+  "about": {
+    "title": "Informacje",
+    "short": "Informacje o aplikacji i licencjach open source.",
+    "description": "Matchday Clock działa lokalnie na tym urządzeniu i może działać offline.",
+    "licenses": {
+      "heading": "Licencje i podziękowania",
+      "description": "Wyświetlacz używa czcionki DSEG7 Classic na licencji SIL Open Font License 1.1.",
+      "font": "Przeczytaj licencję czcionki DSEG7 (OFL 1.1)"
+    },
+    "platformNote": "Aplikacja internetowa nie gwarantuje działania w tle ani powiadomień na każdym telefonie. Po powrocie zegar oblicza czas ponownie na podstawie zapisanych znaczników czasu."
+  },
+  "app": {
+    "subtitle": "Zegar piłkarski",
+    "homeAria": "Strona główna Matchday Clock"
+  },
+  "storage": {
+    "saved": "Zapisano na urządzeniu",
+    "notSaving": "Brak zapisu",
+    "dismissSavedWarning": "Zamknij ostrzeżenie o zapisanych danych",
+    "invalidMatch": "Nie udało się odczytać zapisanych danych. Wczytano nowy zegar.",
+    "invalidPreferences": "Zapisane preferencje były nieprawidłowe. Używane są ustawienia urządzenia.",
+    "writeFailed": "Ta przeglądarka nie mogła zapisać meczu lokalnie. Nie odświeżaj ani nie zamykaj aplikacji."
+  },
+  "period": {
+    "firstHalf": "Pierwsza połowa",
+    "secondHalf": "Druga połowa",
+    "extraTimeFirst": "Dogrywka 1",
+    "extraTimeSecond": "Dogrywka 2",
+    "extraShort": "DOG.",
+    "select": "Wybierz połowę",
+    "help": "Kolejna połowa zaczyna się od odpowiedniego czasu meczu. Zegar działa po limicie i zmienia kolor na czerwony w czasie doliczonym."
+  },
+  "lostTime": {
+    "hold": "Przytrzymaj, aby mierzyć stracony czas",
+    "tracking": "Mierzenie straconego czasu",
+    "total": "Niezależnie od zegara meczu · łącznie {time}"
+  },
+  "control": {
+    "start": "Start",
+    "resume": "Wznów",
+    "pause": "Pauza",
+    "stop": "Stop",
+    "reset": "Resetuj"
+  },
+  "wake": {
+    "idle": "Podtrzymanie ekranu jest nieaktywne.",
+    "off": "Podtrzymywanie ekranu jest wyłączone w ustawieniach.",
+    "active": "Ekran pozostaje aktywny, gdy aplikacja jest widoczna.",
+    "unsupported": "Ta przeglądarka nie obsługuje podtrzymywania ekranu.",
+    "retry": "Podtrzymanie ekranu zostało zwolnione; ponawianie.",
+    "failed": "Nie można podtrzymać ekranu. Zegar meczu będzie działać dalej."
+  },
+  "pauseLog": {
+    "none": "Brak zarejestrowanych przerw",
+    "summary": "Przerwy: {count}{current} · łącznie {time}",
+    "matchLog": "Dziennik meczu",
+    "title": "Przerwy",
+    "emptyState": "Wstrzymaj zegar, aby rozpocząć zapisywanie przerw.",
+    "current": "Bieżąca przerwa",
+    "totalTime": "Łączny czas przerw"
+  },
+  "correction": {
+    "quickAdjustment": "Szybka korekta",
+    "title": "Skoryguj czas meczu",
+    "useLiveTime": "Użyj bieżącego czasu",
+    "useLiveTimeAria": "Wczytaj bieżący czas do pól korekty",
+    "helper": "Ustaw wyświetlany czas dla: {phase}. Możesz to zrobić również podczas działania zegara.",
+    "minutes": "Minuty",
+    "seconds": "Sekundy",
+    "invalid": "Wpisz całe minuty i sekundy od 0 do 59.",
+    "beforePeriod": "Ten czas jest wcześniejszy niż początek: {phase} ({time})."
+  },
+  "units": {
+    "minuteShort": "MIN"
+  },
+  "date": {
+    "startedAt": "Początek: {time}",
+    "atTime": "Przy {time} · {date}"
+  },
+  "notification": {
+    "unsupported": "Ta przeglądarka nie obsługuje powiadomień o zegarze.",
+    "denied": "Powiadomienia są zablokowane. Zezwól na nie w ustawieniach przeglądarki, aby zobaczyć status.",
+    "permission": "Zezwól na powiadomienia w ustawieniach przeglądarki, aby wyświetlać status.",
+    "noServiceWorker": "Ta przeglądarka nie może wyświetlać powiadomień w tle.",
+    "noRegistration": "Powiadomienia będą dostępne po zainstalowaniu aplikacji lub otwarciu hostowanej PWA.",
+    "title": "Matchday Clock działa",
+    "body": "Zegar meczu działa. Otwórz Matchday Clock, aby nim sterować.",
+    "sent": "Wysłano powiadomienie, jeśli platforma je obsługuje.",
+    "failed": "Nie można wyświetlić powiadomienia. Sprawdź uprawnienia aplikacji.",
+    "closeFailed": "Przeglądarka nie mogła zamknąć powiadomienia."
+  },
+  "confirmation": {
+    "stop": "Zatrzymać mecz i pozostawić widoczny końcowy czas? Zresetuj zegar przed rozpoczęciem kolejnego meczu.",
+    "reset": "Zresetować zegar, dziennik przerw i mierzony stracony czas? Ustawienia zostaną zachowane."
+  },
+  "feedback": {
+    "stopped": "Mecz zatrzymany. Końcowy czas zapisano na tym urządzeniu.",
+    "reset": "Zegar zresetowany. Ustawienia pozostają bez zmian.",
+    "corrected": "Skorygowano czas meczu."
+  },
+  "locale": {
+    "loadFailed": "Nie uda?o si? wczyta? j?zyka {language}. U?ywany jest angielski (Wielka Brytania)."
+  }
+}

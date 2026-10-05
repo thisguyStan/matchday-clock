@@ -1,0 +1,206 @@
+{
+  "install": {
+    "banner": "Instala Matchday Clock para acceder rápidamente y usarla sin conexión.",
+    "dismiss": "Cerrar aviso de instalación",
+    "app": "Instalar app",
+    "instructions": {
+      "title": "Instalar Matchday Clock",
+      "ios": "En Safari, toca Compartir y después Añadir a pantalla de inicio. En otros navegadores de iPhone, abre el menú de compartir o del navegador y elige Añadir a pantalla de inicio.",
+      "android": "Abre el menú del navegador y elige Instalar aplicación o Añadir a pantalla de inicio.",
+      "other": "Usa la opción Instalar aplicación o Añadir a pantalla de inicio del navegador. Si no aparece, consulta su menú."
+    },
+    "failed": "No se pudo iniciar la instalación. Instala la aplicación desde el menú del navegador."
+  },
+  "settings": {
+    "open": "Abrir ajustes",
+    "title": "Ajustes",
+    "display": "Ajustes de la aplicación",
+    "pauseClock": "Registrar el tiempo entre periodos",
+    "pauseClockHelp": "Medir automáticamente el descanso al detener un periodo",
+    "personalize": "Personalizar",
+    "keepAwake": "Mantener pantalla activa",
+    "keepAwakeHelp": "Mientras el reloj del partido está en marcha",
+    "runningNotification": "Notificación de reloj en marcha",
+    "notificationHelp": "Sujeto a permisos y compatibilidad del dispositivo",
+    "trackLost": "Medir tiempo perdido",
+    "trackHelp": "Añade un botón que debes mantener pulsado",
+    "language": "Idioma",
+    "appearance": "Apariencia",
+    "system": "Usar ajustes del dispositivo",
+    "light": "Claro",
+    "dark": "Oscuro"
+  },
+  "launch": {
+    "title": "¿Todo listo para el partido?",
+    "description": "Elige tu configuración habitual o prepara un partido nuevo. El reloj empieza al pulsar Iniciar.",
+    "useLastSettings": "Usar últimos ajustes",
+    "setup": "Configurar partido"
+  },
+  "preset": {
+    "choose": "Elegir una configuración guardada",
+    "count": "{count} configuraciones guardadas",
+    "nameRequired": "Escribe un nombre para esta configuración.",
+    "nameExists": "Ya existe una configuración con ese nombre.",
+    "deleteConfirm": "¿Eliminar «{name}»? Esta acción no se puede deshacer.",
+    "saved": "Configuración guardada en este dispositivo.",
+    "updated": "Configuración actualizada.",
+    "deleted": "Configuración eliminada.",
+    "heading": "Configuraciones guardadas",
+    "empty": "Todavía no hay configuraciones guardadas. Guarda una al preparar un partido.",
+    "new": "Nueva configuración",
+    "edit": "Editar configuración",
+    "name": "Nombre de la configuración"
+  },
+  "break": {
+    "running": "Reloj del descanso en marcha",
+    "time": "Tiempo de descanso",
+    "stop": "Detener reloj del descanso"
+  },
+  "clock": {
+    "status": {
+      "finished": "Finalizado",
+      "ready": "Preparado",
+      "running": "En marcha",
+      "paused": "Pausado",
+      "stopped": "Detenido"
+    },
+    "timer": "Reloj del partido",
+    "stoppage": "Tiempo añadido",
+    "periodLimit": "Periodo {time}",
+    "thisPeriod": "{time} de este periodo",
+    "pausedFor": "Pausado {time}",
+    "controlsAria": "Controles del reloj del partido"
+  },
+  "match": {
+    "finished": "Partido finalizado. El tiempo final se ha guardado en este dispositivo.",
+    "flow": "Desarrollo del partido"
+  },
+  "common": {
+    "delete": "Eliminar",
+    "edit": "Editar",
+    "close": "Cerrar",
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "apply": "Aplicar",
+    "dismissMessage": "Cerrar mensaje"
+  },
+  "setup": {
+    "description": "Elige la duración de los periodos. Puedes guardar esta configuración para más adelante.",
+    "saveAsPreset": "Guardar esta configuración como preajuste",
+    "saveAsPresetHelp": "Guarda estas duraciones en este dispositivo para otros partidos.",
+    "continueToClock": "Continuar al reloj",
+    "summary": {
+      "withExtraTime": "Partes de {half} min · periodos de prórroga de {extra} min",
+      "withoutExtraTime": "Partes de {half} min · sin prórroga"
+    },
+    "title": "Configuración del partido",
+    "eachHalf": "Cada parte",
+    "extraPeriods": "Periodos de prórroga",
+    "extraTime": "Prórroga",
+    "extraHelp": "Dos periodos con la duración indicada",
+    "note": "La configuración y el partido se guardan en este navegador y dispositivo. La duración se puede cambiar después de reiniciar."
+  },
+  "about": {
+    "title": "Acerca de",
+    "short": "Información de la aplicación y avisos de código abierto.",
+    "description": "Matchday Clock funciona localmente en este dispositivo y puede usarse sin conexión.",
+    "licenses": {
+      "heading": "Licencias y reconocimientos",
+      "description": "La pantalla usa DSEG7 Classic, distribuida bajo la licencia SIL Open Font License 1.1.",
+      "font": "Leer la licencia de la fuente DSEG7 (OFL 1.1)"
+    },
+    "platformNote": "Una aplicación web no puede garantizar la ejecución en segundo plano ni las notificaciones en todos los teléfonos. Al volver, el reloj recalcula el tiempo con las marcas guardadas."
+  },
+  "app": {
+    "subtitle": "Reloj de fútbol",
+    "homeAria": "Inicio de Matchday Clock"
+  },
+  "storage": {
+    "saved": "Guardado en el dispositivo",
+    "notSaving": "No se guarda",
+    "dismissSavedWarning": "Cerrar aviso de datos guardados",
+    "invalidMatch": "No se pudieron leer los datos guardados. Se ha cargado un reloj nuevo.",
+    "invalidPreferences": "Las preferencias guardadas no eran válidas. Se usarán los ajustes del dispositivo.",
+    "writeFailed": "Este navegador no pudo guardar el partido localmente. Evita actualizar o cerrar la app."
+  },
+  "period": {
+    "firstHalf": "Primera parte",
+    "secondHalf": "Segunda parte",
+    "extraTimeFirst": "Prórroga 1",
+    "extraTimeSecond": "Prórroga 2",
+    "extraShort": "PRÓR.",
+    "select": "Seleccionar periodo",
+    "help": "El nuevo periodo empieza en su minuto acumulado. El reloj sigue después del límite y se pone rojo durante el tiempo añadido."
+  },
+  "lostTime": {
+    "hold": "Mantén pulsado para medir el tiempo perdido",
+    "tracking": "Midiendo el tiempo perdido",
+    "total": "Independiente del reloj · total: {time}"
+  },
+  "control": {
+    "start": "Iniciar",
+    "resume": "Reanudar",
+    "pause": "Pausar",
+    "stop": "Detener",
+    "reset": "Reiniciar"
+  },
+  "wake": {
+    "idle": "La pantalla permanece activa solo cuando se necesita.",
+    "off": "La opción de mantener la pantalla activa está desactivada.",
+    "active": "La pantalla se mantiene activa mientras la app está visible.",
+    "unsupported": "Este navegador no permite mantener la pantalla activa.",
+    "retry": "Se liberó el bloqueo de pantalla; volviendo a intentarlo.",
+    "failed": "No se pudo mantener la pantalla activa. El reloj seguirá funcionando."
+  },
+  "pauseLog": {
+    "none": "No hay pausas registradas",
+    "summary": "Pausas: {count}{current} · total: {time}",
+    "matchLog": "Registro del partido",
+    "title": "Pausas",
+    "emptyState": "Pausa el reloj para empezar a registrar las pausas.",
+    "current": "Pausa actual",
+    "totalTime": "Tiempo total de pausa"
+  },
+  "correction": {
+    "quickAdjustment": "Ajuste rápido",
+    "title": "Corregir el tiempo",
+    "useLiveTime": "Usar tiempo actual",
+    "useLiveTimeAria": "Cargar el tiempo actual en los campos de corrección",
+    "helper": "Ajusta el tiempo mostrado para {phase}. También funciona con el reloj en marcha.",
+    "minutes": "Minutos",
+    "seconds": "Segundos",
+    "invalid": "Introduce minutos enteros y segundos entre 0 y 59.",
+    "beforePeriod": "Ese tiempo es anterior al inicio de {phase} ({time})."
+  },
+  "units": {
+    "minuteShort": "MIN"
+  },
+  "date": {
+    "startedAt": "Empezó a las {time}",
+    "atTime": "En {time} · {date}"
+  },
+  "notification": {
+    "unsupported": "Este navegador no admite notificaciones del reloj.",
+    "denied": "Las notificaciones están bloqueadas. Permítelas en el navegador para ver el estado del reloj.",
+    "permission": "Permite las notificaciones en el navegador para mostrar el estado del reloj.",
+    "noServiceWorker": "Este navegador no puede mostrar notificaciones en segundo plano.",
+    "noRegistration": "Las notificaciones estarán disponibles cuando instales la app o la abras desde la PWA alojada.",
+    "title": "Matchday Clock está en marcha",
+    "body": "El reloj del partido está activo. Abre Matchday Clock para controlarlo.",
+    "sent": "Se envió la notificación cuando la plataforma lo permite.",
+    "failed": "No se pudo mostrar la notificación. Comprueba los permisos de la app.",
+    "closeFailed": "El navegador no pudo cerrar la notificación."
+  },
+  "confirmation": {
+    "stop": "¿Detener el partido y dejar visible el tiempo final? Reinicia el reloj antes de iniciar otro partido.",
+    "reset": "¿Reiniciar el reloj, el registro de pausas y el tiempo perdido? Se conservará la configuración."
+  },
+  "feedback": {
+    "stopped": "Partido detenido. El tiempo final se guardó en este dispositivo.",
+    "reset": "Reloj reiniciado. La configuración no ha cambiado.",
+    "corrected": "Tiempo del partido corregido."
+  },
+  "locale": {
+    "loadFailed": "No se pudo cargar {language}. Se usar? ingl?s (Reino Unido)."
+  }
+}

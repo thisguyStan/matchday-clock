@@ -1,0 +1,206 @@
+{
+  "install": {
+    "banner": "Installér Matchday Clock for hurtig adgang og brug offline.",
+    "dismiss": "Luk installationsmeddelelse",
+    "app": "Installér app",
+    "instructions": {
+      "title": "Installér Matchday Clock",
+      "ios": "Tryk på Del i Safari og derefter på Føj til hjemmeskærm. I andre iPhone-browsere skal du åbne delings- eller browsermenuen og vælge Føj til hjemmeskærm.",
+      "android": "Åbn browsermenuen, og vælg Installér app eller Føj til startskærmen.",
+      "other": "Brug browserens mulighed Installér app eller Føj til startskærmen. Hvis den ikke vises, kan du se i browsermenuen."
+    },
+    "failed": "Installationen kunne ikke startes. Installér appen via browsermenuen."
+  },
+  "settings": {
+    "open": "Åbn indstillinger",
+    "title": "Indstillinger",
+    "display": "Appindstillinger",
+    "pauseClock": "Registrér tiden mellem perioderne",
+    "pauseClockHelp": "Mål automatisk pausen, når en periode stoppes",
+    "personalize": "Tilpas",
+    "keepAwake": "Hold skærmen aktiv",
+    "keepAwakeHelp": "Mens kampuret kører",
+    "runningNotification": "Besked, mens uret kører",
+    "notificationHelp": "Kræver tilladelse og understøttelse fra platformen",
+    "trackLost": "Mål tabt tid",
+    "trackHelp": "Tilføjer en knap, der skal holdes nede",
+    "language": "Sprog",
+    "appearance": "Udseende",
+    "system": "Brug enhedens indstilling",
+    "light": "Lyst",
+    "dark": "Mørkt"
+  },
+  "launch": {
+    "title": "Klar til kampdag?",
+    "description": "Vælg din sædvanlige kampopsætning, eller klargør en ny kamp. Uret starter, når du trykker på Start.",
+    "useLastSettings": "Brug seneste indstillinger",
+    "setup": "Opsæt kamp"
+  },
+  "preset": {
+    "choose": "Vælg en gemt forudindstilling",
+    "count": "{count} gemte forudindstillinger",
+    "nameRequired": "Angiv et navn til forudindstillingen.",
+    "nameExists": "Der findes allerede en forudindstilling med dette navn.",
+    "deleteConfirm": "Slet „{name}“? Dette kan ikke fortrydes.",
+    "saved": "Forudindstillingen er gemt på enheden.",
+    "updated": "Forudindstillingen er opdateret.",
+    "deleted": "Forudindstillingen er slettet.",
+    "heading": "Gemte forudindstillinger",
+    "empty": "Ingen gemte forudindstillinger endnu. Gem en, når du opsætter en kamp.",
+    "new": "Ny forudindstilling",
+    "edit": "Rediger forudindstilling",
+    "name": "Navn på forudindstilling"
+  },
+  "break": {
+    "running": "Pauseuret kører",
+    "time": "Pausetid",
+    "stop": "Stop pauseuret"
+  },
+  "clock": {
+    "status": {
+      "finished": "Afsluttet",
+      "ready": "Klar",
+      "running": "I gang",
+      "paused": "Sat på pause",
+      "stopped": "Stoppet"
+    },
+    "timer": "Kampur",
+    "stoppage": "Tillægstid",
+    "periodLimit": "Periode {time}",
+    "thisPeriod": "{time} i denne halvleg",
+    "pausedFor": "Pause i {time}",
+    "controlsAria": "Kampurets knapper"
+  },
+  "match": {
+    "finished": "Kampen er slut. Sluttiden er gemt på denne enhed.",
+    "flow": "Kampforløb"
+  },
+  "common": {
+    "delete": "Slet",
+    "edit": "Rediger",
+    "close": "Luk",
+    "save": "Gem",
+    "cancel": "Annuller",
+    "apply": "Anvend",
+    "dismissMessage": "Luk besked"
+  },
+  "setup": {
+    "description": "Vælg periodernes længde. Du kan gemme opsætningen til senere kampe.",
+    "saveAsPreset": "Gem opsætningen som en forudindstilling",
+    "saveAsPresetHelp": "Gem periodernes længde på denne enhed til kommende kampe.",
+    "continueToClock": "Fortsæt til uret",
+    "summary": {
+      "withExtraTime": "{half} min halvlege · {extra} min pr. forlænget periode",
+      "withoutExtraTime": "{half} min halvlege · ingen forlænget spilletid"
+    },
+    "title": "Kampindstillinger",
+    "eachHalf": "Hver halvleg",
+    "extraPeriods": "Forlængede perioder",
+    "extraTime": "Forlænget spilletid",
+    "extraHelp": "To perioder med længden ovenfor",
+    "note": "Indstillinger og kampdata gemmes i denne browser på enheden. Periodernes længde kan ændres efter nulstilling."
+  },
+  "about": {
+    "title": "Om",
+    "short": "Appoplysninger og meddelelser om open source.",
+    "description": "Matchday Clock kører lokalt på denne enhed og kan bruges offline.",
+    "licenses": {
+      "heading": "Licenser og anerkendelser",
+      "description": "Displayet bruger DSEG7 Classic, som distribueres under SIL Open Font License 1.1.",
+      "font": "Læs licensen for DSEG7-skrifttypen (OFL 1.1)"
+    },
+    "platformNote": "En webapp kan ikke garantere baggrundskørsel eller beskeder på alle telefoner. Når du vender tilbage, beregner uret tiden ud fra gemte tidsstempler."
+  },
+  "app": {
+    "subtitle": "Fodboldur",
+    "homeAria": "Matchday Clock-startside"
+  },
+  "storage": {
+    "saved": "Gemt på enheden",
+    "notSaving": "Gemmes ikke",
+    "dismissSavedWarning": "Luk advarslen om gemte data",
+    "invalidMatch": "De gemte kampdata kunne ikke læses. Et nyt ur er indlæst.",
+    "invalidPreferences": "De gemte indstillinger var ugyldige. Enhedens indstillinger bruges.",
+    "writeFailed": "Denne browser kunne ikke gemme kampen lokalt. Undgå at opdatere eller lukke appen."
+  },
+  "period": {
+    "firstHalf": "1. halvleg",
+    "secondHalf": "2. halvleg",
+    "extraTimeFirst": "Forlænget spilletid 1",
+    "extraTimeSecond": "Forlænget spilletid 2",
+    "extraShort": "FS",
+    "select": "Vælg periode",
+    "help": "Næste periode starter ved sin samlede kampminutmarkering. Uret fortsætter efter grænsen og bliver rødt i tillægstiden."
+  },
+  "lostTime": {
+    "hold": "Hold nede for at måle tabt tid",
+    "tracking": "Måler tabt tid",
+    "total": "Separat fra kampuret · i alt {time}"
+  },
+  "control": {
+    "start": "Start",
+    "resume": "Fortsæt",
+    "pause": "Pause",
+    "stop": "Stop",
+    "reset": "Nulstil"
+  },
+  "wake": {
+    "idle": "Skærmen holdes ikke aktiv.",
+    "off": "Skærmen holdes ikke aktiv ifølge indstillingerne.",
+    "active": "Skærmen holdes aktiv, mens appen er synlig.",
+    "unsupported": "Denne browser kan ikke holde skærmen aktiv.",
+    "retry": "Skærmlåsen blev frigivet; prøver igen.",
+    "failed": "Skærmen kunne ikke holdes aktiv. Kampuret fortsætter."
+  },
+  "pauseLog": {
+    "none": "Ingen pauser registreret",
+    "summary": "Pauser: {count}{current} · i alt {time}",
+    "matchLog": "Kamplog",
+    "title": "Pauser",
+    "emptyState": "Sæt uret på pause for at begynde at logge pauser.",
+    "current": "Aktuel pause",
+    "totalTime": "Samlet pausetid"
+  },
+  "correction": {
+    "quickAdjustment": "Hurtig justering",
+    "title": "Ret kamptid",
+    "useLiveTime": "Brug aktuel tid",
+    "useLiveTimeAria": "Indlæs den aktuelle kamptid i rettelsesfelterne",
+    "helper": "Indstil den viste kamptid for {phase}. Det virker også, mens uret kører.",
+    "minutes": "Minutter",
+    "seconds": "Sekunder",
+    "invalid": "Indtast hele minutter og sekunder fra 0 til 59.",
+    "beforePeriod": "Tiden ligger før starten på {phase} ({time})."
+  },
+  "units": {
+    "minuteShort": "MIN"
+  },
+  "date": {
+    "startedAt": "Startede kl. {time}",
+    "atTime": "Ved {time} · {date}"
+  },
+  "notification": {
+    "unsupported": "Denne browser understøtter ikke beskeder om kampuret.",
+    "denied": "Beskeder er blokeret. Tillad dem i browserindstillingerne for at se status.",
+    "permission": "Tillad beskeder i browserindstillingerne for at vise status.",
+    "noServiceWorker": "Denne browser kan ikke vise en besked i baggrunden.",
+    "noRegistration": "Beskeder er tilgængelige, når appen er installeret eller den hostede PWA er åbnet.",
+    "title": "Matchday Clock kører",
+    "body": "Kampuret er aktivt. Åbn Matchday Clock for at styre det.",
+    "sent": "En besked blev sendt, hvis platformen understøtter det.",
+    "failed": "Beskeden kunne ikke vises. Kontrollér appens tilladelser.",
+    "closeFailed": "Browseren kunne ikke lukke beskeden."
+  },
+  "confirmation": {
+    "stop": "Stop kampen, og behold sluttiden synlig? Nulstil uret, før du starter en ny kamp.",
+    "reset": "Nulstil kampuret, pauseloggen og den målte tabte tid? Indstillingerne bevares."
+  },
+  "feedback": {
+    "stopped": "Kampen er stoppet. Sluttiden er gemt på enheden.",
+    "reset": "Kampuret er nulstillet. Indstillingerne er uændrede.",
+    "corrected": "Kamptiden er rettet."
+  },
+  "locale": {
+    "loadFailed": "Sproget {language} kunne ikke indl?ses. Britisk engelsk bruges."
+  }
+}

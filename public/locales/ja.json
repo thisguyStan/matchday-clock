@@ -1,0 +1,206 @@
+{
+  "install": {
+    "banner": "すばやくアクセスし、オフラインでも使えるようにMatchday Clockをインストールしましょう。",
+    "dismiss": "インストール案内を閉じる",
+    "app": "アプリをインストール",
+    "instructions": {
+      "title": "Matchday Clockをインストール",
+      "ios": "Safariでは「共有」をタップしてから「ホーム画面に追加」を選びます。ほかのiPhoneブラウザでは、共有メニューまたはブラウザメニューを開き、「ホーム画面に追加」を選んでください。",
+      "android": "ブラウザのメニューを開き、「アプリをインストール」または「ホーム画面に追加」を選んでください。",
+      "other": "ブラウザの「アプリをインストール」または「ホーム画面に追加」を選んでください。表示されない場合は、ブラウザのメニューを確認してください。"
+    },
+    "failed": "インストールを開始できませんでした。ブラウザのメニューからアプリをインストールしてください。"
+  },
+  "settings": {
+    "open": "設定を開く",
+    "title": "設定",
+    "display": "アプリの設定",
+    "pauseClock": "ピリオド間の時間を計測",
+    "pauseClockHelp": "ピリオド終了後の休憩時間を自動で計測します",
+    "personalize": "カスタマイズ",
+    "keepAwake": "画面を点灯したままにする",
+    "keepAwakeHelp": "試合時計の実行中",
+    "runningNotification": "実行中の通知",
+    "notificationHelp": "可能な範囲で提供。権限とプラットフォームの対応が必要です",
+    "trackLost": "長押しでロスタイムを計測",
+    "trackHelp": "時計に専用の長押しボタンを追加します",
+    "language": "言語",
+    "appearance": "外観",
+    "system": "端末の設定を使用",
+    "light": "ライト",
+    "dark": "ダーク"
+  },
+  "launch": {
+    "title": "試合日の準備はできましたか？",
+    "description": "いつもの試合設定を使うか、新しく設定してください。「開始」を押すと時計が動き始めます。",
+    "useLastSettings": "前回の設定を使う",
+    "setup": "試合を設定"
+  },
+  "preset": {
+    "choose": "保存したプリセットを選択",
+    "count": "保存済みプリセット：{count}件",
+    "nameRequired": "プリセット名を入力してください。",
+    "nameExists": "同じ名前のプリセットがすでにあります。",
+    "deleteConfirm": "「{name}」を削除しますか？この操作は取り消せません。",
+    "saved": "プリセットをこの端末に保存しました。",
+    "updated": "プリセットを更新しました。",
+    "deleted": "プリセットを削除しました。",
+    "heading": "保存済みプリセット",
+    "empty": "保存済みプリセットはありません。試合の設定時に保存できます。",
+    "new": "新しいプリセット",
+    "edit": "プリセットを編集",
+    "name": "プリセット名"
+  },
+  "break": {
+    "running": "休憩時計が動作中",
+    "time": "休憩時間",
+    "stop": "休憩時計を停止"
+  },
+  "clock": {
+    "status": {
+      "finished": "終了",
+      "ready": "準備完了",
+      "running": "進行中",
+      "paused": "一時停止",
+      "stopped": "停止"
+    },
+    "timer": "試合時計",
+    "stoppage": "ロスタイム",
+    "periodLimit": "ピリオド {time}",
+    "thisPeriod": "このピリオド：{time}",
+    "pausedFor": "一時停止 {time}",
+    "controlsAria": "試合時計の操作"
+  },
+  "match": {
+    "finished": "試合終了。最終時間はこの端末に保存されました。",
+    "flow": "試合の進行状況"
+  },
+  "common": {
+    "delete": "削除",
+    "edit": "編集",
+    "close": "閉じる",
+    "save": "保存",
+    "cancel": "キャンセル",
+    "apply": "適用",
+    "dismissMessage": "メッセージを閉じる"
+  },
+  "setup": {
+    "description": "この試合のピリオドの長さを選択してください。設定は後で使えるように保存できます。",
+    "saveAsPreset": "この設定をプリセットとして保存",
+    "saveAsPresetHelp": "このピリオドの長さをこの端末に保存し、次の試合でも使えます。",
+    "continueToClock": "時計へ進む",
+    "summary": {
+      "withExtraTime": "{half}分ハーフ · 延長戦は各{extra}分",
+      "withoutExtraTime": "{half}分ハーフ · 延長戦なし"
+    },
+    "title": "試合設定",
+    "eachHalf": "各ハーフ",
+    "extraPeriods": "延長戦のピリオド",
+    "extraTime": "延長戦",
+    "extraHelp": "上記の長さで2ピリオド",
+    "note": "設定と試合データは、この端末のこのブラウザ内に保存されます。リセット後にピリオドの長さを変更できます。"
+  },
+  "about": {
+    "title": "アプリ情報",
+    "short": "アプリ情報とオープンソースに関するお知らせ。",
+    "description": "Matchday Clockはこの端末上で動作し、オフラインでも使用できます。",
+    "licenses": {
+      "heading": "ライセンスと謝辞",
+      "description": "表示には、SIL Open Font License 1.1のもとで配布されるDSEG7 Classicを使用しています。",
+      "font": "DSEG7フォントライセンス（OFL 1.1）を読む"
+    },
+    "platformNote": "すべてのスマートフォンでバックグラウンド実行や通知が保証されるわけではありません。戻ってきたときに経過時間を復元できるよう、時計は保存済みのタイムスタンプを使用します。"
+  },
+  "app": {
+    "subtitle": "サッカー時計",
+    "homeAria": "Matchday Clockのホーム"
+  },
+  "storage": {
+    "saved": "端末に保存済み",
+    "notSaving": "保存されていません",
+    "dismissSavedWarning": "保存データの警告を閉じる",
+    "invalidMatch": "保存された試合データを読み取れなかったため、新しい時計を読み込みました。",
+    "invalidPreferences": "保存された設定が無効なため、端末の設定を使用しています。",
+    "writeFailed": "このブラウザでは試合データを端末に保存できませんでした。アプリを更新または閉じないでください。"
+  },
+  "period": {
+    "firstHalf": "前半",
+    "secondHalf": "後半",
+    "extraTimeFirst": "延長前半",
+    "extraTimeSecond": "延長後半",
+    "extraShort": "延長",
+    "select": "ピリオドを選択",
+    "help": "新しいピリオドは試合時間の所定の時点から始まります。時計は制限時間を過ぎても動き続け、ロスタイムになると赤く表示されます。"
+  },
+  "lostTime": {
+    "hold": "長押しでロスタイムを計測",
+    "tracking": "ロスタイムを計測中",
+    "total": "試合時計とは別 · 合計 {time}"
+  },
+  "control": {
+    "start": "開始",
+    "resume": "再開",
+    "pause": "一時停止",
+    "stop": "停止",
+    "reset": "リセット"
+  },
+  "wake": {
+    "idle": "画面点灯維持は待機中です。",
+    "off": "設定で画面点灯維持がオフになっています。",
+    "active": "このアプリの表示中は画面点灯を維持します。",
+    "unsupported": "このブラウザは画面点灯維持に対応していません。",
+    "retry": "画面点灯維持が解除されました。再試行しています。",
+    "failed": "画面点灯を維持できませんでした。試合時計は動き続けます。"
+  },
+  "pauseLog": {
+    "none": "一時停止の記録はありません",
+    "summary": "一時停止：{count}{current} · 合計 {time}",
+    "matchLog": "試合ログ",
+    "title": "一時停止時間",
+    "emptyState": "時計を一時停止すると記録が始まります。",
+    "current": "現在の一時停止",
+    "totalTime": "一時停止の合計時間"
+  },
+  "correction": {
+    "quickAdjustment": "クイック調整",
+    "title": "試合時間を修正",
+    "useLiveTime": "現在の時間を使用",
+    "useLiveTimeAria": "現在の試合時間を修正欄に読み込む",
+    "helper": "{phase}の表示試合時間を設定します。時計の実行中も修正できます。",
+    "minutes": "分",
+    "seconds": "秒",
+    "invalid": "分と秒は0から59までの整数で入力してください。",
+    "beforePeriod": "その時間は{phase}の開始時刻（{time}）より前です。"
+  },
+  "units": {
+    "minuteShort": "分"
+  },
+  "date": {
+    "startedAt": "開始時刻 {time}",
+    "atTime": "{time} · {date}"
+  },
+  "notification": {
+    "unsupported": "このブラウザは実行中の通知に対応していません。",
+    "denied": "通知がブロックされています。実行状況を表示するには、ブラウザの設定で許可してください。",
+    "permission": "実行状況を表示するには、ブラウザの設定で通知を許可してください。",
+    "noServiceWorker": "このブラウザではバックグラウンド実行通知を表示できません。",
+    "noRegistration": "実行中の通知は、アプリをインストールするか、ホストされたPWAから読み込むと使用できます。",
+    "title": "Matchday Clockは動作中です",
+    "body": "試合時計が動作しています。操作するにはMatchday Clockに戻ってください。",
+    "sent": "このプラットフォームが対応している場合、実行中の通知を送信しました。",
+    "failed": "実行中の通知を表示できませんでした。このアプリのブラウザ権限を確認してください。",
+    "closeFailed": "ブラウザで実行中の通知を消去できませんでした。"
+  },
+  "confirmation": {
+    "stop": "この試合を終了し、最終時間を表示したままにしますか？次の試合を始めるにはリセットが必要です。",
+    "reset": "試合時計、一時停止ログ、計測したロスタイムをリセットしますか？試合設定は保持されます。"
+  },
+  "feedback": {
+    "stopped": "試合を停止しました。最終時間はこの端末に保存されています。",
+    "reset": "試合時計をリセットしました。試合設定は変更されていません。",
+    "corrected": "試合時間を修正しました。"
+  },
+  "locale": {
+    "loadFailed": "{language}を読み込めませんでした。英語（英国）を使用します。"
+  }
+}

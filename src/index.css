@@ -1088,6 +1088,35 @@ button:disabled {
   background: #f2f6f1;
 }
 
+:root[data-theme="oled"] {
+  --app-bg: #000;
+  --surface: #0a0a0a;
+  --surface-raised: #050505;
+  --surface-soft: #111;
+  --surface-input: #000;
+  --border: rgb(255 255 255 / 12%);
+  color-scheme: dark;
+  color: #eff5ef;
+  background: #000;
+}
+
+:root[data-theme="oled"] body,
+:root[data-theme="oled"] .app-shell {
+  background: #000;
+  color: #eff5ef;
+}
+
+:root[data-theme="oled"] .app-shell::before {
+  background: none;
+}
+
+:root[data-theme="oled"] .clock-card,
+:root[data-theme="oled"] .panel {
+  border-color: var(--border);
+  background: linear-gradient(140deg, var(--surface), var(--surface-raised));
+  box-shadow: 0 18px 50px rgb(0 0 0 / 35%);
+}
+
 :root[data-theme="light"] button:focus-visible,
 :root[data-theme="light"] input:focus-visible,
 :root[data-theme="light"] select:focus-visible,
@@ -1117,6 +1146,13 @@ button:disabled {
   border-color: #dbe5dc;
   background: linear-gradient(140deg, #fff, #f8faf7);
   box-shadow: 0 18px 50px rgb(33 53 37 / 8%);
+}
+
+:root .clock-card.active-match {
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
 }
 
 :root[data-theme="light"] .brand-lockup small {

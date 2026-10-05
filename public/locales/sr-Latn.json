@@ -1,0 +1,206 @@
+{
+  "install": {
+    "banner": "Instalirajte Matchday Clock za brz pristup i korišćenje van mreže.",
+    "dismiss": "Zatvori baner za instalaciju",
+    "app": "Instaliraj aplikaciju",
+    "instructions": {
+      "title": "Instalirajte Matchday Clock",
+      "ios": "U Safariju dodirnite „Podeli“, a zatim „Dodaj na početni ekran“. U drugim iPhone pregledačima otvorite meni za deljenje ili meni pregledača i izaberite „Dodaj na početni ekran“.",
+      "android": "Otvorite meni pregledača i izaberite „Instaliraj aplikaciju“ ili „Dodaj na početni ekran“.",
+      "other": "Koristite opciju „Instaliraj aplikaciju“ ili „Dodaj na početni ekran“ u pregledaču. Ako nije dostupna, proverite meni pregledača."
+    },
+    "failed": "Instalacija nije mogla da se pokrene. Instalirajte aplikaciju iz menija pregledača."
+  },
+  "settings": {
+    "open": "Otvori podešavanja",
+    "title": "Podešavanja",
+    "display": "Podešavanja aplikacije",
+    "pauseClock": "Prati vreme između perioda",
+    "pauseClockHelp": "Automatski meri pauzu nakon završetka perioda",
+    "personalize": "Prilagodi",
+    "keepAwake": "Održi ekran uključenim",
+    "keepAwakeHelp": "Dok sat utakmice radi",
+    "runningNotification": "Obaveštenje o radu",
+    "notificationHelp": "Kada je moguće; potrebni su dozvola i podrška platforme",
+    "trackLost": "Drži za praćenje izgubljenog vremena",
+    "trackHelp": "Dodaj zasebno dugme za držanje na satu",
+    "language": "Jezik",
+    "appearance": "Izgled",
+    "system": "Koristi podešavanje uređaja",
+    "light": "Svetlo",
+    "dark": "Tamno"
+  },
+  "launch": {
+    "title": "Spremni za dan utakmice?",
+    "description": "Izaberite uobičajena podešavanja utakmice ili podesite nova. Sat počinje da radi kada pritisnete Start.",
+    "useLastSettings": "Koristi prethodna podešavanja",
+    "setup": "Podesi utakmicu"
+  },
+  "preset": {
+    "choose": "Izaberite sačuvani šablon utakmice",
+    "count": "{count} sačuvanih šablona",
+    "nameRequired": "Unesite naziv šablona.",
+    "nameExists": "Šablon sa ovim nazivom već postoji.",
+    "deleteConfirm": "Obrisati „{name}“? Ova radnja se ne može opozvati.",
+    "saved": "Šablon je sačuvan na ovom uređaju.",
+    "updated": "Šablon je ažuriran.",
+    "deleted": "Šablon je obrisan.",
+    "heading": "Sačuvani šabloni",
+    "empty": "Još nema sačuvanih šablona. Sačuvajte jedan prilikom podešavanja utakmice.",
+    "new": "Novi šablon",
+    "edit": "Izmeni šablon",
+    "name": "Naziv šablona"
+  },
+  "break": {
+    "running": "Sat za pauzu radi",
+    "time": "Vreme pauze",
+    "stop": "Zaustavi sat za pauzu"
+  },
+  "clock": {
+    "status": {
+      "finished": "Završeno",
+      "ready": "Spremno",
+      "running": "U toku",
+      "paused": "Pauzirano",
+      "stopped": "Zaustavljeno"
+    },
+    "timer": "Sat utakmice",
+    "stoppage": "Nadoknada vremena",
+    "periodLimit": "Period {time}",
+    "thisPeriod": "{time} u ovom periodu",
+    "pausedFor": "Pauzirano {time}",
+    "controlsAria": "Kontrole sata utakmice"
+  },
+  "match": {
+    "finished": "Utakmica je završena. Završno vreme je sačuvano na ovom uređaju.",
+    "flow": "Tok utakmice"
+  },
+  "common": {
+    "delete": "Obriši",
+    "edit": "Izmeni",
+    "close": "Zatvori",
+    "save": "Sačuvaj",
+    "cancel": "Otkaži",
+    "apply": "Primeni",
+    "dismissMessage": "Zatvori poruku"
+  },
+  "setup": {
+    "description": "Izaberite trajanje perioda za ovu utakmicu. Ova podešavanja možete sačuvati za kasnije.",
+    "saveAsPreset": "Sačuvaj ova podešavanja kao šablon",
+    "saveAsPresetHelp": "Sačuvajte ova trajanja perioda na ovom uređaju za naredne utakmice.",
+    "continueToClock": "Nastavi na sat",
+    "summary": {
+      "withExtraTime": "{half} min po poluvremenu · periodi produžetaka od {extra} min",
+      "withoutExtraTime": "{half} min po poluvremenu · bez produžetaka"
+    },
+    "title": "Podešavanje utakmice",
+    "eachHalf": "Svako poluvreme",
+    "extraPeriods": "Periodi produžetaka",
+    "extraTime": "Produžeci",
+    "extraHelp": "Dva perioda, trajanja navedenog iznad",
+    "note": "Podešavanja i podaci o utakmici ostaju u ovom pregledaču na ovom uređaju. Trajanje perioda može da se promeni nakon resetovanja."
+  },
+  "about": {
+    "title": "O aplikaciji",
+    "short": "Informacije o aplikaciji i obaveštenja o otvorenom kodu.",
+    "description": "Matchday Clock radi lokalno na ovom uređaju i može da radi van mreže.",
+    "licenses": {
+      "heading": "Licence i zahvalnice",
+      "description": "Prikaz koristi font DSEG7 Classic, distribuiran pod licencom SIL Open Font License 1.1.",
+      "font": "Pročitajte licencu za font DSEG7 (OFL 1.1)"
+    },
+    "platformNote": "Veb aplikacija ne može da garantuje rad u pozadini ili obaveštenja na svakom telefonu. Kada se vratite, sat koristi sačuvane vremenske oznake da bi nadoknadio proteklo vreme."
+  },
+  "app": {
+    "subtitle": "Fudbalski sat",
+    "homeAria": "Početna stranica Matchday Clock-a"
+  },
+  "storage": {
+    "saved": "Sačuvano na uređaju",
+    "notSaving": "Ne čuva se",
+    "dismissSavedWarning": "Zatvori upozorenje o sačuvanim podacima",
+    "invalidMatch": "Sačuvani podaci o utakmici nisu mogli da se pročitaju, pa je učitan nov sat.",
+    "invalidPreferences": "Sačuvana podešavanja nisu bila ispravna, pa se koriste podešavanja uređaja.",
+    "writeFailed": "Ovaj pregledač nije mogao lokalno da sačuva utakmicu. Nemojte osvežavati stranicu niti zatvarati aplikaciju."
+  },
+  "period": {
+    "firstHalf": "Prvo poluvreme",
+    "secondHalf": "Drugo poluvreme",
+    "extraTimeFirst": "Prvi produžetak",
+    "extraTimeSecond": "Drugi produžetak",
+    "extraShort": "ET",
+    "select": "Izaberite period",
+    "help": "Novi period počinje od svoje vremenske oznake utakmice. Sat nastavlja da radi i nakon isteka i postaje crven tokom nadoknade vremena."
+  },
+  "lostTime": {
+    "hold": "Drži za praćenje izgubljenog vremena",
+    "tracking": "Prati se izgubljeno vreme",
+    "total": "Odvojeno od sata utakmice · ukupno {time}"
+  },
+  "control": {
+    "start": "Pokreni",
+    "resume": "Nastavi",
+    "pause": "Pauziraj",
+    "stop": "Zaustavi",
+    "reset": "Resetuj"
+  },
+  "wake": {
+    "idle": "Održavanje ekrana uključenim miruje.",
+    "off": "Održavanje ekrana uključenim je isključeno u podešavanjima.",
+    "active": "Ekran ostaje uključen dok je ova aplikacija vidljiva.",
+    "unsupported": "Ovaj pregledač ne podržava održavanje ekrana uključenim.",
+    "retry": "Održavanje ekrana uključenim je prekinuto; pokušava se ponovo.",
+    "failed": "Ekran nije mogao da ostane uključen. Sat utakmice će nastaviti da radi."
+  },
+  "pauseLog": {
+    "none": "Nema zabeleženih pauza",
+    "summary": "Pauze: {count}{current} · ukupno {time}",
+    "matchLog": "Evidencija utakmice",
+    "title": "Vremena pauza",
+    "emptyState": "Pauzirajte sat da biste započeli evidenciju pauza.",
+    "current": "Trenutna pauza",
+    "totalTime": "Ukupno vreme pauze"
+  },
+  "correction": {
+    "quickAdjustment": "Brza korekcija",
+    "title": "Ispravite vreme utakmice",
+    "useLiveTime": "Koristi trenutno vreme",
+    "useLiveTimeAria": "Učitaj trenutno vreme utakmice u polja za korekciju",
+    "helper": "Podesite prikazano vreme utakmice za {phase}. Ovo radi i dok je sat pokrenut.",
+    "minutes": "Minuti",
+    "seconds": "Sekunde",
+    "invalid": "Unesite cele minute i sekunde od 0 do 59.",
+    "beforePeriod": "To vreme je pre početka perioda {phase} ({time})."
+  },
+  "units": {
+    "minuteShort": "MIN"
+  },
+  "date": {
+    "startedAt": "Početak u {time}",
+    "atTime": "U {time} · {date}"
+  },
+  "notification": {
+    "unsupported": "Ovaj pregledač ne podržava obaveštenja o radu.",
+    "denied": "Obaveštenja su blokirana. Dozvolite ih u podešavanjima pregledača da biste videli status rada.",
+    "permission": "Dozvolite obaveštenja u podešavanjima pregledača da bi se prikazao status rada.",
+    "noServiceWorker": "Ovaj pregledač ne može da prikaže obaveštenje o radu u pozadini.",
+    "noRegistration": "Obaveštenja o radu dostupna su kada se aplikacija instalira ili otvori sa svog hostovanog PWA-a.",
+    "title": "Matchday Clock radi",
+    "body": "Sat utakmice je aktivan. Vratite se u Matchday Clock da biste upravljali njime.",
+    "sent": "Obaveštenje o radu je poslato ako ga ova platforma podržava.",
+    "failed": "Obaveštenje o radu nije moglo da se prikaže. Proverite dozvole pregledača za ovu aplikaciju.",
+    "closeFailed": "Pregledač nije mogao da ukloni obaveštenje o radu."
+  },
+  "confirmation": {
+    "stop": "Zaustaviti ovu utakmicu i ostaviti završno vreme prikazanim? Pre pokretanja nove utakmice neophodno je resetovanje.",
+    "reset": "Resetovati sat utakmice, evidenciju pauza i praćeno izgubljeno vreme? Podešavanja utakmice će biti sačuvana."
+  },
+  "feedback": {
+    "stopped": "Utakmica je zaustavljena. Završno vreme je sačuvano na ovom uređaju.",
+    "reset": "Sat utakmice je resetovan. Podešavanja utakmice nisu promenjena.",
+    "corrected": "Vreme utakmice je ispravljeno."
+  },
+  "locale": {
+    "loadFailed": "Nije moguće učitati jezik {language}. Koristi se engleski (UK)."
+  }
+}

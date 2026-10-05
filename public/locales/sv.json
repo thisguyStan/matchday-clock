@@ -1,0 +1,206 @@
+{
+  "install": {
+    "banner": "Installera Matchday Clock för snabb åtkomst och användning offline.",
+    "dismiss": "Stäng installationsmeddelandet",
+    "app": "Installera appen",
+    "instructions": {
+      "title": "Installera Matchday Clock",
+      "ios": "Tryck på Dela i Safari och sedan på Lägg till på hemskärmen. I andra iPhone-webbläsare öppnar du delnings- eller webbläsarmenyn och väljer Lägg till på hemskärmen.",
+      "android": "Öppna webbläsarens meny och välj Installera app eller Lägg till på startskärmen.",
+      "other": "Använd webbläsarens alternativ Installera app eller Lägg till på startskärmen. Om det saknas kan du kontrollera webbläsarens meny."
+    },
+    "failed": "Det gick inte att starta installationen. Installera appen via webbläsarens meny."
+  },
+  "settings": {
+    "open": "Öppna inställningar",
+    "title": "Inställningar",
+    "display": "Appinställningar",
+    "pauseClock": "Mät tiden mellan perioderna",
+    "pauseClockHelp": "Mät pausen automatiskt när en period stoppas",
+    "personalize": "Anpassa",
+    "keepAwake": "Håll skärmen aktiv",
+    "keepAwakeHelp": "När matchklockan går",
+    "runningNotification": "Avisering när klockan går",
+    "notificationHelp": "Kräver tillstånd och stöd från plattformen",
+    "trackLost": "Mät förlorad tid",
+    "trackHelp": "Lägger till en knapp som hålls ned",
+    "language": "Språk",
+    "appearance": "Utseende",
+    "system": "Använd enhetens inställning",
+    "light": "Ljust",
+    "dark": "Mörkt"
+  },
+  "launch": {
+    "title": "Redo för matchdag?",
+    "description": "Välj din vanliga matchinställning eller ställ in en ny match. Klockan startar när du trycker på Start.",
+    "useLastSettings": "Använd senaste inställningarna",
+    "setup": "Ställ in match"
+  },
+  "preset": {
+    "choose": "Välj en sparad förinställning",
+    "count": "{count} sparade förinställningar",
+    "nameRequired": "Ange ett namn för förinställningen.",
+    "nameExists": "Det finns redan en förinställning med det namnet.",
+    "deleteConfirm": "Ta bort ”{name}”? Det går inte att ångra.",
+    "saved": "Förinställningen har sparats på enheten.",
+    "updated": "Förinställningen har uppdaterats.",
+    "deleted": "Förinställningen har tagits bort.",
+    "heading": "Sparade förinställningar",
+    "empty": "Inga sparade förinställningar ännu. Spara en när du ställer in en match.",
+    "new": "Ny förinställning",
+    "edit": "Redigera förinställning",
+    "name": "Förinställningens namn"
+  },
+  "break": {
+    "running": "Pausklockan går",
+    "time": "Paus",
+    "stop": "Stoppa pausklockan"
+  },
+  "clock": {
+    "status": {
+      "finished": "Avslutad",
+      "ready": "Redo",
+      "running": "Pågår",
+      "paused": "Pausad",
+      "stopped": "Stoppad"
+    },
+    "timer": "Matchklocka",
+    "stoppage": "Tilläggstid",
+    "periodLimit": "Period {time}",
+    "thisPeriod": "{time} denna halvlek",
+    "pausedFor": "Pausad i {time}",
+    "controlsAria": "Matchklockans kontroller"
+  },
+  "match": {
+    "finished": "Matchen är slut. Sluttiden har sparats på den här enheten.",
+    "flow": "Matchförlopp"
+  },
+  "common": {
+    "delete": "Ta bort",
+    "edit": "Redigera",
+    "close": "Stäng",
+    "save": "Spara",
+    "cancel": "Avbryt",
+    "apply": "Använd",
+    "dismissMessage": "Stäng meddelandet"
+  },
+  "setup": {
+    "description": "Välj periodernas längd. Du kan spara inställningarna till senare matcher.",
+    "saveAsPreset": "Spara inställningarna som en förinställning",
+    "saveAsPresetHelp": "Spara periodernas längd på den här enheten för kommande matcher.",
+    "continueToClock": "Fortsätt till klockan",
+    "summary": {
+      "withExtraTime": "{half} min halvlekar · {extra} min per förlängningsperiod",
+      "withoutExtraTime": "{half} min halvlekar · ingen förlängning"
+    },
+    "title": "Matchinställningar",
+    "eachHalf": "Varje halvlek",
+    "extraPeriods": "Förlängningsperioder",
+    "extraTime": "Förlängning",
+    "extraHelp": "Två perioder med längden ovan",
+    "note": "Inställningar och matchdata sparas i den här webbläsaren på enheten. Periodlängder kan ändras efter återställning."
+  },
+  "about": {
+    "title": "Om appen",
+    "short": "Appinformation och meddelanden om öppen källkod.",
+    "description": "Matchday Clock körs lokalt på den här enheten och kan användas offline.",
+    "licenses": {
+      "heading": "Licenser och tack",
+      "description": "Klockan använder DSEG7 Classic, som distribueras under SIL Open Font License 1.1.",
+      "font": "Läs licensen för DSEG7-typsnittet (OFL 1.1)"
+    },
+    "platformNote": "En webbapp kan inte garantera bakgrundskörning eller aviseringar på alla telefoner. När du återvänder räknar klockan om tiden från sparade tidsstämplar."
+  },
+  "app": {
+    "subtitle": "Fotbollsklocka",
+    "homeAria": "Matchday Clock startsida"
+  },
+  "storage": {
+    "saved": "Sparat på enheten",
+    "notSaving": "Sparas inte",
+    "dismissSavedWarning": "Stäng varningen om sparade data",
+    "invalidMatch": "Sparad matchdata kunde inte läsas. En ny klocka har laddats.",
+    "invalidPreferences": "De sparade inställningarna var ogiltiga. Enhetens inställningar används.",
+    "writeFailed": "Webbläsaren kunde inte spara matchen lokalt. Undvik att uppdatera eller stänga appen."
+  },
+  "period": {
+    "firstHalf": "Första halvlek",
+    "secondHalf": "Andra halvlek",
+    "extraTimeFirst": "Förlängning 1",
+    "extraTimeSecond": "Förlängning 2",
+    "extraShort": "FÖRL.",
+    "select": "Välj period",
+    "help": "Nästa period börjar på sin matchtidsmarkering. Klockan fortsätter efter gränsen och blir röd under tilläggstid."
+  },
+  "lostTime": {
+    "hold": "Håll ned för att mäta förlorad tid",
+    "tracking": "Mäter förlorad tid",
+    "total": "Separat från matchklockan · totalt {time}"
+  },
+  "control": {
+    "start": "Starta",
+    "resume": "Återuppta",
+    "pause": "Pausa",
+    "stop": "Stoppa",
+    "reset": "Återställ"
+  },
+  "wake": {
+    "idle": "Skärmlås är inaktivt.",
+    "off": "Skärmen hålls inte aktiv enligt inställningarna.",
+    "active": "Skärmen hålls aktiv medan appen visas.",
+    "unsupported": "Den här webbläsaren kan inte hålla skärmen aktiv.",
+    "retry": "Skärmlåset släpptes; försöker igen.",
+    "failed": "Skärmen kunde inte hållas aktiv. Matchklockan fortsätter."
+  },
+  "pauseLog": {
+    "none": "Inga pauser registrerade",
+    "summary": "Pauser: {count}{current} · totalt {time}",
+    "matchLog": "Matchlogg",
+    "title": "Pauser",
+    "emptyState": "Pausa klockan för att börja logga pauser.",
+    "current": "Pågående paus",
+    "totalTime": "Total paustid"
+  },
+  "correction": {
+    "quickAdjustment": "Snabbjustering",
+    "title": "Korrigera matchtid",
+    "useLiveTime": "Använd aktuell tid",
+    "useLiveTimeAria": "Hämta aktuell matchtid till korrigeringsfälten",
+    "helper": "Ange den visade matchtiden för {phase}. Det fungerar även när klockan går.",
+    "minutes": "Minuter",
+    "seconds": "Sekunder",
+    "invalid": "Ange hela minuter och sekunder mellan 0 och 59.",
+    "beforePeriod": "Tiden är före starten av {phase} ({time})."
+  },
+  "units": {
+    "minuteShort": "MIN"
+  },
+  "date": {
+    "startedAt": "Startade {time}",
+    "atTime": "Vid {time} · {date}"
+  },
+  "notification": {
+    "unsupported": "Den här webbläsaren stöder inte aviseringar för matchklockan.",
+    "denied": "Aviseringar är blockerade. Tillåt dem i webbläsarens inställningar för att se status.",
+    "permission": "Tillåt aviseringar i webbläsarens inställningar för att visa status.",
+    "noServiceWorker": "Den här webbläsaren kan inte visa en avisering i bakgrunden.",
+    "noRegistration": "Aviseringar är tillgängliga efter installation eller när den värdbaserade PWA:n har öppnats.",
+    "title": "Matchday Clock körs",
+    "body": "Matchklockan är igång. Öppna Matchday Clock för att styra den.",
+    "sent": "En avisering skickades om plattformen stöder det.",
+    "failed": "Aviseringen kunde inte visas. Kontrollera appens behörigheter.",
+    "closeFailed": "Webbläsaren kunde inte stänga aviseringen."
+  },
+  "confirmation": {
+    "stop": "Stoppa matchen och visa sluttiden? Återställ klockan innan du startar en ny match.",
+    "reset": "Återställa matchklockan, pausloggen och uppmätt förlorad tid? Inställningarna behålls."
+  },
+  "feedback": {
+    "stopped": "Matchen stoppades. Sluttiden sparades på enheten.",
+    "reset": "Matchklockan återställdes. Inställningarna är oförändrade.",
+    "corrected": "Matchtiden korrigerades."
+  },
+  "locale": {
+    "loadFailed": "Spr?ket {language} kunde inte l?sas in. Engelska (Storbritannien) anv?nds."
+  }
+}

@@ -1,0 +1,206 @@
+{
+  "install": {
+    "banner": "安装 Matchday Clock，便于快速访问并离线使用。",
+    "dismiss": "关闭安装提示",
+    "app": "安装应用",
+    "instructions": {
+      "title": "安装 Matchday Clock",
+      "ios": "在 Safari 中轻点“分享”，然后选择“添加到主屏幕”。在 iPhone 上使用其他浏览器时，打开分享菜单或浏览器菜单，再选择“添加到主屏幕”。",
+      "android": "打开浏览器菜单，选择“安装应用”或“添加到主屏幕”。",
+      "other": "在浏览器中选择“安装应用”或“添加到主屏幕”。如果没有此选项，请查看浏览器菜单。"
+    },
+    "failed": "无法开始安装。请通过浏览器菜单安装应用。"
+  },
+  "settings": {
+    "open": "打开设置",
+    "title": "设置",
+    "display": "应用设置",
+    "pauseClock": "记录各比赛阶段之间的间歇",
+    "pauseClockHelp": "比赛阶段结束后自动计时休息时间",
+    "personalize": "个性化",
+    "keepAwake": "保持屏幕常亮",
+    "keepAwakeHelp": "比赛计时器运行时",
+    "runningNotification": "运行状态通知",
+    "notificationHelp": "尽力提供；需要授权且平台支持",
+    "trackLost": "按住以记录损失时间",
+    "trackHelp": "为计时器添加单独的按住按钮",
+    "language": "语言",
+    "appearance": "外观",
+    "system": "跟随设备设置",
+    "light": "浅色",
+    "dark": "深色"
+  },
+  "launch": {
+    "title": "准备好迎接比赛日了吗？",
+    "description": "选择常用的比赛设置，或配置新的设置。按下“开始”后，计时器即会启动。",
+    "useLastSettings": "使用上次设置",
+    "setup": "设置比赛"
+  },
+  "preset": {
+    "choose": "选择已保存的预设",
+    "count": "已保存 {count} 个预设",
+    "nameRequired": "请输入预设名称。",
+    "nameExists": "已存在同名预设。",
+    "deleteConfirm": "删除“{name}”？此操作无法撤销。",
+    "saved": "预设已保存在此设备上。",
+    "updated": "预设已更新。",
+    "deleted": "预设已删除。",
+    "heading": "已保存的预设",
+    "empty": "尚无已保存的预设。设置比赛时可以保存一个。",
+    "new": "新建预设",
+    "edit": "编辑预设",
+    "name": "预设名称"
+  },
+  "break": {
+    "running": "间歇计时中",
+    "time": "间歇时间",
+    "stop": "停止间歇计时"
+  },
+  "clock": {
+    "status": {
+      "finished": "已结束",
+      "ready": "就绪",
+      "running": "计时中",
+      "paused": "已暂停",
+      "stopped": "已停止"
+    },
+    "timer": "比赛计时器",
+    "stoppage": "伤停补时",
+    "periodLimit": "阶段 {time}",
+    "thisPeriod": "本阶段 {time}",
+    "pausedFor": "已暂停 {time}",
+    "controlsAria": "比赛计时器控件"
+  },
+  "match": {
+    "finished": "比赛已完成。最终用时已保存在此设备上。",
+    "flow": "比赛流程"
+  },
+  "common": {
+    "delete": "删除",
+    "edit": "编辑",
+    "close": "关闭",
+    "save": "保存",
+    "cancel": "取消",
+    "apply": "应用",
+    "dismissMessage": "关闭消息"
+  },
+  "setup": {
+    "description": "选择本场比赛各阶段的时长。你可以保存这些设置以供以后使用。",
+    "saveAsPreset": "将此设置保存为预设",
+    "saveAsPresetHelp": "将各阶段时长保存在此设备上，供以后比赛使用。",
+    "continueToClock": "继续并打开计时器",
+    "summary": {
+      "withExtraTime": "每半场 {half} 分钟 · 加时阶段 {extra} 分钟",
+      "withoutExtraTime": "每半场 {half} 分钟 · 无加时赛"
+    },
+    "title": "比赛设置",
+    "eachHalf": "每个半场",
+    "extraPeriods": "加时阶段",
+    "extraTime": "加时赛",
+    "extraHelp": "两个阶段，时长同上",
+    "note": "设置和比赛数据仅保存在此设备的此浏览器中。重置后可以更改各阶段时长。"
+  },
+  "about": {
+    "title": "关于",
+    "short": "应用信息和开源声明。",
+    "description": "Matchday Clock 在此设备本地运行，也可离线使用。",
+    "licenses": {
+      "heading": "许可证与致谢",
+      "description": "显示字体使用 DSEG7 Classic，依据 SIL Open Font License 1.1 分发。",
+      "font": "查看 DSEG7 字体许可证（OFL 1.1）"
+    },
+    "platformNote": "网页应用无法保证在每部手机上都能后台运行或发送通知。返回应用时，计时器会根据已保存的时间戳恢复已过去的时间。"
+  },
+  "app": {
+    "subtitle": "足球比赛计时器",
+    "homeAria": "Matchday Clock 主页"
+  },
+  "storage": {
+    "saved": "已保存在设备上",
+    "notSaving": "未保存",
+    "dismissSavedWarning": "关闭已保存数据警告",
+    "invalidMatch": "无法读取已保存的比赛数据，已加载新的计时器。",
+    "invalidPreferences": "已保存的偏好设置无效，正在使用设备设置。",
+    "writeFailed": "此浏览器无法在本地保存比赛。请勿刷新或关闭应用。"
+  },
+  "period": {
+    "firstHalf": "上半场",
+    "secondHalf": "下半场",
+    "extraTimeFirst": "加时赛 1",
+    "extraTimeSecond": "加时赛 2",
+    "extraShort": "加时",
+    "select": "选择比赛阶段",
+    "help": "新阶段从对应的比赛时间标记开始。计时器会在阶段时长结束后继续运行，伤停补时时间会显示为红色。"
+  },
+  "lostTime": {
+    "hold": "按住以记录损失时间",
+    "tracking": "正在记录损失时间",
+    "total": "与比赛计时器分开 · 共 {time}"
+  },
+  "control": {
+    "start": "开始",
+    "resume": "继续",
+    "pause": "暂停",
+    "stop": "停止",
+    "reset": "重置"
+  },
+  "wake": {
+    "idle": "屏幕常亮未启用。",
+    "off": "设置中已关闭屏幕常亮。",
+    "active": "应用显示期间，屏幕将保持常亮。",
+    "unsupported": "此浏览器不支持保持屏幕常亮。",
+    "retry": "屏幕常亮已解除，正在重试。",
+    "failed": "无法保持屏幕常亮。比赛计时器将继续运行。"
+  },
+  "pauseLog": {
+    "none": "暂无暂停记录",
+    "summary": "暂停：{count}{current} · 共 {time}",
+    "matchLog": "比赛记录",
+    "title": "暂停时间",
+    "emptyState": "暂停计时器以开始记录暂停时间。",
+    "current": "当前暂停",
+    "totalTime": "暂停总时长"
+  },
+  "correction": {
+    "quickAdjustment": "快速调整",
+    "title": "校正比赛时间",
+    "useLiveTime": "使用当前时间",
+    "useLiveTimeAria": "将当前比赛时间载入校正字段",
+    "helper": "设置“{phase}”阶段显示的比赛时间。计时器运行时也可以校正。",
+    "minutes": "分钟",
+    "seconds": "秒",
+    "invalid": "请输入整数分钟数和 0 到 59 之间的秒数。",
+    "beforePeriod": "该时间早于“{phase}”阶段的开始时间（{time}）。"
+  },
+  "units": {
+    "minuteShort": "分钟"
+  },
+  "date": {
+    "startedAt": "开始时间：{time}",
+    "atTime": "{time} · {date}"
+  },
+  "notification": {
+    "unsupported": "此浏览器不支持运行状态通知。",
+    "denied": "通知已被屏蔽。请在浏览器设置中允许通知，以查看运行状态。",
+    "permission": "请在浏览器设置中允许通知，以显示运行状态。",
+    "noServiceWorker": "此浏览器无法显示后台运行状态通知。",
+    "noRegistration": "安装应用或从托管的 PWA 加载后，即可使用运行状态通知。",
+    "title": "Matchday Clock 正在运行",
+    "body": "比赛计时器正在运行。返回 Matchday Clock 进行控制。",
+    "sent": "已发送运行状态通知（平台支持时）。",
+    "failed": "无法显示运行状态通知。请检查此应用的浏览器权限。",
+    "closeFailed": "浏览器无法清除运行状态通知。"
+  },
+  "confirmation": {
+    "stop": "停止本场比赛并保留最终时间显示？开始下一场比赛前必须先重置。",
+    "reset": "重置比赛计时器、暂停记录和损失时间记录？比赛设置将保留。"
+  },
+  "feedback": {
+    "stopped": "比赛已停止。最终用时已保存在此设备上。",
+    "reset": "比赛计时器已重置。比赛设置未更改。",
+    "corrected": "比赛时间已校正。"
+  },
+  "locale": {
+    "loadFailed": "无法加载 {language}。正在使用英语（英国）。"
+  }
+}
