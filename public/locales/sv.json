@@ -116,7 +116,7 @@
     "homeAria": "Matchday Clock startsida"
   },
   "storage": {
-    "saved": "Sparat på enheten",
+    "saved": "Sparat",
     "notSaving": "Sparas inte",
     "dismissSavedWarning": "Stäng varningen om sparade data",
     "invalidMatch": "Sparad matchdata kunde inte läsas. En ny klocka har laddats.",
@@ -154,11 +154,12 @@
   "pauseLog": {
     "none": "Inga pauser registrerade",
     "summary": "Pauser: {count}{current} · totalt {time}",
-    "matchLog": "Matchlogg",
+    "matchLog": "Matchhistorik",
     "title": "Pauser",
     "emptyState": "Pausa klockan för att börja logga pauser.",
     "current": "Pågående paus",
-    "totalTime": "Total paustid"
+    "totalTime": "Total paustid",
+    "totalPlayTime": "Total speltid"
   },
   "correction": {
     "quickAdjustment": "Snabbjustering",

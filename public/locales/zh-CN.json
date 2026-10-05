@@ -116,7 +116,7 @@
     "homeAria": "Matchday Clock 主页"
   },
   "storage": {
-    "saved": "已保存在设备上",
+    "saved": "已保存",
     "notSaving": "未保存",
     "dismissSavedWarning": "关闭已保存数据警告",
     "invalidMatch": "无法读取已保存的比赛数据，已加载新的计时器。",
@@ -154,11 +154,12 @@
   "pauseLog": {
     "none": "暂无暂停记录",
     "summary": "暂停：{count}{current} · 共 {time}",
-    "matchLog": "比赛记录",
+    "matchLog": "比赛历史",
     "title": "暂停时间",
     "emptyState": "暂停计时器以开始记录暂停时间。",
     "current": "当前暂停",
-    "totalTime": "暂停总时长"
+    "totalTime": "暂停总时长",
+    "totalPlayTime": "总比赛时间"
   },
   "correction": {
     "quickAdjustment": "快速调整",

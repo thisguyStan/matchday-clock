@@ -1,8 +1,4 @@
-import {
-  formatClockTime,
-  type MatchPhase,
-  type PauseRecord,
-} from "./match-clock";
+import type { MatchPhase } from "./match-clock";
 import {
   getIntlLocale,
   translate,
@@ -47,26 +43,4 @@ export function phaseShortLabel(
     case "extraTimeSecond":
       return `${translate(messages, "extraShort")} 2`;
   }
-}
-
-export function pauseSummary(
-  pauses: PauseRecord[],
-  currentPauseMs: number | null,
-  messages: LocaleMessages | null,
-): string {
-  const count = pauses.length + (currentPauseMs === null ? 0 : 1);
-  if (count === 0) {
-    return translate(messages, "noPauses");
-  }
-  const totalMs =
-    pauses.reduce((total, pause) => total + pause.durationMs, 0) +
-    (currentPauseMs ?? 0);
-  return translate(messages, "pauseSummary", {
-    count,
-    current:
-      currentPauseMs === null
-        ? ""
-        : ` · ${translate(messages, "currentPause")}`,
-    time: formatClockTime(totalMs),
-  });
 }

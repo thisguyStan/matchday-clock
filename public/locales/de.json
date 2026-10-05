@@ -116,7 +116,7 @@
     "homeAria": "Zur Matchday Clock-Startseite"
   },
   "storage": {
-    "saved": "Auf diesem Gerät gespeichert",
+    "saved": "Gespeichert",
     "notSaving": "Nicht gespeichert",
     "dismissSavedWarning": "Warnung zu gespeicherten Daten schließen",
     "invalidMatch": "Gespeicherte Spieldaten konnten nicht gelesen werden. Eine neue Uhr wurde geladen.",
@@ -154,11 +154,12 @@
   "pauseLog": {
     "none": "Keine Pausen erfasst",
     "summary": "Pausen: {count}{current} · insgesamt {time}",
-    "matchLog": "Spielprotokoll",
+    "matchLog": "Spielhistorie",
     "title": "Pausenzeiten",
     "emptyState": "Uhr pausieren, um Pausen zu protokollieren.",
     "current": "Aktuelle Pause",
-    "totalTime": "Pausenzeit gesamt"
+    "totalTime": "Pausenzeit gesamt",
+    "totalPlayTime": "Gesamte Spielzeit"
   },
   "correction": {
     "quickAdjustment": "Schnelle Korrektur",

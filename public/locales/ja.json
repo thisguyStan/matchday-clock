@@ -116,7 +116,7 @@
     "homeAria": "Matchday Clockのホーム"
   },
   "storage": {
-    "saved": "端末に保存済み",
+    "saved": "保存済み",
     "notSaving": "保存されていません",
     "dismissSavedWarning": "保存データの警告を閉じる",
     "invalidMatch": "保存された試合データを読み取れなかったため、新しい時計を読み込みました。",
@@ -154,11 +154,12 @@
   "pauseLog": {
     "none": "一時停止の記録はありません",
     "summary": "一時停止：{count}{current} · 合計 {time}",
-    "matchLog": "試合ログ",
+    "matchLog": "試合履歴",
     "title": "一時停止時間",
     "emptyState": "時計を一時停止すると記録が始まります。",
     "current": "現在の一時停止",
-    "totalTime": "一時停止の合計時間"
+    "totalTime": "一時停止の合計時間",
+    "totalPlayTime": "総プレー時間"
   },
   "correction": {
     "quickAdjustment": "クイック調整",

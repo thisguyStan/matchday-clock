@@ -116,7 +116,7 @@
     "homeAria": "Matchday Clock-startside"
   },
   "storage": {
-    "saved": "Gemt på enheden",
+    "saved": "Gemt",
     "notSaving": "Gemmes ikke",
     "dismissSavedWarning": "Luk advarslen om gemte data",
     "invalidMatch": "De gemte kampdata kunne ikke læses. Et nyt ur er indlæst.",
@@ -154,11 +154,12 @@
   "pauseLog": {
     "none": "Ingen pauser registreret",
     "summary": "Pauser: {count}{current} · i alt {time}",
-    "matchLog": "Kamplog",
+    "matchLog": "Kamphistorik",
     "title": "Pauser",
     "emptyState": "Sæt uret på pause for at begynde at logge pauser.",
     "current": "Aktuel pause",
-    "totalTime": "Samlet pausetid"
+    "totalTime": "Samlet pausetid",
+    "totalPlayTime": "Samlet spilletid"
   },
   "correction": {
     "quickAdjustment": "Hurtig justering",

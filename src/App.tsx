@@ -463,17 +463,16 @@ function App() {
             <span className="local-badge-dot" />
             {storageError ? t("notSaving") : t("saved")}
           </span>
-          {settings.keepScreenAwake && (
-            <span
-              aria-label={`${t("keepAwake")}: ${t(wakeStatus)}`}
-              className="local-badge wake-badge"
-              data-wake-status={wakeStatus}
-              role="status"
-              title={t(wakeStatus)}
+          {hasMatch && (
+            <button
+              aria-label={t("correctTime")}
+              className="icon-button mobile-correction-button"
+              onClick={openCorrection}
+              title={t("correctTime")}
+              type="button"
             >
-              <span aria-hidden="true" className="local-badge-dot" />
-              <span className="wake-badge-label">{t("keepAwake")}</span>
-            </span>
+              <span aria-hidden="true">✎</span>
+            </button>
           )}
           <button
             aria-label={t("openSettings")}
@@ -580,6 +579,8 @@ function App() {
           match={match}
           pauseClockEnabled={pauseClockEnabled}
           pauseDurationNow={pauseDurationNow}
+          matchTimeMs={matchTimeMs}
+          wakeStatus={wakeStatus}
           now={now}
           displayLocale={displayLocale}
           messages={displayMessages}

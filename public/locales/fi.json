@@ -116,7 +116,7 @@
     "homeAria": "Matchday Clock -etusivu"
   },
   "storage": {
-    "saved": "Tallennettu laitteelle",
+    "saved": "Tallennettu",
     "notSaving": "Ei tallenneta",
     "dismissSavedWarning": "Sulje tallennettujen tietojen varoitus",
     "invalidMatch": "Tallennettuja ottelutietoja ei voitu lukea. Uusi kello avattiin.",
@@ -154,11 +154,12 @@
   "pauseLog": {
     "none": "Taukoja ei ole kirjattu",
     "summary": "Tauot: {count}{current} · yhteensä {time}",
-    "matchLog": "Otteluloki",
+    "matchLog": "Otteluhistoria",
     "title": "Tauot",
     "emptyState": "Aloita taukoloki pysäyttämällä kello.",
     "current": "Nykyinen tauko",
-    "totalTime": "Taukojen kokonaisaika"
+    "totalTime": "Taukojen kokonaisaika",
+    "totalPlayTime": "Pelattu kokonaisaika"
   },
   "correction": {
     "quickAdjustment": "Pikakorjaus",

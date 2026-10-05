@@ -116,7 +116,7 @@
     "homeAria": "Matchday Clock home"
   },
   "storage": {
-    "saved": "Saved on device",
+    "saved": "Saved",
     "notSaving": "Not saving",
     "dismissSavedWarning": "Dismiss saved data warning",
     "invalidMatch": "Saved match data could not be read, so a fresh clock was loaded.",
@@ -154,11 +154,12 @@
   "pauseLog": {
     "none": "No pauses recorded",
     "summary": "Pauses: {count}{current} · {time} total",
-    "matchLog": "Match log",
+    "matchLog": "Match history",
     "title": "Pause times",
     "emptyState": "Pause the clock to start a pause log.",
     "current": "Current pause",
-    "totalTime": "Total pause time"
+    "totalTime": "Total pause time",
+    "totalPlayTime": "Total play time"
   },
   "correction": {
     "quickAdjustment": "Quick adjustment",

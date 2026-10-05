@@ -116,7 +116,7 @@
     "homeAria": "Página inicial do Matchday Clock"
   },
   "storage": {
-    "saved": "Guardado no dispositivo",
+    "saved": "Guardado",
     "notSaving": "Não guardado",
     "dismissSavedWarning": "Fechar aviso dos dados guardados",
     "invalidMatch": "Não foi possível ler os dados guardados. Foi carregado um relógio novo.",
@@ -154,11 +154,12 @@
   "pauseLog": {
     "none": "Sem pausas registadas",
     "summary": "Pausas: {count}{current} · total: {time}",
-    "matchLog": "Registo do jogo",
+    "matchLog": "Histórico do jogo",
     "title": "Pausas",
     "emptyState": "Pause o relógio para começar a registar pausas.",
     "current": "Pausa atual",
-    "totalTime": "Tempo total em pausa"
+    "totalTime": "Tempo total em pausa",
+    "totalPlayTime": "Tempo total de jogo"
   },
   "correction": {
     "quickAdjustment": "Ajuste rápido",

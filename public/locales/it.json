@@ -116,7 +116,7 @@
     "homeAria": "Home di Matchday Clock"
   },
   "storage": {
-    "saved": "Salvato sul dispositivo",
+    "saved": "Salvato",
     "notSaving": "Non salvato",
     "dismissSavedWarning": "Chiudi l'avviso sui dati salvati",
     "invalidMatch": "Impossibile leggere i dati salvati. È stato caricato un nuovo cronometro.",
@@ -154,11 +154,12 @@
   "pauseLog": {
     "none": "Nessuna pausa registrata",
     "summary": "Pause: {count}{current} · totale {time}",
-    "matchLog": "Registro partita",
+    "matchLog": "Cronologia della partita",
     "title": "Pause",
     "emptyState": "Metti in pausa il cronometro per iniziare il registro.",
     "current": "Pausa attuale",
-    "totalTime": "Tempo totale di pausa"
+    "totalTime": "Tempo totale di pausa",
+    "totalPlayTime": "Tempo di gioco totale"
   },
   "correction": {
     "quickAdjustment": "Correzione rapida",

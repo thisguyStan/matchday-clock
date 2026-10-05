@@ -116,7 +116,7 @@
     "homeAria": "Strona główna Matchday Clock"
   },
   "storage": {
-    "saved": "Zapisano na urządzeniu",
+    "saved": "Zapisano",
     "notSaving": "Brak zapisu",
     "dismissSavedWarning": "Zamknij ostrzeżenie o zapisanych danych",
     "invalidMatch": "Nie udało się odczytać zapisanych danych. Wczytano nowy zegar.",
@@ -154,11 +154,12 @@
   "pauseLog": {
     "none": "Brak zarejestrowanych przerw",
     "summary": "Przerwy: {count}{current} · łącznie {time}",
-    "matchLog": "Dziennik meczu",
+    "matchLog": "Historia meczu",
     "title": "Przerwy",
     "emptyState": "Wstrzymaj zegar, aby rozpocząć zapisywanie przerw.",
     "current": "Bieżąca przerwa",
-    "totalTime": "Łączny czas przerw"
+    "totalTime": "Łączny czas przerw",
+    "totalPlayTime": "Łączny czas gry"
   },
   "correction": {
     "quickAdjustment": "Szybka korekta",

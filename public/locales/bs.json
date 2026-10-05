@@ -116,7 +116,7 @@
     "homeAria": "Početna stranica Matchday Clock"
   },
   "storage": {
-    "saved": "Sačuvano na uređaju",
+    "saved": "Sačuvano",
     "notSaving": "Ne čuva se",
     "dismissSavedWarning": "Zatvori upozorenje o sačuvanim podacima",
     "invalidMatch": "Sačuvani podaci utakmice nisu se mogli pročitati, pa je učitan novi sat.",
@@ -154,11 +154,12 @@
   "pauseLog": {
     "none": "Nema zabilježenih pauza",
     "summary": "Pauze: {count}{current} · ukupno {time}",
-    "matchLog": "Evidencija utakmice",
+    "matchLog": "Historija utakmice",
     "title": "Trajanje pauza",
     "emptyState": "Pauzirajte sat da biste počeli bilježiti pauze.",
     "current": "Trenutna pauza",
-    "totalTime": "Ukupno trajanje pauza"
+    "totalTime": "Ukupno trajanje pauza",
+    "totalPlayTime": "Ukupno vrijeme igre"
   },
   "correction": {
     "quickAdjustment": "Brzo podešavanje",

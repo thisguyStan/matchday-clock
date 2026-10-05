@@ -145,30 +145,6 @@ button:disabled {
   background: #caff72;
 }
 
-.wake-badge .local-badge-dot {
-  background: var(--text-muted);
-}
-
-.wake-badge[data-wake-status="wakeActive"] .local-badge-dot {
-  background: var(--accent);
-}
-
-.wake-badge[data-wake-status="wakeRetry"] .local-badge-dot {
-  background: #ffca63;
-}
-
-.wake-badge[data-wake-status="wakeFailed"],
-.wake-badge[data-wake-status="wakeUnsupported"] {
-  border-color: color-mix(in srgb, var(--danger) 28%, transparent);
-  background: color-mix(in srgb, var(--danger) 7%, transparent);
-  color: var(--danger);
-}
-
-.wake-badge[data-wake-status="wakeFailed"] .local-badge-dot,
-.wake-badge[data-wake-status="wakeUnsupported"] .local-badge-dot {
-  background: var(--danger);
-}
-
 .clock-card,
 .panel {
   border: 1px solid rgb(169 194 174 / 12%);
@@ -187,7 +163,6 @@ button:disabled {
 .clock-card-top,
 .panel-heading,
 .clock-meta-row,
-.clock-footer,
 .setup-summary,
 .log-summary {
   display: flex;
@@ -275,6 +250,8 @@ button:disabled {
 }
 
 .clock-readout {
+  width: 100%;
+  min-width: 0;
   max-width: 100%;
   color: #f0f6ed;
   font-family: "DSEG7", "Courier New", monospace;
@@ -368,9 +345,16 @@ button:disabled {
   gap: 0.65rem;
 }
 
+.clock-actions {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
 .control-button {
   display: flex;
-  min-height: 3.35rem;
+  min-height: 4rem;
   align-items: center;
   justify-content: center;
   gap: 0.55rem;
@@ -425,19 +409,6 @@ button:disabled {
 .button-symbol {
   font-size: 0.95rem;
   line-height: 1;
-}
-
-.clock-footer {
-  flex-wrap: wrap;
-  margin-top: 1.25rem;
-  padding-top: 0.9rem;
-  border-top: 1px solid rgb(169 194 174 / 10%);
-}
-
-.match-total {
-  margin-left: auto;
-  color: #72867a;
-  font-size: 0.63rem;
 }
 
 .side-column {
@@ -746,6 +717,33 @@ button:disabled {
   line-height: 1.35;
 }
 
+.wake-setting-status {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.wake-status-dot {
+  width: 0.42rem;
+  height: 0.42rem;
+  flex: 0 0 auto;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.wake-setting-status[data-wake-status="wakeActive"] {
+  color: var(--accent);
+}
+
+.wake-setting-status[data-wake-status="wakeRetry"] {
+  color: #ffca63;
+}
+
+.wake-setting-status[data-wake-status="wakeFailed"],
+.wake-setting-status[data-wake-status="wakeUnsupported"] {
+  color: var(--danger);
+}
+
 .setting-toggle input {
   width: 2.55rem;
   height: 1.42rem;
@@ -897,21 +895,6 @@ button:disabled {
   color: #ffca63;
 }
 
-.pause-total {
-  display: flex;
-  justify-content: space-between;
-  gap: 1rem;
-  padding-top: 0.8rem;
-  color: #82968a;
-  font-size: 0.64rem;
-}
-
-.pause-total strong {
-  color: #d1e4c5;
-  font-family: "DSEG7 Classic", "Courier New", monospace;
-  font-size: 0.73rem;
-}
-
 .platform-note {
   display: flex;
   gap: 0.62rem;
@@ -1019,14 +1002,6 @@ button:disabled {
 
   .control-button {
     min-height: 3.15rem;
-  }
-
-  .clock-footer {
-    align-items: flex-start;
-  }
-
-  .match-total {
-    text-align: right;
   }
 
   .panel-heading-note {
@@ -1283,13 +1258,7 @@ button:disabled {
   background: #f8e4e2;
 }
 
-:root[data-theme="light"] .clock-footer {
-  border-color: #dce5dd;
-}
 
-:root[data-theme="light"] .match-total {
-  color: #607466;
-}
 
 :root[data-theme="light"] .panel-heading-note,
 :root[data-theme="light"] .summary-meta {
@@ -1410,7 +1379,7 @@ button:disabled {
 
 :root[data-theme="light"] .chevron,
 :root[data-theme="light"] .empty-log,
-:root[data-theme="light"] .pause-total {
+:root[data-theme="light"] .match-history-total {
   color: #607466;
 }
 
@@ -1431,7 +1400,7 @@ button:disabled {
 }
 
 :root[data-theme="light"] .pause-duration,
-:root[data-theme="light"] .pause-total strong {
+:root[data-theme="light"] .match-history-total strong {
   color: #466a35;
 }
 
@@ -1478,6 +1447,10 @@ button:disabled {
   font-size: 1.15rem;
   cursor: pointer;
   transition: background 140ms ease, border-color 140ms ease, transform 140ms ease;
+}
+
+.mobile-correction-button {
+  display: none;
 }
 
 .icon-button:hover {
@@ -1989,24 +1962,8 @@ button:disabled {
   border-top: 1px solid var(--border);
 }
 
-.pause-log-section {
+.match-history-section {
   margin-top: 1rem;
-}
-
-.pause-log-section summary {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  color: var(--text-strong);
-  font-size: 0.75rem;
-  font-weight: 650;
-  cursor: pointer;
-  list-style: none;
-}
-
-.pause-log-section summary::-webkit-details-marker {
-  display: none;
 }
 
 .pause-log-count {
@@ -2016,21 +1973,51 @@ button:disabled {
   color: var(--text-muted);
 }
 
-.pause-log-section .pause-list {
+.match-history-section .pause-list {
   margin-top: 0.65rem;
 }
 
-.pause-log-section .pause-list li {
+.match-history-section .pause-list li {
   border-bottom-color: var(--border);
 }
 
-.pause-log-section .pause-detail strong {
+.match-history-section .pause-detail strong {
   color: var(--text-strong);
 }
 
-.pause-log-section .pause-detail small,
-.pause-total {
+.match-history-section .pause-detail small,
+.match-history-total {
   color: var(--text-muted);
+}
+
+.empty-match-history {
+  margin: 0.8rem 0 0;
+  color: var(--text-muted);
+  font-size: 0.68rem;
+}
+
+.match-history-totals {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.8rem;
+  margin-top: 0.85rem;
+  padding-top: 0.85rem;
+  border-top: 1px solid var(--border);
+}
+
+.match-history-total {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  font-size: 0.64rem;
+}
+
+.match-history-total strong {
+  flex: 0 0 auto;
+  color: var(--text-strong);
+  font-family: "DSEG7 Classic", "Courier New", monospace;
+  font-size: 0.73rem;
 }
 
 .about-entry {
@@ -2194,7 +2181,7 @@ button:disabled {
   }
 
   .control-button {
-    min-height: 3.25rem;
+    min-height: 4rem;
   }
 
   .control-button .button-label {
@@ -2246,22 +2233,6 @@ button:disabled {
     max-width: 9rem;
     overflow: hidden;
     text-overflow: ellipsis;
-  }
-
-  .wake-badge {
-    max-width: 7rem;
-    gap: 0.25rem;
-    padding-inline: 0.3rem;
-    font-size: 0.5rem;
-    letter-spacing: 0.04em;
-  }
-
-  .wake-badge-label {
-    flex: 1 1 auto;
-    min-width: 0;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
   }
 
   .install-banner {
@@ -2367,6 +2338,11 @@ button:disabled {
 }
 
 @media (orientation: landscape) and (max-height: 600px) {
+  .app-shell:has(.clock-card.active-match) {
+    display: flex;
+    flex-direction: column;
+  }
+
   .app-main {
     min-height: 0;
     padding-top: 0;
@@ -2375,6 +2351,7 @@ button:disabled {
 
   .app-main.is-clock {
     min-height: 0;
+    flex: 1;
   }
 
   .app-header {
@@ -2404,70 +2381,66 @@ button:disabled {
   }
 
   .clock-card.active-match {
+    flex: 1;
     min-height: 0;
     padding: 0.5rem 0.9rem;
   }
 
   .clock-card.active-match:has(.hold-tracker) {
-    display: grid;
-    grid-template-columns: minmax(0, 1.65fr) minmax(0, 1fr);
-    align-items: center;
-    column-gap: 0.75rem;
-    row-gap: 0.25rem;
+    align-items: stretch;
+    justify-content: space-between;
+    gap: 0.5rem;
   }
 
-  .clock-card.active-match:has(.hold-tracker) > .clock-card-top,
-  .clock-card.active-match:has(.hold-tracker) > .clock-controls,
-  .clock-card.active-match:has(.hold-tracker) > .clock-utilities,
-  .clock-card.active-match:has(.hold-tracker) > .clock-footer,
-  .clock-card.active-match:has(.hold-tracker) > .break-clock {
-    grid-column: 1 / -1;
-  }
-
-  .clock-card.active-match:has(.hold-tracker) > .clock-readout-wrap {
+  .clock-actions {
     width: 100%;
-    min-width: 0;
-    grid-column: 1;
-    align-self: stretch;
-  }
-
-  .clock-card.active-match:has(.hold-tracker) > .hold-tracker {
-    width: 100%;
-    min-width: 0;
-    grid-column: 2;
+    max-width: 34rem;
     align-self: center;
-    min-height: min(9rem, 24vh);
-    gap: min(1rem, 3vw);
+  }
+
+  .clock-actions:has(.hold-tracker) {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) minmax(0, 2fr);
+    align-items: stretch;
+    gap: 0.45rem;
+  }
+
+  .clock-actions:has(.hold-tracker) > .clock-controls {
+    display: contents;
+  }
+
+  .clock-actions:has(.hold-tracker) > .hold-tracker {
+    grid-column: 4;
+    grid-row: 1;
+    width: auto;
+    min-width: 0;
+    min-height: 3.35rem;
+    gap: 0.4rem;
     margin: 0;
-    padding: 0.75rem;
+    padding: 0.4rem 0.65rem;
   }
 
   .hold-icon {
-    width: min(2.5rem, 8vh);
-    height: min(2.5rem, 8vh);
+    width: min(2rem, 7vh);
+    height: min(2rem, 7vh);
   }
 
   .hold-value {
-    font-size: min(9vh, 5vw);
+    font-size: min(6vh, 3vw);
   }
 
   .clock-readout-wrap {
     min-height: 0;
-    flex: 0 0 auto;
+    flex: 1;
     padding: 0;
   }
 
   .clock-readout {
-    font-size: min(38vh, 17vw);
+    font-size: min(48vh, 22vw);
   }
 
   .clock-meta-row {
     margin-top: 0.25rem;
-  }
-
-  .clock-footer {
-    margin-top: 0.25rem;
-    padding-top: 0.3rem;
   }
 
   .clock-utilities {
@@ -2482,12 +2455,6 @@ button:disabled {
     display: none;
   }
 
-  .clock-controls {
-    max-width: 34rem;
-    align-self: center;
-    width: 100%;
-  }
-
   .modal-dialog {
     max-height: calc(100dvh - 1rem);
   }
@@ -2499,16 +2466,11 @@ button:disabled {
   }
 
   .clock-readout {
-    font-size: min(34vh, 15vw);
+    font-size: min(42vh, 22vw);
   }
 
   .control-button {
-    min-height: 2.75rem;
-  }
-
-  .clock-footer {
-    margin-top: 0.1rem;
-    padding-top: 0.15rem;
+    min-height: 3.25rem;
   }
 
   .clock-utilities {
@@ -2529,6 +2491,11 @@ button:disabled {
 
   .clock-readout {
     font-size: min(29vw, 18vh);
+  }
+
+  .clock-readout.is-long {
+    font-size: min(22vw, 13vh);
+    transform: translateX(-0.3em);
   }
 
   .clock-readout-wrap {
@@ -2556,8 +2523,7 @@ button:disabled {
     font-size: min(10vw, 5vh);
   }
 
-  .clock-utilities,
-  .clock-footer {
+  .clock-utilities {
     margin-top: 0;
   }
 }
@@ -2567,11 +2533,18 @@ button:disabled {
     padding: 0.5rem;
   }
 
-  .wake-badge-label {
-    display: none;
-  }
 }
 
 .app-shell:has(.clock-card.active-match) .install-banner {
   display: none;
+}
+
+@media (max-width: 600px), (orientation: landscape) and (max-height: 600px) {
+  .mobile-correction-button {
+    display: inline-grid;
+  }
+
+  .correction-trigger {
+    display: none;
+  }
 }

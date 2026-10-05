@@ -116,7 +116,7 @@
     "homeAria": "Início do Matchday Clock"
   },
   "storage": {
-    "saved": "Salvo no dispositivo",
+    "saved": "Salvo",
     "notSaving": "Não está salvando",
     "dismissSavedWarning": "Fechar aviso dos dados salvos",
     "invalidMatch": "Não foi possível ler os dados salvos. Um relógio novo foi carregado.",
@@ -154,11 +154,12 @@
   "pauseLog": {
     "none": "Nenhuma pausa registrada",
     "summary": "Pausas: {count}{current} · total: {time}",
-    "matchLog": "Registro da partida",
+    "matchLog": "Histórico da partida",
     "title": "Pausas",
     "emptyState": "Pause o relógio para começar a registrar as pausas.",
     "current": "Pausa atual",
-    "totalTime": "Tempo total pausado"
+    "totalTime": "Tempo total pausado",
+    "totalPlayTime": "Tempo total de jogo"
   },
   "correction": {
     "quickAdjustment": "Ajuste rápido",

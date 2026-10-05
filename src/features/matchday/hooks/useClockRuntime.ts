@@ -1,6 +1,7 @@
 import {
   useCallback,
   useEffect,
+  useRef,
   useState,
   type Dispatch,
   type SetStateAction,
@@ -23,6 +24,8 @@ import type {
 import type { LocalizedMessage } from "../types";
 
 const RUNNING_NOTIFICATION_TAG = "matchday-clock-running";
+const NOTIFICATION_PERMISSION_NOTICE_STORAGE_KEY =
+  "matchday-clock:notification-permission-notice-date";
 
 interface UseClockRuntimeResult {
   now: number;
@@ -52,6 +55,7 @@ export function useClockRuntime(
 ): UseClockRuntimeResult {
   const [now, setNow] = useState(() => Date.now());
   const [wakeStatus, setWakeStatus] = useState<MessageKey>("wakeIdle");
+  const notificationPermissionNoticeDate = useRef<string | null>(null);
   const running = match.status === "running";
   const breakRunning = match.status === "break";
   const activeClock = running || breakRunning;
@@ -91,6 +95,44 @@ export function useClockRuntime(
       window.removeEventListener("pagehide", updateNow);
     };
   }, [match.status, setMatch]);
+
+  const showNotificationPermissionNotice = useCallback(
+    (key: "notificationDenied" | "notificationPermission") => {
+      const date = new Date();
+      const today = [
+        String(date.getFullYear()).padStart(4, "0"),
+        String(date.getMonth() + 1).padStart(2, "0"),
+        String(date.getDate()).padStart(2, "0"),
+      ].join("-");
+      if (notificationPermissionNoticeDate.current === today) {
+        return;
+      }
+
+      try {
+        if (
+          window.localStorage.getItem(
+            NOTIFICATION_PERMISSION_NOTICE_STORAGE_KEY,
+          ) === today
+        ) {
+          notificationPermissionNoticeDate.current = today;
+          return;
+        }
+        window.localStorage.setItem(
+          NOTIFICATION_PERMISSION_NOTICE_STORAGE_KEY,
+          today,
+        );
+      } catch (error) {
+        console.error(
+          "Could not persist the daily notification permission notice.",
+          error,
+        );
+      }
+
+      notificationPermissionNoticeDate.current = today;
+      setFeedback({ key });
+    },
+    [setFeedback],
+  );
 
   useEffect(() => {
     if (!activeClock || !settings.keepScreenAwake) {
@@ -172,12 +214,11 @@ export function useClockRuntime(
           permission = await Notification.requestPermission();
         }
         if (permission !== "granted") {
-          setFeedback({
-            key:
-              permission === "denied"
-                ? "notificationDenied"
-                : "notificationPermission",
-          });
+          showNotificationPermissionNotice(
+            permission === "denied"
+              ? "notificationDenied"
+              : "notificationPermission",
+          );
           return;
         }
         if (!("serviceWorker" in navigator)) {
@@ -198,13 +239,17 @@ export function useClockRuntime(
           tag: RUNNING_NOTIFICATION_TAG,
           silent: true,
         });
-        setFeedback({ key: "notificationSent" });
       } catch (error) {
         console.error("Could not show a running notification.", error);
         setFeedback({ key: "notificationFailed" });
       }
     },
-    [settings.showRunningNotification, setFeedback, t],
+    [
+      settings.showRunningNotification,
+      setFeedback,
+      showNotificationPermissionNotice,
+      t,
+    ],
   );
 
   const closeRunningNotification = useCallback(async () => {

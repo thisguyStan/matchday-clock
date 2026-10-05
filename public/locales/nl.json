@@ -116,7 +116,7 @@
     "homeAria": "Naar Matchday Clock"
   },
   "storage": {
-    "saved": "Op dit apparaat opgeslagen",
+    "saved": "Opgeslagen",
     "notSaving": "Niet opgeslagen",
     "dismissSavedWarning": "Waarschuwing over opgeslagen gegevens sluiten",
     "invalidMatch": "Opgeslagen wedstrijdgegevens konden niet worden gelezen. Er is een nieuwe klok geladen.",
@@ -154,11 +154,12 @@
   "pauseLog": {
     "none": "Geen pauzes vastgelegd",
     "summary": "Pauzes: {count}{current} · totaal {time}",
-    "matchLog": "Wedstrijdlog",
+    "matchLog": "Wedstrijdgeschiedenis",
     "title": "Pauzes",
     "emptyState": "Pauzeer de klok om pauzes vast te leggen.",
     "current": "Huidige pauze",
-    "totalTime": "Totale pauzetijd"
+    "totalTime": "Totale pauzetijd",
+    "totalPlayTime": "Totale speeltijd"
   },
   "correction": {
     "quickAdjustment": "Snel aanpassen",

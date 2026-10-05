@@ -116,7 +116,7 @@
     "homeAria": "Matchday Clock 홈"
   },
   "storage": {
-    "saved": "기기에 저장됨",
+    "saved": "저장됨",
     "notSaving": "저장되지 않음",
     "dismissSavedWarning": "저장 데이터 경고 닫기",
     "invalidMatch": "저장된 경기 데이터를 읽을 수 없어 새 시계를 불러왔습니다.",
@@ -154,11 +154,12 @@
   "pauseLog": {
     "none": "기록된 일시 정지가 없습니다",
     "summary": "일시 정지: {count}{current} · 합계 {time}",
-    "matchLog": "경기 기록",
+    "matchLog": "경기 이력",
     "title": "일시 정지 시간",
     "emptyState": "시계를 일시 정지하면 기록이 시작됩니다.",
     "current": "현재 일시 정지",
-    "totalTime": "총 일시 정지 시간"
+    "totalTime": "총 일시 정지 시간",
+    "totalPlayTime": "총 플레이 시간"
   },
   "correction": {
     "quickAdjustment": "빠른 조정",

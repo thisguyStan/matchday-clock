@@ -116,7 +116,7 @@
     "homeAria": "Matchday Clock-startside"
   },
   "storage": {
-    "saved": "Lagret på enheten",
+    "saved": "Lagret",
     "notSaving": "Ikke lagret",
     "dismissSavedWarning": "Lukk advarselen om lagrede data",
     "invalidMatch": "Kunne ikke lese lagrede kampdata. En ny klokke er lastet.",
@@ -154,11 +154,12 @@
   "pauseLog": {
     "none": "Ingen pauser registrert",
     "summary": "Pauser: {count}{current} · totalt {time}",
-    "matchLog": "Kamplogg",
+    "matchLog": "Kamphistorikk",
     "title": "Pauser",
     "emptyState": "Sett klokken på pause for å begynne å logge pauser.",
     "current": "Gjeldende pause",
-    "totalTime": "Samlet pausetid"
+    "totalTime": "Samlet pausetid",
+    "totalPlayTime": "Total spilletid"
   },
   "correction": {
     "quickAdjustment": "Rask justering",

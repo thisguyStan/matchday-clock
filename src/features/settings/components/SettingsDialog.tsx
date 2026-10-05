@@ -9,6 +9,7 @@ import {
   LANGUAGE_OPTIONS,
   type LocaleCode,
   type LocaleMessages,
+  type MessageKey,
   type Translator,
   type UserPreferences,
 } from "../../../utils/i18n";
@@ -24,6 +25,8 @@ interface SettingsDialogProps {
   match: MatchClockState;
   pauseClockEnabled: boolean;
   pauseDurationNow: number | null;
+  matchTimeMs: number;
+  wakeStatus: MessageKey;
   now: number;
   displayLocale: LocaleCode;
   messages: LocaleMessages | null;
@@ -45,6 +48,8 @@ export function SettingsDialog({
   match,
   pauseClockEnabled,
   pauseDurationNow,
+  matchTimeMs,
+  wakeStatus,
   now,
   displayLocale,
   messages,
@@ -59,6 +64,12 @@ export function SettingsDialog({
   onPauseClockSetting,
 }: SettingsDialogProps) {
   const pauses = match.pauses;
+  const pauseCount = pauses.length + (pauseDurationNow === null ? 0 : 1);
+  const totalPauseTimeMs =
+    pauses.reduce((total, pause) => total + pause.durationMs, 0) +
+    (pauseDurationNow ?? 0);
+  const hasMatchHistory =
+    match.status !== "ready" || pauseCount > 0;
 
   return (
     <ModalShell
@@ -117,6 +128,16 @@ export function SettingsDialog({
             <span>
               <strong>{t("keepAwake")}</strong>
               <small>{t("keepAwakeHelp")}</small>
+              {settings.keepScreenAwake && (
+                <small
+                  className="wake-setting-status"
+                  data-wake-status={wakeStatus}
+                  role="status"
+                >
+                  <span aria-hidden="true" className="wake-status-dot" />
+                  {t(wakeStatus)}
+                </small>
+              )}
             </span>
             <input
               checked={settings.keepScreenAwake}
@@ -228,66 +249,77 @@ export function SettingsDialog({
         </section>
       </div>
 
-      {pauses.length > 0 || pauseDurationNow !== null ? (
-        <details className="modal-section pause-log-section">
-          <summary>
-            <span>{t("pauseTimes")}</span>
-            <span className="pause-log-count">
-              {pauses.length + (pauseDurationNow === null ? 0 : 1)}
-              <span aria-hidden="true">⌄</span>
-            </span>
-          </summary>
-          <ol className="pause-list">
-            {pauses.map((pause, index) => (
-              <li key={`${pause.startedAt}-${index}`}>
-                <span className="pause-index">
-                  {String(index + 1).padStart(2, "0")}
-                </span>
-                <span className="pause-detail">
-                  <strong>{phaseLabel(pause.phase, messages)}</strong>
-                  <small>
-                    {t("atTime", {
-                      time: formatClockTime(pause.matchTimeMs),
-                      date: formatPauseDate(pause.startedAt, displayLocale),
-                    })}
-                  </small>
-                </span>
-                <span className="pause-duration">
-                  {formatClockTime(pause.durationMs)}
-                </span>
-              </li>
-            ))}
-            {pauseDurationNow !== null && (
-              <li className="pause-current">
-                <span className="pause-index">··</span>
-                <span className="pause-detail">
-                  <strong>{t("currentPause")}</strong>
-                  <small>
-                    {t("startedAt", {
-                      time: formatPauseDate(
-                        match.pauseStartedAt ?? now,
-                        displayLocale,
-                      ),
-                    })}
-                  </small>
-                </span>
-                <span className="pause-duration">
-                  {formatClockTime(pauseDurationNow)}
-                </span>
-              </li>
+      {hasMatchHistory && (
+        <section
+          aria-labelledby="match-history-heading"
+          className="modal-section match-history-section"
+        >
+          <div className="section-heading">
+            <h3 id="match-history-heading">{t("matchLog")}</h3>
+            {pauseCount > 0 && (
+              <span className="pause-log-count">{pauseCount}</span>
             )}
-          </ol>
-          <div className="pause-total">
-            <span>{t("totalPauseTime")}</span>
-            <strong>
-              {formatClockTime(
-                pauses.reduce((total, pause) => total + pause.durationMs, 0) +
-                  (pauseDurationNow ?? 0),
-              )}
-            </strong>
           </div>
-        </details>
-      ) : null}
+          {pauseCount > 0 ? (
+            <ol className="pause-list">
+              {pauses.map((pause, index) => (
+                <li key={`${pause.startedAt}-${index}`}>
+                  <span className="pause-index">
+                    {String(index + 1).padStart(2, "0")}
+                  </span>
+                  <span className="pause-detail">
+                    <strong>{phaseLabel(pause.phase, messages)}</strong>
+                    <small>
+                      {t("atTime", {
+                        time: formatClockTime(pause.matchTimeMs),
+                        date: formatPauseDate(pause.startedAt, displayLocale),
+                      })}
+                    </small>
+                  </span>
+                  <span className="pause-duration">
+                    {formatClockTime(pause.durationMs)}
+                  </span>
+                </li>
+              ))}
+              {pauseDurationNow !== null && (
+                <li className="pause-current">
+                  <span className="pause-index">··</span>
+                  <span className="pause-detail">
+                    <strong>
+                      {phaseLabel(match.pausePhase ?? match.phase, messages)}
+                    </strong>
+                    <small>
+                      {t("currentPause")} ·{" "}
+                      {t("atTime", {
+                        time: formatClockTime(match.pauseMatchTimeMs ?? matchTimeMs),
+                        date: formatPauseDate(
+                          match.pauseStartedAt ?? now,
+                          displayLocale,
+                        ),
+                      })}
+                    </small>
+                  </span>
+                  <span className="pause-duration">
+                    {formatClockTime(pauseDurationNow)}
+                  </span>
+                </li>
+              )}
+            </ol>
+          ) : (
+            <p className="empty-match-history">{t("pauseEmpty")}</p>
+          )}
+          <div className="match-history-totals">
+            <div className="match-history-total">
+              <span>{t("totalPlayTime")}</span>
+              <strong>{formatClockTime(matchTimeMs)}</strong>
+            </div>
+            <div className="match-history-total">
+              <span>{t("totalPauseTime")}</span>
+              <strong>{formatClockTime(totalPauseTimeMs)}</strong>
+            </div>
+          </div>
+        </section>
+      )}
 
       <section className="about-entry">
         <div>

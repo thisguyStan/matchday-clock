@@ -9,10 +9,7 @@ import {
   type MatchSettings,
 } from "../../../utils/match-clock";
 import { HourglassIcon } from "../../../components/ui/HourglassIcon";
-import {
-  phaseLabel,
-  pauseSummary,
-} from "../../../utils/formatting";
+import { phaseLabel } from "../../../utils/formatting";
 import type {
   LocaleMessages,
   Translator,
@@ -132,7 +129,7 @@ export function MatchScreens({
             <div
               aria-label={`${phaseLabel(match.phase, messages)}, ${formatClockTime(matchTimeMs)}${stoppageTime ? `, ${t("stoppage")}` : ""}`}
               aria-live="off"
-              className={`clock-readout${stoppageTime ? " is-stoppage" : ""}`}
+              className={`clock-readout${matchTimeMs >= 100 * 60_000 ? " is-long" : ""}${stoppageTime ? " is-stoppage" : ""}`}
               role="timer"
             >
               {formatClockTime(matchTimeMs)}
@@ -176,74 +173,76 @@ export function MatchScreens({
             </div>
           )}
 
-          {running && settings.trackStoppageTime && (
-            <button
-              aria-label={`${t(match.timeLostStartedAt !== null ? "timeLostTracking" : "timeLostHold")}: ${formatClockTime(timeLostMs)}`}
-              aria-pressed={match.timeLostStartedAt !== null}
-              className={`hold-tracker${match.timeLostStartedAt !== null ? " is-tracking" : ""}`}
-              onBlur={onEndTracking}
-              onContextMenu={(event) => event.preventDefault()}
-              onKeyDown={onTrackingKeyDown}
-              onKeyUp={onTrackingKeyUp}
-              onLostPointerCapture={onEndTracking}
-              onPointerCancel={onEndTracking}
-              onPointerDown={onBeginTracking}
-              onPointerUp={onEndTracking}
-              type="button"
-            >
-              <HourglassIcon className="hold-icon" />
-              <span aria-hidden="true" className="hold-value">
-                {formatClockTime(timeLostMs)}
-              </span>
-            </button>
-          )}
+          <div className="clock-actions">
+            {running && settings.trackStoppageTime && (
+              <button
+                aria-label={`${t(match.timeLostStartedAt !== null ? "timeLostTracking" : "timeLostHold")}: ${formatClockTime(timeLostMs)}`}
+                aria-pressed={match.timeLostStartedAt !== null}
+                className={`hold-tracker${match.timeLostStartedAt !== null ? " is-tracking" : ""}`}
+                onBlur={onEndTracking}
+                onContextMenu={(event) => event.preventDefault()}
+                onKeyDown={onTrackingKeyDown}
+                onKeyUp={onTrackingKeyUp}
+                onLostPointerCapture={onEndTracking}
+                onPointerCancel={onEndTracking}
+                onPointerDown={onBeginTracking}
+                onPointerUp={onEndTracking}
+                type="button"
+              >
+                <HourglassIcon className="hold-icon" />
+                <span aria-hidden="true" className="hold-value">
+                  {formatClockTime(timeLostMs)}
+                </span>
+              </button>
+            )}
 
-          <div aria-label={t("controlsAria")} className="clock-controls">
-            <button
-              aria-label={
-                running
-                  ? t("pause")
-                  : t(match.status === "paused" ? "resume" : "start")
-              }
-              className="control-button control-start"
-              disabled={match.status === "stopped"}
-              onClick={running ? onPause : onStart}
-              type="button"
-            >
-              <span aria-hidden="true" className="button-symbol">
-                {running ? "Ⅱ" : "▶"}
-              </span>
-              <span className="button-label">
-                {running
-                  ? t("pause")
-                  : t(match.status === "paused" ? "resume" : "start")}
-              </span>
-            </button>
-            <button
-              aria-label={breakRunning ? t("stopBreak") : t("stop")}
-              className="control-button control-stop"
-              disabled={match.status === "ready" || match.status === "stopped"}
-              onClick={onStop}
-              type="button"
-            >
-              <span aria-hidden="true" className="button-symbol">
-                ■
-              </span>
-              <span className="button-label">
-                {breakRunning ? t("stopBreak") : t("stop")}
-              </span>
-            </button>
-            <button
-              aria-label={t("reset")}
-              className="control-button control-reset"
-              onClick={onReset}
-              type="button"
-            >
-              <span aria-hidden="true" className="button-symbol">
-                ↺
-              </span>
-              <span className="button-label">{t("reset")}</span>
-            </button>
+            <div aria-label={t("controlsAria")} className="clock-controls">
+              <button
+                aria-label={
+                  running
+                    ? t("pause")
+                    : t(match.status === "paused" ? "resume" : "start")
+                }
+                className="control-button control-start"
+                disabled={match.status === "stopped"}
+                onClick={running ? onPause : onStart}
+                type="button"
+              >
+                <span aria-hidden="true" className="button-symbol">
+                  {running ? "Ⅱ" : "▶"}
+                </span>
+                <span className="button-label">
+                  {running
+                    ? t("pause")
+                    : t(match.status === "paused" ? "resume" : "start")}
+                </span>
+              </button>
+              <button
+                aria-label={breakRunning ? t("stopBreak") : t("stop")}
+                className="control-button control-stop"
+                disabled={match.status === "ready" || match.status === "stopped"}
+                onClick={onStop}
+                type="button"
+              >
+                <span aria-hidden="true" className="button-symbol">
+                  ■
+                </span>
+                <span className="button-label">
+                  {breakRunning ? t("stopBreak") : t("stop")}
+                </span>
+              </button>
+              <button
+                aria-label={t("reset")}
+                className="control-button control-reset"
+                onClick={onReset}
+                type="button"
+              >
+                <span aria-hidden="true" className="button-symbol">
+                  ↺
+                </span>
+                <span className="button-label">{t("reset")}</span>
+              </button>
+            </div>
           </div>
 
           <div className="clock-utilities">
@@ -255,12 +254,6 @@ export function MatchScreens({
               <span aria-hidden="true">✎</span>
               {t("correctTime")}
             </button>
-          </div>
-
-          <div className="clock-footer">
-            <div className="match-total">
-              {pauseSummary(match.pauses, pauseDurationNow, messages)}
-            </div>
           </div>
         </section>
       )}

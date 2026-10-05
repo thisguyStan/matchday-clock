@@ -116,7 +116,7 @@
     "homeAria": "Matchday Clock ana sayfası"
   },
   "storage": {
-    "saved": "Cihaza kaydedildi",
+    "saved": "Kaydedildi",
     "notSaving": "Kaydedilmiyor",
     "dismissSavedWarning": "Kaydedilen veri uyarısını kapat",
     "invalidMatch": "Kaydedilen maç verileri okunamadı; bu nedenle yeni bir saat yüklendi.",
@@ -154,11 +154,12 @@
   "pauseLog": {
     "none": "Kaydedilmiş duraklama yok",
     "summary": "Duraklamalar: {count}{current} · toplam {time}",
-    "matchLog": "Maç kaydı",
+    "matchLog": "Maç geçmişi",
     "title": "Duraklama süreleri",
     "emptyState": "Duraklama kaydını başlatmak için saati duraklatın.",
     "current": "Geçerli duraklama",
-    "totalTime": "Toplam duraklama süresi"
+    "totalTime": "Toplam duraklama süresi",
+    "totalPlayTime": "Toplam oyun süresi"
   },
   "correction": {
     "quickAdjustment": "Hızlı düzeltme",
