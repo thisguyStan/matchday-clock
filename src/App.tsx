@@ -18,7 +18,6 @@ import {
   startTimeLostTracking,
   stopBreakClock,
   stopClock,
-  type ClockStatus,
   type MatchSettings,
 } from "./utils/match-clock";
 import type { MessageKey, UserPreferences } from "./utils/i18n";
@@ -155,13 +154,6 @@ function App() {
         extra: settings.extraTimeLengthMinutes,
       })
     : t("settingsNoExtra", { half: settings.halfLengthMinutes });
-  const statusLabel: Record<ClockStatus, string> = {
-    ready: t("ready"),
-    running: t("running"),
-    paused: t("paused"),
-    break: t("breakRunning"),
-    stopped: t("finished"),
-  };
   function updateSettings(patch: Partial<MatchSettings>) {
     setSettings((current) => ({ ...current, ...patch }));
   }
@@ -471,6 +463,18 @@ function App() {
             <span className="local-badge-dot" />
             {storageError ? t("notSaving") : t("saved")}
           </span>
+          {settings.keepScreenAwake && (
+            <span
+              aria-label={`${t("keepAwake")}: ${t(wakeStatus)}`}
+              className="local-badge wake-badge"
+              data-wake-status={wakeStatus}
+              role="status"
+              title={t(wakeStatus)}
+            >
+              <span aria-hidden="true" className="local-badge-dot" />
+              <span className="wake-badge-label">{t("keepAwake")}</span>
+            </span>
+          )}
           <button
             aria-label={t("openSettings")}
             className="icon-button settings-button"
@@ -510,7 +514,6 @@ function App() {
         settings={settings}
         match={match}
         settingsSummary={settingsSummary}
-        statusLabel={statusLabel}
         messages={displayMessages}
         t={t}
         matchTimeMs={matchTimeMs}
@@ -519,9 +522,7 @@ function App() {
         stoppageTime={stoppageTime}
         running={running}
         breakRunning={breakRunning}
-        activeClock={activeClock}
         pauseDurationNow={pauseDurationNow}
-        wakeStatus={wakeStatus}
         presetCount={presets.length}
         onOpenPresetPicker={() => setModal("presetPicker")}
         onUseLastSettings={() => startNewMatch(getConfiguration(settings))}

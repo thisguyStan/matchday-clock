@@ -69,7 +69,6 @@ export const MESSAGE_PATHS = {
   pausedFor: "clock.pausedFor",
   timeLostHold: "lostTime.hold",
   timeLostTracking: "lostTime.tracking",
-  timeLostTotal: "lostTime.total",
   controlsAria: "clock.controlsAria",
   start: "control.start",
   resume: "control.resume",

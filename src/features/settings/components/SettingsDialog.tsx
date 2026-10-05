@@ -14,6 +14,7 @@ import {
 } from "../../../utils/i18n";
 import { formatPauseDate, phaseLabel } from "../../../utils/formatting";
 import type { MatchPreset } from "../../matchday/types";
+import { HourglassIcon } from "../../../components/ui/HourglassIcon";
 import { ModalShell } from "../../../components/ui/ModalShell";
 
 interface SettingsDialogProps {
@@ -142,7 +143,10 @@ export function SettingsDialog({
           </label>
           <label className="setting-toggle">
             <span>
-              <strong>{t("trackLost")}</strong>
+              <span className="setting-toggle-heading">
+                <HourglassIcon className="setting-hourglass-icon" />
+                <strong>{t("trackLost")}</strong>
+              </span>
               <small>{t("trackHelp")}</small>
             </span>
             <input

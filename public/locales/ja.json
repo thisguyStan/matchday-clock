@@ -23,7 +23,7 @@
     "runningNotification": "実行中の通知",
     "notificationHelp": "可能な範囲で提供。権限とプラットフォームの対応が必要です",
     "trackLost": "長押しでロスタイムを計測",
-    "trackHelp": "時計に専用の長押しボタンを追加します",
+    "trackHelp": "砂時計を長押しして、試合時計とは別に中断時間を計測します",
     "language": "言語",
     "appearance": "外観",
     "system": "端末の設定を使用",
@@ -134,8 +134,7 @@
   },
   "lostTime": {
     "hold": "長押しでロスタイムを計測",
-    "tracking": "ロスタイムを計測中",
-    "total": "試合時計とは別 · 合計 {time}"
+    "tracking": "ロスタイムを計測中"
   },
   "control": {
     "start": "開始",

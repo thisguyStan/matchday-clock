@@ -23,7 +23,7 @@
     "runningNotification": "Laufbenachrichtigung",
     "notificationHelp": "Bestmöglich; Berechtigung und Plattformunterstützung erforderlich",
     "trackLost": "Verlorene Zeit messen",
-    "trackHelp": "Eine separate Gedrückthalten-Taste hinzufügen",
+    "trackHelp": "Halte die Sanduhr gedrückt, um eine Spielunterbrechung getrennt von der Spieluhr zu messen",
     "language": "Sprache",
     "appearance": "Darstellung",
     "system": "Geräteeinstellung verwenden",
@@ -134,8 +134,7 @@
   },
   "lostTime": {
     "hold": "Gedrückt halten, um verlorene Zeit zu messen",
-    "tracking": "Verlorene Zeit wird gemessen",
-    "total": "Unabhängig von der Spieluhr · insgesamt {time}"
+    "tracking": "Verlorene Zeit wird gemessen"
   },
   "control": {
     "start": "Start",

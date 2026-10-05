@@ -23,7 +23,7 @@
     "runningNotification": "Running notification",
     "notificationHelp": "Best effort; permission and platform support required",
     "trackLost": "Hold to track time lost",
-    "trackHelp": "Add a separate hold button to the clock",
+    "trackHelp": "Hold the hourglass to time a stoppage separately from the match clock",
     "language": "Language",
     "appearance": "Appearance",
     "system": "Use device setting",
@@ -134,8 +134,7 @@
   },
   "lostTime": {
     "hold": "Hold to track time lost",
-    "tracking": "Tracking time lost",
-    "total": "Separate from the match clock · {time} total"
+    "tracking": "Tracking time lost"
   },
   "control": {
     "start": "Start",

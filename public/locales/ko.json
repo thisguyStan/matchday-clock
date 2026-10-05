@@ -23,7 +23,7 @@
     "runningNotification": "실행 중 알림",
     "notificationHelp": "가능한 경우 제공되며, 권한과 플랫폼 지원이 필요합니다",
     "trackLost": "길게 눌러 추가 시간 측정",
-    "trackHelp": "시계에 별도의 길게 누르기 버튼을 추가합니다",
+    "trackHelp": "모래시계를 길게 눌러 경기 시계와 별도로 중단 시간을 측정합니다",
     "language": "언어",
     "appearance": "모양",
     "system": "기기 설정 사용",
@@ -134,8 +134,7 @@
   },
   "lostTime": {
     "hold": "길게 눌러 추가 시간 측정",
-    "tracking": "추가 시간 측정 중",
-    "total": "경기 시계와 별도 · 합계 {time}"
+    "tracking": "추가 시간 측정 중"
   },
   "control": {
     "start": "시작",

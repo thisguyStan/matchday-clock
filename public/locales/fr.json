@@ -23,7 +23,7 @@
     "runningNotification": "Notification de match en cours",
     "notificationHelp": "Selon les autorisations et la prise en charge de la plateforme",
     "trackLost": "Mesurer le temps perdu",
-    "trackHelp": "Ajoute un bouton à maintenir enfoncé",
+    "trackHelp": "Maintenez le sablier pour chronométrer un arrêt séparément de l’horloge du match",
     "language": "Langue",
     "appearance": "Apparence",
     "system": "Utiliser le réglage de l’appareil",
@@ -134,8 +134,7 @@
   },
   "lostTime": {
     "hold": "Maintenir pour mesurer le temps perdu",
-    "tracking": "Mesure du temps perdu",
-    "total": "Indépendant du chronomètre · total : {time}"
+    "tracking": "Mesure du temps perdu"
   },
   "control": {
     "start": "Démarrer",

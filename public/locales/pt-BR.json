@@ -23,7 +23,7 @@
     "runningNotification": "Notificação de relógio em andamento",
     "notificationHelp": "Depende de permissões e suporte da plataforma",
     "trackLost": "Medir tempo perdido",
-    "trackHelp": "Adiciona um botão que deve ser mantido pressionado",
+    "trackHelp": "Mantenha a ampulheta pressionada para cronometrar uma paralisação separadamente do relógio da partida",
     "language": "Idioma",
     "appearance": "Aparência",
     "system": "Usar configuração do dispositivo",
@@ -134,8 +134,7 @@
   },
   "lostTime": {
     "hold": "Mantenha pressionado para medir o tempo perdido",
-    "tracking": "Medindo o tempo perdido",
-    "total": "Separado do relógio da partida · total: {time}"
+    "tracking": "Medindo o tempo perdido"
   },
   "control": {
     "start": "Iniciar",

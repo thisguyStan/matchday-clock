@@ -23,7 +23,7 @@
     "runningNotification": "Obaveštenje o radu",
     "notificationHelp": "Kada je moguće; potrebni su dozvola i podrška platforme",
     "trackLost": "Drži za praćenje izgubljenog vremena",
-    "trackHelp": "Dodaj zasebno dugme za držanje na satu",
+    "trackHelp": "Držite peščani sat da merite prekid odvojeno od sata utakmice",
     "language": "Jezik",
     "appearance": "Izgled",
     "system": "Koristi podešavanje uređaja",
@@ -134,8 +134,7 @@
   },
   "lostTime": {
     "hold": "Drži za praćenje izgubljenog vremena",
-    "tracking": "Prati se izgubljeno vreme",
-    "total": "Odvojeno od sata utakmice · ukupno {time}"
+    "tracking": "Prati se izgubljeno vreme"
   },
   "control": {
     "start": "Pokreni",

@@ -23,7 +23,7 @@
     "runningNotification": "Avisering när klockan går",
     "notificationHelp": "Kräver tillstånd och stöd från plattformen",
     "trackLost": "Mät förlorad tid",
-    "trackHelp": "Lägger till en knapp som hålls ned",
+    "trackHelp": "Håll timglaset intryckt för att mäta ett avbrott separat från matchklockan",
     "language": "Språk",
     "appearance": "Utseende",
     "system": "Använd enhetens inställning",
@@ -134,8 +134,7 @@
   },
   "lostTime": {
     "hold": "Håll ned för att mäta förlorad tid",
-    "tracking": "Mäter förlorad tid",
-    "total": "Separat från matchklockan · totalt {time}"
+    "tracking": "Mäter förlorad tid"
   },
   "control": {
     "start": "Starta",

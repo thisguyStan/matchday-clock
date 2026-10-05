@@ -23,7 +23,7 @@
     "runningNotification": "运行状态通知",
     "notificationHelp": "尽力提供；需要授权且平台支持",
     "trackLost": "按住以记录损失时间",
-    "trackHelp": "为计时器添加单独的按住按钮",
+    "trackHelp": "按住沙漏，单独计时暂停时间，不影响比赛时钟",
     "language": "语言",
     "appearance": "外观",
     "system": "跟随设备设置",
@@ -134,8 +134,7 @@
   },
   "lostTime": {
     "hold": "按住以记录损失时间",
-    "tracking": "正在记录损失时间",
-    "total": "与比赛计时器分开 · 共 {time}"
+    "tracking": "正在记录损失时间"
   },
   "control": {
     "start": "开始",

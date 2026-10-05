@@ -23,7 +23,7 @@
     "runningNotification": "Çalışma bildirimi",
     "notificationHelp": "Mümkün olduğunda; izin ve platform desteği gerekir",
     "trackLost": "Kaybedilen süreyi basılı tutarak kaydet",
-    "trackHelp": "Saate ayrı bir basılı tutma düğmesi ekle",
+    "trackHelp": "Kum saatini basılı tutarak duraklamayı maç saatinden ayrı ölç",
     "language": "Dil",
     "appearance": "Görünüm",
     "system": "Cihaz ayarını kullan",
@@ -134,8 +134,7 @@
   },
   "lostTime": {
     "hold": "Kaybedilen süreyi basılı tutarak kaydet",
-    "tracking": "Kaybedilen süre kaydediliyor",
-    "total": "Maç saatinden ayrı · toplam {time}"
+    "tracking": "Kaybedilen süre kaydediliyor"
   },
   "control": {
     "start": "Başlat",

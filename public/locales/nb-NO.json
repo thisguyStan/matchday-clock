@@ -23,7 +23,7 @@
     "runningNotification": "Varsel når klokken går",
     "notificationHelp": "Krever tillatelse og støtte fra plattformen",
     "trackLost": "Mål tapt tid",
-    "trackHelp": "Legger til en knapp du holder inne",
+    "trackHelp": "Hold timeglasset inne for å måle en kampstopp separat fra kampklokken",
     "language": "Språk",
     "appearance": "Utseende",
     "system": "Bruk enhetens innstilling",
@@ -134,8 +134,7 @@
   },
   "lostTime": {
     "hold": "Hold inne for å måle tapt tid",
-    "tracking": "Måler tapt tid",
-    "total": "Separat fra kampklokken · totalt {time}"
+    "tracking": "Måler tapt tid"
   },
   "control": {
     "start": "Start",

@@ -23,7 +23,7 @@
     "runningNotification": "Ilmoitus kellon käydessä",
     "notificationHelp": "Edellyttää lupaa ja alustan tukea",
     "trackLost": "Mittaa menetettyä aikaa",
-    "trackHelp": "Lisää erillisen painettuna pidettävän painikkeen",
+    "trackHelp": "Pidä tiimalasia painettuna, niin pelikatko mitataan erikseen ottelukellosta",
     "language": "Kieli",
     "appearance": "Ulkoasu",
     "system": "Käytä laitteen asetusta",
@@ -134,8 +134,7 @@
   },
   "lostTime": {
     "hold": "Mittaa menetetty aika pitämällä painettuna",
-    "tracking": "Menetettyä aikaa mitataan",
-    "total": "Erillään ottelukellosta · yhteensä {time}"
+    "tracking": "Menetettyä aikaa mitataan"
   },
   "control": {
     "start": "Aloita",

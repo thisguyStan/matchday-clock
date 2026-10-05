@@ -5,17 +5,16 @@ import type {
 import {
   formatClockTime,
   getPhaseBaselineMs,
-  type ClockStatus,
   type MatchClockState,
   type MatchSettings,
 } from "../../../utils/match-clock";
+import { HourglassIcon } from "../../../components/ui/HourglassIcon";
 import {
   phaseLabel,
   pauseSummary,
 } from "../../../utils/formatting";
 import type {
   LocaleMessages,
-  MessageKey,
   Translator,
 } from "../../../utils/i18n";
 
@@ -24,7 +23,6 @@ interface MatchScreensProps {
   settings: MatchSettings;
   match: MatchClockState;
   settingsSummary: string;
-  statusLabel: Record<ClockStatus, string>;
   messages: LocaleMessages | null;
   t: Translator;
   matchTimeMs: number;
@@ -33,9 +31,7 @@ interface MatchScreensProps {
   stoppageTime: boolean;
   running: boolean;
   breakRunning: boolean;
-  activeClock: boolean;
   pauseDurationNow: number | null;
-  wakeStatus: MessageKey;
   presetCount: number;
   onOpenPresetPicker: () => void;
   onUseLastSettings: () => void;
@@ -56,7 +52,6 @@ export function MatchScreens({
   settings,
   match,
   settingsSummary,
-  statusLabel,
   messages,
   t,
   matchTimeMs,
@@ -65,9 +60,7 @@ export function MatchScreens({
   stoppageTime,
   running,
   breakRunning,
-  activeClock,
   pauseDurationNow,
-  wakeStatus,
   presetCount,
   onOpenPresetPicker,
   onUseLastSettings,
@@ -131,18 +124,9 @@ export function MatchScreens({
         </section>
       ) : (
         <section className="clock-card active-match" aria-labelledby="clock-heading">
-          <div className="clock-card-top">
-            <div>
-              <p className="eyebrow">{t("timer")}</p>
-              <h1 id="clock-heading" className="clock-phase-title">
-                {phaseLabel(match.phase, messages)}
-              </h1>
-            </div>
-            <span className={`status-pill status-${match.status}`}>
-              <span className="status-dot" />
-              {statusLabel[match.status]}
-            </span>
-          </div>
+          <h1 id="clock-heading" className="sr-only">
+            {phaseLabel(match.phase, messages)}
+          </h1>
 
           <div className="clock-readout-wrap">
             <div
@@ -194,7 +178,7 @@ export function MatchScreens({
 
           {running && settings.trackStoppageTime && (
             <button
-              aria-label={`${t("timeLostHold")}: ${formatClockTime(timeLostMs)}`}
+              aria-label={`${t(match.timeLostStartedAt !== null ? "timeLostTracking" : "timeLostHold")}: ${formatClockTime(timeLostMs)}`}
               aria-pressed={match.timeLostStartedAt !== null}
               className={`hold-tracker${match.timeLostStartedAt !== null ? " is-tracking" : ""}`}
               onBlur={onEndTracking}
@@ -207,19 +191,7 @@ export function MatchScreens({
               onPointerUp={onEndTracking}
               type="button"
             >
-              <span aria-hidden="true" className="hold-icon">
-                {match.timeLostStartedAt !== null ? "●" : "◉"}
-              </span>
-              <span className="hold-copy">
-                <strong>
-                  {match.timeLostStartedAt !== null
-                    ? t("timeLostTracking")
-                    : t("timeLostHold")}
-                </strong>
-                <small>
-                  {t("timeLostTotal", { time: formatClockTime(timeLostMs) })}
-                </small>
-              </span>
+              <HourglassIcon className="hold-icon" />
               <span aria-hidden="true" className="hold-value">
                 {formatClockTime(timeLostMs)}
               </span>
@@ -286,14 +258,6 @@ export function MatchScreens({
           </div>
 
           <div className="clock-footer">
-            <div className="wake-status" aria-live="polite">
-              <span
-                className={`wake-icon${activeClock && settings.keepScreenAwake ? " wake-active" : ""}`}
-              >
-                ◉
-              </span>
-              <span>{t(wakeStatus)}</span>
-            </div>
             <div className="match-total">
               {pauseSummary(match.pauses, pauseDurationNow, messages)}
             </div>

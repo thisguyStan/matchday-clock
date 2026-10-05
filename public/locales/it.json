@@ -23,7 +23,7 @@
     "runningNotification": "Notifica del cronometro",
     "notificationHelp": "Richiede autorizzazione e supporto della piattaforma",
     "trackLost": "Misura il tempo perso",
-    "trackHelp": "Aggiunge un pulsante da tenere premuto",
+    "trackHelp": "Tieni premuta la clessidra per cronometrare un’interruzione separatamente dall’orologio della partita",
     "language": "Lingua",
     "appearance": "Aspetto",
     "system": "Usa impostazione del dispositivo",
@@ -134,8 +134,7 @@
   },
   "lostTime": {
     "hold": "Tieni premuto per misurare il tempo perso",
-    "tracking": "Misurazione del tempo perso",
-    "total": "Separato dal cronometro · totale {time}"
+    "tracking": "Misurazione del tempo perso"
   },
   "control": {
     "start": "Avvia",

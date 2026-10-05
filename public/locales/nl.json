@@ -23,7 +23,7 @@
     "runningNotification": "Melding bij lopende klok",
     "notificationHelp": "Afhankelijk van toestemming en platformondersteuning",
     "trackLost": "Verloren tijd meten",
-    "trackHelp": "Voegt een knop toe die je ingedrukt houdt",
+    "trackHelp": "Houd de zandloper ingedrukt om een onderbreking apart van de wedstrijdklok te meten",
     "language": "Taal",
     "appearance": "Weergave",
     "system": "Apparaatinstelling gebruiken",
@@ -134,8 +134,7 @@
   },
   "lostTime": {
     "hold": "Houd ingedrukt om verloren tijd te meten",
-    "tracking": "Verloren tijd meten",
-    "total": "Los van de wedstrijdklok · totaal {time}"
+    "tracking": "Verloren tijd meten"
   },
   "control": {
     "start": "Start",

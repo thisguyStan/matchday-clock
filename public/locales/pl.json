@@ -23,7 +23,7 @@
     "runningNotification": "Powiadomienie o działającym zegarze",
     "notificationHelp": "Wymaga uprawnień i obsługi przez platformę",
     "trackLost": "Mierz stracony czas",
-    "trackHelp": "Dodaje osobny przycisk do przytrzymania",
+    "trackHelp": "Przytrzymaj klepsydrę, aby mierzyć przerwę w grze niezależnie od zegara meczu",
     "language": "Język",
     "appearance": "Wygląd",
     "system": "Użyj ustawienia urządzenia",
@@ -134,8 +134,7 @@
   },
   "lostTime": {
     "hold": "Przytrzymaj, aby mierzyć stracony czas",
-    "tracking": "Mierzenie straconego czasu",
-    "total": "Niezależnie od zegara meczu · łącznie {time}"
+    "tracking": "Mierzenie straconego czasu"
   },
   "control": {
     "start": "Start",

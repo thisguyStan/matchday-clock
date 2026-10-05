@@ -23,7 +23,7 @@
     "runningNotification": "Notificación de reloj en marcha",
     "notificationHelp": "Sujeto a permisos y compatibilidad del dispositivo",
     "trackLost": "Medir tiempo perdido",
-    "trackHelp": "Añade un botón que debes mantener pulsado",
+    "trackHelp": "Mantén pulsado el reloj de arena para medir una interrupción por separado del reloj del partido",
     "language": "Idioma",
     "appearance": "Apariencia",
     "system": "Usar ajustes del dispositivo",
@@ -134,8 +134,7 @@
   },
   "lostTime": {
     "hold": "Mantén pulsado para medir el tiempo perdido",
-    "tracking": "Midiendo el tiempo perdido",
-    "total": "Independiente del reloj · total: {time}"
+    "tracking": "Midiendo el tiempo perdido"
   },
   "control": {
     "start": "Iniciar",

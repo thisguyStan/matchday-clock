@@ -23,7 +23,7 @@
     "runningNotification": "Besked, mens uret kører",
     "notificationHelp": "Kræver tilladelse og understøttelse fra platformen",
     "trackLost": "Mål tabt tid",
-    "trackHelp": "Tilføjer en knap, der skal holdes nede",
+    "trackHelp": "Hold timeglasset nede for at måle en afbrydelse separat fra kampuret",
     "language": "Sprog",
     "appearance": "Udseende",
     "system": "Brug enhedens indstilling",
@@ -134,8 +134,7 @@
   },
   "lostTime": {
     "hold": "Hold nede for at måle tabt tid",
-    "tracking": "Måler tabt tid",
-    "total": "Separat fra kampuret · i alt {time}"
+    "tracking": "Måler tabt tid"
   },
   "control": {
     "start": "Start",
